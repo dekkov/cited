@@ -1,0 +1,6 @@
+msg_file="$1"
+first_line=$(head -n1 "$msg_file")
+if ! echo "$first_line" | grep -qE '^(feat|fix|refactor|docs|test|chore|perf|ci|build|style)(\([a-z0-9_-]+\))?!?: .+'; then
+  echo "Commit message must follow Conventional Commits (feat|fix|refactor|docs|test|chore|perf|ci|build|style): subject"
+  exit 1
+fi
