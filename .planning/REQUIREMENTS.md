@@ -7,15 +7,15 @@
 
 ### Foundation & Repo
 
-- [ ] **FND-01**: Monorepo (pnpm + Turborepo) with `apps/web`, `packages/db`, `packages/core`, `packages/ui`, `packages/config`, `packages/api-contracts`; `apps/worker/` as doc-only stub
-- [ ] **FND-02**: Strict TypeScript, Biome (lint+format), Husky + lint-staged pre-commit
-- [ ] **FND-03**: One-command local dev (`pnpm dev`) and `docker compose up` self-host path
+- [x] **FND-01**: Monorepo (pnpm + Turborepo) with `apps/web`, `packages/db`, `packages/core`, `packages/ui`, `packages/config`, `packages/api-contracts`; `apps/worker/` as doc-only stub
+- [x] **FND-02**: Strict TypeScript, Biome (lint+format), Husky + lint-staged pre-commit
+- [x] **FND-03**: One-command local dev (`pnpm dev`) and `docker compose up` self-host path
 - [ ] **FND-04**: docker-compose CI smoke test passes from clean checkout
-- [ ] **FND-05**: Vitest + React Testing Library + Playwright wired in CI
+- [x] **FND-05**: Vitest + React Testing Library + Playwright wired in CI
 - [ ] **FND-06**: Drizzle schema with full table set: `profiles`, `podcasts`, `episodes`, `clips`, `clip_edits` (audit log for ADMN-11), `transcript_chunks` (RAG-able transcript fragments per ADMN-13), `habit_templates`, `habit_template_clips`, `user_habits`, `check_ins`, `streaks`, `streak_freezes`, `extraction_jobs`, `clips_pending` (Phase 5 placeholders)
 - [ ] **FND-07**: drizzle-kit migrations + co-located RLS policy SQL; RLS policy on every user-data table
 - [ ] **FND-08**: `packages/api-contracts` zod schemas mirrored for the deferred Python worker contract
-- [ ] **FND-09**: gitleaks secrets scan in CI
+- [x] **FND-09**: gitleaks secrets scan in CI
 
 ### Authentication & Consent
 
@@ -218,15 +218,15 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FND-01 | Phase 1 | Pending |
-| FND-02 | Phase 1 | Pending |
-| FND-03 | Phase 1 | Pending |
+| FND-01 | Phase 1 | Complete |
+| FND-02 | Phase 1 | Complete |
+| FND-03 | Phase 1 | Complete |
 | FND-04 | Phase 1 | Pending |
-| FND-05 | Phase 1 | Pending |
+| FND-05 | Phase 1 | Complete |
 | FND-06 | Phase 1 | Pending |
 | FND-07 | Phase 1 | Pending |
 | FND-08 | Phase 1 | Pending |
-| FND-09 | Phase 1 | Pending |
+| FND-09 | Phase 1 | Complete |
 | AUTH-01 | Phase 1 | Pending |
 | AUTH-02 | Phase 1 | Pending |
 | AUTH-03 | Phase 1 | Pending |
