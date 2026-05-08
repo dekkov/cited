@@ -1,4 +1,8 @@
-# Hdiary (working title)
+# Cited (working name)
+
+> Working name: **Cited** — "Habits backed by people who study this for a living."
+> Alternates under consideration in [.planning/NAMING.md](./NAMING.md).
+> Final lock pending trademark + domain availability checks; renames in Phase 4 (NAME-02/03).
 
 ## What This Is
 
@@ -136,7 +140,7 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 | **Web-first, defer PWA** | Smaller scope risk; user accepts the tradeoff vs. "phones are where habits live" | ⚠️ Revisit if alpha feedback flags mobile pain |
 | **Hosted demo at real domain (not self-host-only)** | DOAC won't `git clone`; click-through demo is a pitch hard requirement; cheap (~$5–25/mo) | — Pending |
 | **Trusted-curator role designed in from MVP** | Single curator at launch (user); avoids future schema migration when contributors arrive | — Pending |
-| **Naming: "Hdiary" working title; rename before public launch** | Current name doesn't communicate the concept and must NOT be DOAC-anchored; rename hard-blocks Phase 4 alpha launch. User produces 3 candidate names by end of Phase 1. | ⚠️ Revisit pre-launch |
+| **Working name: "Cited"** (alternates: Receipts, Lodestar, Margin, Practice — see `.planning/NAMING.md`) | Single word, one syllable, exactly describes the product, neutral (no medical mistakability), credible register. Final lock pending trademark + domain checks; rename hard-blocks Phase 4 alpha launch. | ⚠️ Revisit pre-launch |
 | **Domain coverage: 4 domains** *(LOCKED)* — sleep / nutrition+gut / exercise+longevity / mental health | 6 domains was redundant (gut ⊂ nutrition; longevity ⊂ exercise+nutrition); 4 domains × ~7–8 clips each at MVP feels curated rather than thin | ✓ Locked |
 | **Disclaimer modal must be acknowledged before onboarding completes** | Legal posture + record-keeping; cheap to build, painful to retrofit | — Pending |
 | **DOAC pitch ladder: non-objection first, endorsement aspirational** *(LOCKED)* | Endorsement carries brand-control + liability fear at media businesses → high refusal rate. Non-objection ("OK to keep using clips with attribution + 48h takedown") is an easy yes and gets ~90% of the legal/social value. Endorsement is the bonus outcome if non-objection lands. | ✓ Locked |
