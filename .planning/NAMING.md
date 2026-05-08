@@ -1,72 +1,128 @@
 # Naming
 
 **Working name:** **Cited**
-**Status:** Working name selected; trademark + domain availability check pending; final lock before Phase 4 alpha launch (NAME-02/03).
+**Status:** Working name selected; availability checks deferred to Phase 4 (NAME-02/03). Final lock before public alpha launch.
 
-## Selected: Cited
+---
 
-**Tagline candidate:** "Habits backed by people who study this for a living."
+## Naming Criteria (Scoring Rubric)
 
-**Why it won:**
-- One word, one syllable, exactly describes the product (every habit is *cited*).
-- Works as both a passive descriptor ("cited by Huberman") and a brand verb ("cited it").
-- Neutral — no health/medical mistakability (legal posture intact).
-- Quieter/more credible register than "Receipts" — fits the Attia/ZOE/long-listener demographic this product overlaps with.
-- Domain candidates likely workable: `cited.app`, `cited.health`, `cited.io`, `getcited.com`.
+Used to evaluate all candidates. Higher adherence = higher ranking.
 
-**Open checks before final lock:**
-- [ ] Trademark search (USPTO TESS, EUIPO, WIPO Global Brand Database) — confirm no live mark in software / health / publishing classes
-- [ ] Domain availability across `.app`, `.health`, `.io`, `.com` (with `get-` or `the-` prefix as fallback)
-- [ ] GitHub org `@cited` availability (likely taken — fallback: `@cited-app`, `@usecited`, `@cited-health`)
-- [ ] npm scope `@cited/*` availability
-- [ ] Social handles: `@cited` on X / Bluesky / Mastodon / LinkedIn
+1. **Length** — Single word strongly preferred; ≤2 syllables ideal.
+2. **Register** — Neutral: not health-service-mistakable ("wellness" tropes avoided); not DOAC-anchored (no "diary", "DOAC", host names).
+3. **Memorability** — Passes the "say it on a podcast" test: clear, no spelling ambiguity.
+4. **Domain attainability** — `.com`, `.dev`, or `.app` should be reasonably attainable (sub-$1k acquisition or available at registration price).
+5. **GitHub org/handle** — Ideally matches or has a close prefix variant (`use-`, `get-`, `-app`).
+6. **Trademark posture** — No active US trademark conflict in IC 009 (software), IC 041 (educational services), IC 044 (medical/health info services).
 
-## Alternates Under Consideration
+---
 
-Kept in case "Cited" fails trademark/domain checks, or if pre-launch instinct shifts.
+## Candidates
 
-### Receipts
-**Tagline:** "Every habit comes with receipts."
+| Name | Syllables | Register | Working tagline | .com status | .dev status | GitHub org status | Trademark risk | Notes |
+|------|-----------|----------|-----------------|-------------|-------------|-------------------|---------------|-------|
+| **Cited** | 2 | Academic/credible | "Habits backed by people who study this for a living." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Current working name. Passive descriptor + brand verb. Neutral, no health mistakability. |
+| **Sourced** | 1 | Journalistic/neutral | "Every habit sourced to the research." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Tightest semantic match after Cited. Implies provenance without medical register. |
+| **Footnote** | 2 | Academic/playful | "The footnote between what experts say and what you actually do." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Strongest academic-credibility frame. Slightly more memorable brand story. |
+| **Receipts** | 2 | Dev-culture/meme | "Every habit comes with receipts." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | High Show HN energy. Logo concept: receipt + checkbox. Risk: meme-y register may not age well. |
+| **Lodestar** | 2 | Poetic/thoughtful | "Habits, with a lodestar to follow." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Distinctive, highly googleable, almost certainly available. Risk: non-native speakers may not know the word. |
+| **Margin** | 2 | Literary/quiet | "The margin is where the real work happens." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Marginalia framing — habits as commentary on what experts said. Risk: trademark crowded (finance, MarginNote app). |
+| **Practice** | 2 | Minimalist/calm | "Just Practice." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Apple-register: stripped-down, habits are practices. Risk: extremely generic; SEO brutal; trademark undefendable. |
+| **Backed** | 1 | Direct/neutral | "Backed by science. Built into habits." | TO CHECK | TO CHECK | TO CHECK | TO CHECK | Minimalist; implies evidence without academic register. Risk: common adjective, very short — may be taken everywhere. |
 
-- Dev-culture meme ("show me the receipts") — strongest Show HN energy.
-- Captures the evidence-backed differentiator viscerally.
-- Logo concept: literal receipt with a checkbox.
-- Risk: common English word → harder SEO + trademark; meme-y register may not age well.
+> All status columns are marked TO CHECK. These are Phase 4 NAME-02 actions, not Phase 1 actions. Running checks now risks tipping domain watchers who may squat if they see interest signals.
 
-### Lodestar
-**Tagline:** "Habits, with a lodestar to follow."
+---
 
-- The guiding star sailors used pre-GPS — evidence as direction.
-- Distinctive, googleable, almost certainly available.
-- More poetic, less meme-y; fits if the brand register is "thoughtful".
-- Risk: non-native English speakers may not know the word; slightly grandiose.
+## Availability Check Methodology
 
-### Margin
-**Tagline:** "The margin is where the real work happens." *(marginalia framing — habits as commentary on what experts said)*
+Run these commands at the start of Phase 4, before selecting the final name.
 
-- Literary, quiet, intellectual.
-- Fits the Attia / ZOE / long-podcast-reader demographic better than the Huberman / biohacker side.
-- Risk: trademark crowded ("Margin" finance, "MarginNote" the app); harder to defend.
+### Domain
 
-### Practice
-**Tagline:** Just **Practice**.
+```bash
+whois cited.com
+whois cited.dev
+whois cited.app
+```
 
-- Stripped-down. Habits are practices.
-- Closest to Apple's branding tendency — calm, no marketing-jargon.
-- Risk: extremely generic; SEO is brutal; trademark is impossible to defend.
+If registered, check [GoDaddy Auctions](https://auctions.godaddy.com), [Sav.com](https://sav.com), [Afternic](https://afternic.com) for resale listings. Budget: sub-$1k acquisition or available at registration price (~$10–15/yr for `.dev`/`.app`).
 
-## Decision Process
+### GitHub Org
 
-1. **Phase 1 (now):** Working name = Cited. Run trademark + domain checks alongside Foundation work.
-2. **Phase 4 pre-launch:** Final lock. If Cited fails any check that can't be cheaply worked around, fall back in this order: **Receipts → Lodestar → Margin → Practice**, repeating the trademark/domain check on each.
-3. **Hard gate:** NAME-02/03 (domain reserved + repo/package/URL renamed) must complete before public alpha launch in Phase 4.
+```bash
+curl -sI https://github.com/<name> | grep "HTTP/"
+# HTTP/2 404 = available
+# HTTP/2 200 = taken (check profile for activity level — abandoned orgs sometimes transfer)
+```
+
+Also check `https://github.com/use<name>`, `https://github.com/get<name>`, `https://github.com/<name>-app`.
+
+### Trademark
+
+Search [USPTO TESS](https://tmsearch.uspto.gov) for each candidate under:
+- IC 009 — Computer software
+- IC 041 — Educational services / information
+- IC 044 — Medical/health information services
+
+Also check [EUIPO eSearch](https://euipo.europa.eu/eSearch/) if EU launch is in scope.
+
+Filter: look for **live marks** with **confusingly similar goods/services**. A mark in an unrelated class (e.g., "Cited" for car parts) is not a conflict.
+
+### Social Handles
+
+Use [namecheckr.com](https://namecheckr.com) or [namechk.com](https://namechk.com) to batch-check availability across X, Bluesky, LinkedIn, Instagram, Mastodon, TikTok.
+
+### npm Scope
+
+```bash
+npm info @<name> 2>&1 | head -5
+# "Not found" = scope likely available (verify on npmjs.com)
+```
+
+---
+
+## Top-3 Working Order (Claude's Recommendation)
+
+User can override at Phase 4; this is a starting point for the availability checks.
+
+1. **Cited** — already the working name; tightest rationale; one syllable shorter than it sounds ("SY-ted" is punchy); every repo commit message already reads naturally ("cited-by: Huberman — sleep pressure").
+2. **Sourced** — second-tightest semantic match; one syllable; strong journalism register without medical risk.
+3. **Footnote** — strongest academic-credibility narrative; two syllables but very clean; `footnote.dev` or `footnote.app` likely more attainable than `cited.com`.
+
+---
+
+## Selection Deferral Note
+
+> **NAME-01 deliverable**: ≥3 viable candidates produced (Phase 1). ✓
+> **NAME-02 / NAME-03**: Domain + GitHub-org reservation, then repo + package + URL renames. **Hard-blocks Phase 4 alpha launch.** Run availability checks at the start of Phase 4, not now — pre-checking risks tipping domain watchers if a name is already taken and gets squatted after a search spike.
+
+The Phase 4 task order is:
+1. Run all availability checks (NAME-02) against the top-3 in ranked order.
+2. Reserve domain + GitHub org for the first name that passes all checks.
+3. Execute repo rename, package scope rename, URL updates (NAME-03).
+4. Unblock alpha launch.
+
+---
 
 ## Anti-Names (Explicitly Avoided)
 
-- Anything DOAC-anchored ("DOAC Habits", "TheDiary*", "CEO Health", etc.) — single-podcaster brand entanglement, kills the schema-agnostic story, kills future expansion.
-- Anything reasonable users could mistake for a medical service ("YourDoctor", "HealthCoach AI", "RxHabits", etc.) — legal/regulatory exposure.
-- Anything Huberman-anchored — pitfall research flagged this specifically given his 2024 controversies.
-- Generic health-tech vocabulary ("Wellnessify", "HabitFlow", "Vitalize", etc.) — undifferentiated.
+| Category | Examples | Reason |
+|----------|----------|--------|
+| DOAC-anchored | "DOAC Habits", "TheDiary*", "CEO Health" | Single-podcaster brand entanglement; kills schema-agnostic story and future expansion. |
+| Medical-service-mistakable | "YourDoctor", "HealthCoach AI", "RxHabits" | Legal/regulatory exposure; conflicts with "not medical advice" posture. |
+| Huberman-anchored | Any host name | Pitfall research flagged — Huberman 2024 controversies add reputational risk. |
+| Generic health-tech vocab | "Wellnessify", "HabitFlow", "Vitalize" | Undifferentiated; no trademark defense; SEO nightmare. |
 
 ---
-*Last updated: 2026-05-07 after initial naming round*
+
+## NAME-01 Acknowledgment
+
+- [ ] I (the user) have reviewed the candidate list and confirm ≥3 viable names exist.
+- [ ] I understand availability checks happen in Phase 4, not now.
+- [ ] I will revisit this file at the start of Phase 4 to drive NAME-02/03.
+
+---
+
+*Last updated: 2026-05-07 — restructured to decision-ready format with ≥8 candidates, availability methodology, and Phase 4 deferral note.*
