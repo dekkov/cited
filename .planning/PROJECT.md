@@ -123,18 +123,23 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | **Goal = OSS traction + DOAC pitch-readiness** (not behavior-change at scale, not personal use) | User explicitly chose OSS/portfolio framing; reshapes priority stack toward demo polish, docs, and DOAC-friendliness | — Pending |
-| **MVP corpus: DOAC-only** | Maximum pitch leverage; show DOAC team a tailored experience; expand to Huberman/Attia/etc. only after DOAC engages or politely passes | — Pending |
-| **AI extraction pipeline deferred to v0.5/Phase 2** | Protects ~4–6 weeks of solo time; doc itself recommends this; hand-curated 30+ clips at MVP is sufficient demo material | — Pending |
-| **Community features cut from v1** (no feed, posts, reactions, leaderboards) | Goal is OSS traction (stars/contributors), not engagement loops; community without users is dead space; replaced by public shareable habit pages | — Pending |
+| **MVP corpus: DOAC-only** | Maximum pitch leverage; show DOAC team a tailored experience; expand to Huberman/Attia/etc. only after DOAC engages or politely passes. Schema stays podcast-agnostic; brand identity stays neutral. | — Pending |
+| **AI extraction pipeline deferred to v0.5 (Phase 5)** | Protects ~4–6 weeks of solo time; doc itself recommends this; hand-curated 30+ clips at MVP is sufficient demo material. `apps/worker/` ships as doc-only stub in Phase 1. | — Pending |
+| **Community features cut from v1** (no feed, posts, reactions, leaderboards) | Goal is OSS traction (stars/contributors), not engagement loops; community without users is dead space; replaced by public shareable `/h/[slug]` habit pages | — Pending |
 | **Habit-swap kept in v1** | Most concrete differentiator vs Habitica/Streaks/Loop; works fine with hand-curated clips | — Pending |
-| **License: working assumption MIT or Apache-2.0** (final call before public release) | Goal of OSS reach + DOAC pitch friendliness outweighs commercial-fork defense; AGPL specifically repels both target audiences | ⚠️ Revisit before launch |
-| **Streak design: grace-day mechanic** | Habit science: rigid streaks accelerate abandonment; grace mechanic preserves motivation without lying about consistency | — Pending |
+| **License: MIT + DCO bot + relicense-reservation clause** *(LOCKED)* | MIT for OSS reach + DOAC pitch friendliness; DCO over CLA (no corporate-feel barrier to drive-by contributors); relicense-reservation in CONTRIBUTING.md preserves future optionality. Must land before first public push. | ✓ Locked |
+| **Streak design: "Streak Freeze" framing, 2 freezes/month banked, max 4** *(LOCKED)* | UI says "freeze," not "grace day" — gain-frame outperforms loss-frame in 2025 retention data. Banking gives users predictable agency. Streak demoted from primary UI; consistency view ("18/21 last 3 weeks") leads. | ✓ Locked |
 | **Web-first, defer PWA** | Smaller scope risk; user accepts the tradeoff vs. "phones are where habits live" | ⚠️ Revisit if alpha feedback flags mobile pain |
 | **Hosted demo at real domain (not self-host-only)** | DOAC won't `git clone`; click-through demo is a pitch hard requirement; cheap (~$5–25/mo) | — Pending |
 | **Trusted-curator role designed in from MVP** | Single curator at launch (user); avoids future schema migration when contributors arrive | — Pending |
-| **Naming: "Hdiary" working title; rename before public launch** | Current name doesn't communicate the concept; deferred decision is fine, but rename must happen pre-pitch | ⚠️ Revisit pre-launch |
-| **Domain coverage: review during phase planning** | 6 domains may be redundant (gut health ⊂ nutrition; longevity ⊂ exercise+nutrition); consolidating to 4 reduces curation work | — Pending |
+| **Naming: "Hdiary" working title; rename before public launch** | Current name doesn't communicate the concept and must NOT be DOAC-anchored; rename hard-blocks Phase 4 alpha launch. User produces 3 candidate names by end of Phase 1. | ⚠️ Revisit pre-launch |
+| **Domain coverage: 4 domains** *(LOCKED)* — sleep / nutrition+gut / exercise+longevity / mental health | 6 domains was redundant (gut ⊂ nutrition; longevity ⊂ exercise+nutrition); 4 domains × ~7–8 clips each at MVP feels curated rather than thin | ✓ Locked |
 | **Disclaimer modal must be acknowledged before onboarding completes** | Legal posture + record-keeping; cheap to build, painful to retrofit | — Pending |
+| **DOAC pitch ladder: non-objection first, endorsement aspirational** *(LOCKED)* | Endorsement carries brand-control + liability fear at media businesses → high refusal rate. Non-objection ("OK to keep using clips with attribution + 48h takedown") is an easy yes and gets ~90% of the legal/social value. Endorsement is the bonus outcome if non-objection lands. | ✓ Locked |
+| **Stack version bumps from artifact** *(LOCKED)* — Next.js 16 + Tailwind v4 + Biome + Fumadocs + `<YouTubeEmbed>` (lite-embed) | Stack research surfaced these as 2026-current; no reason to ship on prior majors. AGPL is explicitly avoided. | ✓ Locked |
+| **Monorepo retained, admin as route group initially** *(LOCKED)* | pnpm + Turborepo monorepo from day 1 (cheap, OSS-credible, future-friendly). `apps/admin` = `apps/web/app/(admin)/...` route group with separate auth-gate layout. Split into dedicated `apps/admin` only when bundle size or independent-deploy needs warrant. `apps/worker/` = doc-only stub. | ✓ Locked |
+| **Three-layer legal posture** *(LOCKED)* | "Deep-link only" is incomplete; must address (a) copyright/fair-use, (b) YouTube ToS (no chrome disable, Watch-on-YouTube affordance, Referer-Policy for self-hosters), (c) right-of-publicity (attribute named credentialed guest, never imply endorsement) | ✓ Locked |
+| **GDPR Art. 9 granular consent** *(LOCKED)* | Habit data feeding sleep/anxiety/gut recs = special-category data. Separate consent toggles for: account, health-adjacent processing, AI/LLM analysis of free-text. Cascade erasure must include pgvector embeddings. | ✓ Locked |
 
 ## Open Questions / Recommendations to Revisit
 
