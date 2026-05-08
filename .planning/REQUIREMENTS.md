@@ -214,17 +214,125 @@
 
 ## Traceability
 
-(To be populated during roadmap creation by gsd-roadmapper.)
+Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one phase.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| All v1 IDs | TBD | Pending |
+| FND-01 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Pending |
+| FND-03 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Pending |
+| FND-05 | Phase 1 | Pending |
+| FND-06 | Phase 1 | Pending |
+| FND-07 | Phase 1 | Pending |
+| FND-08 | Phase 1 | Pending |
+| FND-09 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Pending |
+| AUTH-06 | Phase 1 | Pending |
+| PROF-01 | Phase 1 | Pending |
+| PROF-02 | Phase 1 | Pending |
+| PROF-03 | Phase 4 | Pending (schema plumbing in Phase 1) |
+| PROF-04 | Phase 4 | Pending (cascade design in Phase 1) |
+| ADMN-01 | Phase 1 | Pending |
+| ADMN-02 | Phase 1 | Pending |
+| ADMN-03 | Phase 2 | Pending |
+| ADMN-04 | Phase 2 | Pending |
+| ADMN-05 | Phase 2 | Pending |
+| ADMN-06 | Phase 2 | Pending |
+| ADMN-07 | Phase 2 | Pending |
+| ADMN-08 | Phase 2 | Pending |
+| ADMN-09 | Phase 2 | Pending |
+| ADMN-10 | Phase 2 | Pending |
+| ADMN-11 | Phase 2 | Pending |
+| ADMN-12 | Phase 2 | Pending |
+| ADMN-13 | Phase 2 | Pending |
+| ADMN-14 | Phase 2 | Pending |
+| ADMN-15 | Phase 2 | Pending |
+| ADMN-16 | Phase 2 | Pending |
+| AION-01 | Phase 3 | Pending |
+| AION-02 | Phase 3 | Pending |
+| AION-03 | Phase 3 | Pending |
+| AION-04 | Phase 3 | Pending |
+| AION-05 | Phase 3 | Pending |
+| AION-06 | Phase 3 | Pending |
+| AION-07 | Phase 3 | Pending |
+| AION-08 | Phase 3 | Pending |
+| AION-09 | Phase 1 | Pending |
+| AION-10 | Phase 2 | Pending |
+| REC-01 | Phase 3 | Pending |
+| REC-02 | Phase 3 | Pending |
+| REC-03 | Phase 3 | Pending |
+| REC-04 | Phase 3 | Pending |
+| REC-05 | Phase 3 | Pending |
+| REC-06 | Phase 3 | Pending |
+| HAB-01 | Phase 3 | Pending |
+| HAB-02 | Phase 3 | Pending |
+| HAB-03 | Phase 3 | Pending |
+| HAB-04 | Phase 3 | Pending |
+| HAB-05 | Phase 3 | Pending |
+| HAB-06 | Phase 3 | Pending |
+| HAB-07 | Phase 3 | Pending |
+| HAB-08 | Phase 3 | Pending |
+| HAB-09 | Phase 3 | Pending |
+| HAB-10 | Phase 3 | Pending |
+| SWAP-01 | Phase 3 | Pending |
+| SWAP-02 | Phase 3 | Pending |
+| SWAP-03 | Phase 3 | Pending |
+| SWAP-04 | Phase 3 | Pending |
+| PUB-01 | Phase 3 | Pending |
+| PUB-02 | Phase 3 | Pending |
+| PUB-03 | Phase 3 | Pending |
+| PUB-04 | Phase 3 | Pending |
+| PUB-05 | Phase 3 | Pending |
+| REM-01 | Phase 4 | Pending |
+| REM-02 | Phase 4 | Pending |
+| REM-03 | Phase 4 | Pending |
+| REM-04 | Phase 4 | Pending |
+| REM-05 | Phase 4 | Pending |
+| LGL-01 | Phase 2 | Pending |
+| LGL-02 | Phase 2 | Pending |
+| LGL-03 | Phase 2 | Pending |
+| LGL-04 | Phase 1 | Pending |
+| LGL-05 | Phase 1 | Pending |
+| LGL-06 | Phase 1 | Pending |
+| LGL-07 | Phase 1 | Pending |
+| LGL-08 | Phase 2 | Pending |
+| OSS-01 | Phase 1 | Pending |
+| OSS-02 | Phase 1 | Pending |
+| OSS-03 | Phase 1 | Pending |
+| OSS-04 | Phase 1 | Pending |
+| OSS-05 | Phase 1 | Pending |
+| OSS-06 | Phase 4 | Pending |
+| OSS-07 | Phase 1 | Pending |
+| OSS-08 | Phase 4 | Pending |
+| OSS-09 | Phase 1 | Pending |
+| OSS-10 | Phase 4 | Pending |
+| OSS-11 | Phase 4 | Pending |
+| OSS-12 | Phase 4 | Pending |
+| DEMO-01 | Phase 4 | Pending |
+| DEMO-02 | Phase 4 | Pending |
+| DEMO-03 | Phase 4 | Pending |
+| DEMO-04 | Phase 4 | Pending |
+| PITCH-01 | Phase 5 | Pending |
+| PITCH-02 | Phase 5 | Pending |
+| PITCH-03 | Phase 5 | Pending |
+| PITCH-04 | Phase 5 | Pending |
+| PITCH-05 | Phase 5 | Pending |
+| NAME-01 | Phase 1 | Pending |
+| NAME-02 | Phase 4 | Pending |
+| NAME-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 86 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 86 ⚠️
+- v1 requirements: **107 total** (note: prior header said "86" — recount shows 107 across 15 categories: FND 9 + AUTH 6 + PROF 4 + ADMN 16 + AION 10 + REC 6 + HAB 10 + SWAP 4 + PUB 5 + REM 5 + LGL 8 + OSS 12 + DEMO 4 + PITCH 5 + NAME 3 = 107)
+- Mapped to phases: **107 / 107 ✓**
+- Unmapped: 0
+- Phase distribution: Phase 1 = 34, Phase 2 = 19, Phase 3 = 33, Phase 4 = 16, Phase 5 = 5
 
 ---
 *Requirements defined: 2026-05-07*
-*Last updated: 2026-05-07 after initial definition*
+*Traceability populated: 2026-05-07 by gsd-roadmapper*
+*Last updated: 2026-05-07*
