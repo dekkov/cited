@@ -1,0 +1,13 @@
+{
+  "name": "@cited/web",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'web stub — wired in 01-05'",
+    "build": "echo 'web stub — wired in 01-05'",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  }
+}

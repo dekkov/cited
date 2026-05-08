@@ -1,0 +1,37 @@
+# Dependencies
+node_modules
+
+# Next.js
+.next
+
+# Build outputs
+dist
+
+# Turborepo
+.turbo
+
+# Environment variables
+.env*
+!.env.example
+
+# Test coverage
+coverage
+playwright-report
+test-results
+
+# Vercel
+.vercel
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode
+.idea
