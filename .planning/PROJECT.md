@@ -23,9 +23,13 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 
 **Curated DOAC clip library (manual at MVP)**
 - [ ] Admin UI to add/edit/approve clips (claim, rationale, speaker, start/end seconds, domain, evidence strength, risk flags, primary YouTube video ID)
+- [ ] **Admin AI co-pilot**: chat-with-AI alongside the clip editor to refine start/end timestamps, claim wording, rationale phrasing — AI suggestions are previews, admin explicitly accepts; audit log of AI vs accepted changes
+- [ ] **Document ingestion**: admin can paste a YouTube URL or upload a transcript document; system fetches metadata + indexes transcript text into the RAG corpus even if no clips are extracted yet
+- [ ] **Manual clip cutter**: admin scrubs through ingested transcript to mark clip boundaries; created clips enter the same `pending → approved` lifecycle
 - [ ] Trusted-curator role exists in schema from MVP (single curator at launch; designed to expand)
 - [ ] Clips are stored as metadata only — no audio/video re-hosting; playback via YouTube iframe deep-link
-- [ ] At least 30 hand-curated DOAC clips across 4–6 health domains by alpha launch
+- [ ] At least 30 hand-curated DOAC clips across the 4 health domains by alpha launch
+- [ ] Clip length is "as detailed as needed to convey the claim" — no hard cap, but editorial policy favors brevity where the claim is short
 
 **AI onboarding interview**
 - [ ] LLM-driven adaptive interview (6–10 turns) that asks about sleep, nutrition, exercise, mental health, gut health, longevity
@@ -111,8 +115,8 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 ## Constraints
 
 - **Capacity**: Solo, ~25 hrs/week — every scope decision is a time decision. Strict v1 cuts are non-negotiable.
-- **Budget**: Free-tier-feasible MVP target (~$5/mo), beta target ~$45/mo, no fundraising plan.
-- **Legal/copyright**: Deep-link only. Never store or serve audio/video. Transcripts stored privately as analysis input. ≤90-second clip windows. Active DMCA process.
+- **Budget**: Free-tier-feasible MVP target (~$5/mo), beta target ~$45/mo. **No paid tiers, no VC**, but sponsorship is in scope to cover hosting + LLM costs as the project grows. Open Collective + GitHub Sponsors from launch with transparent burn-rate.
+- **Legal/copyright**: Deep-link only. Never store or serve audio/video. Transcripts stored privately as analysis input. Clip length is **as detailed as needed to convey the claim, not more** — no hard cap, but editorial guidance favors brevity where the claim is short. Fair-use posture rests on factors 1 (transformative — habit operationalization with commentary) and 4 (no market harm — drives traffic back to DOAC), since factor 3 (amount) is weaker without a length cap. Active DMCA process + 48h SLA.
 - **Health/medical**: Not medical advice. No prescription-drug or dosing content. Mandatory disclaimer + risk-flag system. Editorial policy documented.
 - **Privacy/data**: GDPR-ready from v1 (export, delete, DPA, COPPA gate). Supabase TDE encrypts at rest.
 - **DOAC-friendly**: License must not lock DOAC out of using/forking/integrating without copyleft burden. License default leans MIT/Apache-2.0 over AGPL-3.0.
@@ -140,6 +144,9 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 | **Monorepo retained, admin as route group initially** *(LOCKED)* | pnpm + Turborepo monorepo from day 1 (cheap, OSS-credible, future-friendly). `apps/admin` = `apps/web/app/(admin)/...` route group with separate auth-gate layout. Split into dedicated `apps/admin` only when bundle size or independent-deploy needs warrant. `apps/worker/` = doc-only stub. | ✓ Locked |
 | **Three-layer legal posture** *(LOCKED)* | "Deep-link only" is incomplete; must address (a) copyright/fair-use, (b) YouTube ToS (no chrome disable, Watch-on-YouTube affordance, Referer-Policy for self-hosters), (c) right-of-publicity (attribute named credentialed guest, never imply endorsement) | ✓ Locked |
 | **GDPR Art. 9 granular consent** *(LOCKED)* | Habit data feeding sleep/anxiety/gut recs = special-category data. Separate consent toggles for: account, health-adjacent processing, AI/LLM analysis of free-text. Cascade erasure must include pgvector embeddings. | ✓ Locked |
+| **No clip length cap; "as detailed as needed to convey the claim"** *(LOCKED)* | User wants depth over brevity. Trade-off: weakens fair-use factor 3 (amount). Mitigation: lean harder on factors 1 (transformative — habit operationalization with commentary) and 4 (drives traffic to DOAC, no market harm). Editorial guidance still favors brevity where the claim is short. | ✓ Locked |
+| **Admin AI co-pilot for clip editing + manual cutter + document ingestion** *(LOCKED)* | Three admin-side accelerators: (a) chat-with-AI alongside clip editor to refine timestamps/wording, (b) paste YouTube URL or upload transcript to ingest into RAG corpus before any clips are extracted, (c) manual clip-cutter UI on ingested transcripts. Effectively a lightweight v1 stand-in for Phase 5's automated extraction pipeline; lets the corpus expand to non-DOAC sources without waiting for the Whisper worker. | ✓ Locked |
+| **Sponsorship in scope, not paid tiers** *(LOCKED)* | No VC, no subscriptions, no paywall. Open Collective + GitHub Sponsors from launch with transparent burn-rate; one-page sponsorship deck explaining cost model and what each tier funds. Sponsorship is the sustainability path. | ✓ Locked |
 
 ## Open Questions / Recommendations to Revisit
 
