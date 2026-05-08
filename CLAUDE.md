@@ -186,7 +186,16 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
-Conventions not yet established. Will populate as patterns emerge during development.
+### UI Design System
+
+All frontend plans MUST read `.planning/UI-DESIGN.md` before specifying components, colors, or typography. It is the source of truth for:
+- **Color tokens** — warm paper + sage palette (Tailwind v4 `@theme`). Warm only at MVP; cool/dark deferred.
+- **Typography** — Newsreader (headings + card rationale + italic accents), Geist Sans (UI body + buttons), Geist Mono (timestamps + labels). Load via `next/font/google`.
+- **Habit card modes** — `hero` (200px player), `inline` (140px player), `collapsed` (single-row drawer).
+- **Player rule** — marketing landing page: custom animated waveform (no YouTube iframe). Authenticated product: `<YouTubeEmbed>` from `@next/third-parties/google`.
+- **Landing page** — planned for Phase 4. Full section specs in `UI-DESIGN.md`.
+
+Do not invent new color values, font families, or spacing scales — derive everything from tokens in `UI-DESIGN.md`.
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
