@@ -33,3 +33,65 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITLEAKS_CONFIG: .gitleaks.toml
+
+  compose-smoke:
+    runs-on: ubuntu-latest
+    needs: verify
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate Supabase JWT secrets
+        run: |
+          # Deterministic CI JWTs signed with the same secret GoTrue uses.
+          # jsonwebtoken is in root devDependencies (plan 01-01 Task 1).
+          echo "GOTRUE_JWT_SECRET=ci-test-secret-with-at-least-32-characters-long" > docker/.env
+          node -e "
+            const jwt = require('jsonwebtoken');
+            const secret = 'ci-test-secret-with-at-least-32-characters-long';
+            const exp = Math.floor(Date.now()/1000) + 60*60*24*365;
+            const anon = jwt.sign({role:'anon',iss:'supabase',exp}, secret);
+            const sr = jwt.sign({role:'service_role',iss:'supabase',exp}, secret);
+            const fs = require('fs');
+            fs.appendFileSync('docker/.env', '\nSUPABASE_ANON_KEY=' + anon + '\nSUPABASE_SERVICE_ROLE_KEY=' + sr + '\n');
+          "
+
+      - name: Boot compose stack
+        run: docker compose --env-file docker/.env up -d --wait
+
+      - name: Apply migrations
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:54322/postgres
+        run: ./scripts/db-migrate.sh
+
+      - name: Run RLS + cascade tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:54322/postgres
+          SUPABASE_URL: http://localhost:9999
+        run: |
+          # IMPORTANT: do NOT use a job-level env: block to inject SUPABASE_ANON_KEY /
+          # SUPABASE_SERVICE_ROLE_KEY from ${{ env.X }} — those expressions evaluate at
+          # YAML-parse time and the keys do not exist until docker/.env is written above.
+          # Instead, source docker/.env at runtime so the freshly-minted JWTs reach the test process.
+          set -a; . docker/.env; set +a
+          pnpm --filter @cited/db test
+
+      - name: Curl the web service
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 > /dev/null; then echo "web up"; exit 0; fi
+            sleep 2
+          done
+          echo "web did not become ready"; docker compose logs web; exit 1
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
