@@ -14,7 +14,10 @@
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "format": "biome check --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:stack": "./scripts/dev-up.sh",
+    "dev:stack:down": "./scripts/dev-down.sh",
+    "db:migrate": "./scripts/db-migrate.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9",
