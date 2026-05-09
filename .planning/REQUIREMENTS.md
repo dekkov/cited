@@ -19,9 +19,9 @@
 
 ### Authentication & Consent
 
-- [ ] **AUTH-01**: User can sign up via Supabase email magic link
-- [ ] **AUTH-02**: User can sign up / sign in via Google OAuth
-- [ ] **AUTH-03**: User session persists across browser refresh; sign-out works from any page
+- [x] **AUTH-01**: User can sign up via Supabase email magic link
+- [x] **AUTH-02**: User can sign up / sign in via Google OAuth
+- [x] **AUTH-03**: User session persists across browser refresh; sign-out works from any page
 - [x] **AUTH-04**: User must acknowledge medical disclaimer modal before onboarding completes (recorded in `profiles.disclaimer_accepted_at`)
 - [x] **AUTH-05**: Granular GDPR Art. 9 consent toggles at signup: (a) account creation, (b) health-adjacent data processing, (c) AI/LLM analysis of free-text answers — each independently togglable, recorded with timestamps
 - [x] **AUTH-06**: Date-of-birth gate enforces ≥13 (US) / ≥16 (EU jurisdictions); refusal blocks signup with clear messaging
@@ -227,9 +227,9 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | FND-07 | Phase 1 | Complete |
 | FND-08 | Phase 1 | Complete |
 | FND-09 | Phase 1 | Complete |
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
 | AUTH-05 | Phase 1 | Complete |
 | AUTH-06 | Phase 1 | Complete |
