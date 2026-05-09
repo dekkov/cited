@@ -22,6 +22,8 @@
     "postgres": "^3.4"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2",
+    "dotenv": "^17.4.2",
     "drizzle-kit": "^0.27",
     "vitest": "^2"
   }
