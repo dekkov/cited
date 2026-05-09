@@ -1,4 +1,3 @@
-// @cited/db — Database package
-// Drizzle ORM schemas, migrations, and database client.
-// Will be populated in plan 01-04 (Database Schema + RLS).
-export {};
+export { createDb } from './client.js';
+export type { Db } from './client.js';
+export * from './schema/index.js';

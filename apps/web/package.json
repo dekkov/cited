@@ -4,10 +4,38 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "echo 'web stub — wired in 01-05'",
-    "build": "echo 'web stub — wired in 01-05'",
+    "dev": "next dev --turbopack -p 3000",
+    "build": "next build",
+    "start": "next start",
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@cited/api-contracts": "workspace:*",
+    "@cited/config": "workspace:*",
+    "@cited/core": "workspace:*",
+    "@cited/db": "workspace:*",
+    "@cited/ui": "workspace:*",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
+    "class-variance-authority": "^0.7",
+    "clsx": "^2",
+    "lucide-react": "*",
+    "next": "^16",
+    "react": "^19",
+    "react-dom": "^19",
+    "server-only": "*",
+    "tailwind-merge": "^2",
+    "zod": "^3.23"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "postcss": "^8",
+    "tailwindcss": "^4"
   }
 }

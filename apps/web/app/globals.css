@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surfaces — warm paper palette (UI-DESIGN.md) */
+  --color-paper: #f4efe6;
+  --color-paper-2: #ebe4d6;
+  --color-paper-3: #e0d7c5;
+
+  /* Text */
+  --color-ink: #15161a;
+  --color-ink-2: #2c2d33;
+  --color-ink-3: #5c5d66;
+  --color-ink-4: #8c8d96;
+
+  /* Dividers */
+  --color-rule: #d8cfbe;
+  --color-rule-soft: #e5decd;
+
+  /* Accent — sage */
+  --color-accent: oklch(0.55 0.06 145);
+  --color-accent-soft: oklch(0.92 0.025 140);
+  --color-accent-deep: oklch(0.42 0.07 145);
+
+  /* Semantic */
+  --color-warn: oklch(0.62 0.1 55);
+
+  /* shadcn/ui compatible aliases */
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-ink);
+  --color-primary-foreground: var(--color-paper);
+  --color-muted: var(--color-paper-2);
+  --color-muted-foreground: var(--color-ink-3);
+  --color-border: var(--color-rule);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius: 0.5rem;
+
+  /* Shadows */
+  --shadow-card: 0 1px 0 rgba(21, 22, 26, 0.04), 0 8px 28px -16px rgba(21, 22, 26, 0.18);
+  --shadow-soft: 0 1px 0 rgba(21, 22, 26, 0.04), 0 2px 12px -8px rgba(21, 22, 26, 0.1);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
