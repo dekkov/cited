@@ -1,8 +1,10 @@
 import { DisclaimerBanner } from '@/components/disclaimer-banner';
 import { requireUser } from '@/lib/auth/guards';
+import { requireLegalGatePassed } from '@/lib/auth/legal-gate';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  await requireUser();
+  const user = await requireUser();
+  await requireLegalGatePassed(user);
   return (
     <div>
       <DisclaimerBanner />

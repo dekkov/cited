@@ -1,9 +1,11 @@
 import Link from 'next/link';
 
 import { requireCurator } from '@/lib/auth/guards';
+import { requireLegalGatePassed } from '@/lib/auth/legal-gate';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await requireCurator();
+  await requireLegalGatePassed(user);
   return (
     <div>
       <header className="border-b border-[var(--color-rule)] bg-[var(--color-paper-2)] px-4 py-2 text-sm flex gap-4 items-center">

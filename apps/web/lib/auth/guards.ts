@@ -1,19 +1,41 @@
 import 'server-only';
 
 import { redirect } from 'next/navigation';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createDb, profiles, eq } from '@cited/db';
 
-export type SessionUser = { id: string; email: string; role: 'user' | 'curator' | 'admin' };
+export type UserRole = 'user' | 'curator' | 'admin';
+export type SessionUser = { id: string; email: string; role: UserRole };
+
+// Singleton DB connection — reused across requests in the same process
+let _db: ReturnType<typeof createDb> | null = null;
+function db() {
+  if (!_db) _db = createDb(process.env.DATABASE_URL!);
+  return _db;
+}
 
 /**
  * Resolves the current Supabase session user + their profile.role.
  * Returns null if not signed in.
  *
- * Implementation deferred to plan 01-07 (Supabase Auth wiring).
- * This stub returns null so the route guards behave as "not signed in" until 01-07.
+ * Uses @supabase/ssr createServerClient for session resolution,
+ * then queries public.profiles via Drizzle for the role.
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
-  // TODO(01-07): replace with @supabase/ssr createServerClient + db role lookup
-  return null;
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const rows = await db()
+    .select({ role: profiles.role })
+    .from(profiles)
+    .where(eq(profiles.id, user.id))
+    .limit(1);
+
+  const role = (rows[0]?.role ?? 'user') as UserRole;
+  return { id: user.id, email: user.email ?? '', role };
 }
 
 export async function requireUser(): Promise<SessionUser> {
