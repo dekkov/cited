@@ -49,7 +49,7 @@ The DOAC pitch demo follows: T1 → T17 → D2 → D5 → D1 → D15 → T2 → 
 - **Pitfall 7** (solo-maintainer triage spiral): Issue/PR templates, stale-bot wiring (OSS-06 implementation in Phase 4 but config decided here), maintainer-bandwidth statement (OSS-07), Open Collective live from day one (OSS-09).
 - **Pitfall 9** (premature monorepo / phantom worker): Monorepo retained but `apps/admin` ships as `(admin)` route group inside `apps/web`; `apps/worker/` is doc-only stub (FND-01); docker-compose CI smoke test enforced (FND-04).
 
-**Plans:** 5/8 plans executed
+**Plans:** 6/8 plans executed
 
 Plans:
 - [ ] 01-foundation/01-01-monorepo-bootstrap-PLAN.md — pnpm + Turborepo + Biome + Husky + vitest/playwright + gitleaks CI [Wave 1]

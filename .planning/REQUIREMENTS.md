@@ -12,9 +12,9 @@
 - [x] **FND-03**: One-command local dev (`pnpm dev`) and `docker compose up` self-host path
 - [x] **FND-04**: docker-compose CI smoke test passes from clean checkout
 - [x] **FND-05**: Vitest + React Testing Library + Playwright wired in CI
-- [ ] **FND-06**: Drizzle schema with full table set: `profiles`, `podcasts`, `episodes`, `clips`, `clip_edits` (audit log for ADMN-11), `transcript_chunks` (RAG-able transcript fragments per ADMN-13), `habit_templates`, `habit_template_clips`, `user_habits`, `check_ins`, `streaks`, `streak_freezes`, `extraction_jobs`, `clips_pending` (Phase 5 placeholders)
-- [ ] **FND-07**: drizzle-kit migrations + co-located RLS policy SQL; RLS policy on every user-data table
-- [ ] **FND-08**: `packages/api-contracts` zod schemas mirrored for the deferred Python worker contract
+- [x] **FND-06**: Drizzle schema with full table set: `profiles`, `podcasts`, `episodes`, `clips`, `clip_edits` (audit log for ADMN-11), `transcript_chunks` (RAG-able transcript fragments per ADMN-13), `habit_templates`, `habit_template_clips`, `user_habits`, `check_ins`, `streaks`, `streak_freezes`, `extraction_jobs`, `clips_pending` (Phase 5 placeholders)
+- [x] **FND-07**: drizzle-kit migrations + co-located RLS policy SQL; RLS policy on every user-data table
+- [x] **FND-08**: `packages/api-contracts` zod schemas mirrored for the deferred Python worker contract
 - [x] **FND-09**: gitleaks secrets scan in CI
 
 ### Authentication & Consent
@@ -28,10 +28,10 @@
 
 ### Profile
 
-- [ ] **PROF-01**: User has a profile with display name, timezone, goals (jsonb)
+- [x] **PROF-01**: User has a profile with display name, timezone, goals (jsonb)
 - [x] **PROF-02**: User can edit display name, timezone, privacy mode (`public` / `private`)
 - [ ] **PROF-03**: User can request one-click JSON export of all their data (account, habits, check-ins, streaks, consent records)
-- [ ] **PROF-04**: User can request account deletion; cascade-deletes all their rows including pgvector embeddings within 30 days; integration test verifies cascade
+- [x] **PROF-04**: User can request account deletion; cascade-deletes all their rows including pgvector embeddings within 30 days; integration test verifies cascade
 
 ### Curation Admin (DOAC corpus)
 
@@ -62,7 +62,7 @@
 - [ ] **AION-06**: LLM never gives medical advice; if user mentions symptoms, the agent suggests seeing a doctor and continues
 - [ ] **AION-07**: Free-text user answers are only sent to the LLM if AUTH-05 toggle (c) was opted in; otherwise interview falls back to structured choices
 - [ ] **AION-08**: Cheap turn model (Haiku 4.5 / GPT-4o-mini) for interim turns; Sonnet 4.x for final habit synthesis
-- [ ] **AION-09**: All LLM provider calls go through `packages/core/llm` provider-wrapper interfaces (not direct SDK calls in routes)
+- [x] **AION-09**: All LLM provider calls go through `packages/core/llm` provider-wrapper interfaces (not direct SDK calls in routes)
 - [ ] **AION-10**: A 20-transcript hand-graded hallucination eval set exists; CI runs eval against current prompts; regressions fail the build
 
 ### Habit Recommendations & Adoption
@@ -223,9 +223,9 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | FND-03 | Phase 1 | Complete |
 | FND-04 | Phase 1 | Complete |
 | FND-05 | Phase 1 | Complete |
-| FND-06 | Phase 1 | Pending |
-| FND-07 | Phase 1 | Pending |
-| FND-08 | Phase 1 | Pending |
+| FND-06 | Phase 1 | Complete |
+| FND-07 | Phase 1 | Complete |
+| FND-08 | Phase 1 | Complete |
 | FND-09 | Phase 1 | Complete |
 | AUTH-01 | Phase 1 | Pending |
 | AUTH-02 | Phase 1 | Pending |
@@ -233,7 +233,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | AUTH-04 | Phase 1 | Pending |
 | AUTH-05 | Phase 1 | Pending |
 | AUTH-06 | Phase 1 | Pending |
-| PROF-01 | Phase 1 | Pending |
+| PROF-01 | Phase 1 | Complete |
 | PROF-02 | Phase 1 | Complete |
 | PROF-03 | Phase 4 | Pending (schema plumbing in Phase 1) |
 | PROF-04 | Phase 4 | Pending (cascade design in Phase 1) |
@@ -261,7 +261,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | AION-06 | Phase 3 | Pending |
 | AION-07 | Phase 3 | Pending |
 | AION-08 | Phase 3 | Pending |
-| AION-09 | Phase 1 | Pending |
+| AION-09 | Phase 1 | Complete |
 | AION-10 | Phase 2 | Pending |
 | REC-01 | Phase 3 | Pending |
 | REC-02 | Phase 3 | Pending |
