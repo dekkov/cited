@@ -29,14 +29,14 @@
 ### Profile
 
 - [ ] **PROF-01**: User has a profile with display name, timezone, goals (jsonb)
-- [ ] **PROF-02**: User can edit display name, timezone, privacy mode (`public` / `private`)
+- [x] **PROF-02**: User can edit display name, timezone, privacy mode (`public` / `private`)
 - [ ] **PROF-03**: User can request one-click JSON export of all their data (account, habits, check-ins, streaks, consent records)
 - [ ] **PROF-04**: User can request account deletion; cascade-deletes all their rows including pgvector embeddings within 30 days; integration test verifies cascade
 
 ### Curation Admin (DOAC corpus)
 
-- [ ] **ADMN-01**: `(admin)` route group inside `apps/web` with separate auth-gate layout, gated by `profiles.role = 'curator' | 'admin'`
-- [ ] **ADMN-02**: Trusted-curator role exists in schema from MVP (single curator at launch — the user)
+- [x] **ADMN-01**: `(admin)` route group inside `apps/web` with separate auth-gate layout, gated by `profiles.role = 'curator' | 'admin'`
+- [x] **ADMN-02**: Trusted-curator role exists in schema from MVP (single curator at launch — the user)
 - [ ] **ADMN-03**: Admin UI to create/edit/approve/reject clips with fields: claim, rationale, speaker (named guest), `speaker_status` (verified | unverified | host), domain (one of 4), start/end seconds, evidence_strength, risk_flags (mandatory), youtube_video_id, episode_id
 - [ ] **ADMN-04**: Approving a clip triggers OpenAI `text-embedding-3-small` write to the `clips.embedding` vector column (embed-on-approve, not on read)
 - [ ] **ADMN-05**: Risk flags are mandatory on approval; clips with `risk_flags @> '{medical_advice,supplement,contraindication}'` show a banner in user UI: "Consult a doctor before trying this."
@@ -234,11 +234,11 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | AUTH-05 | Phase 1 | Pending |
 | AUTH-06 | Phase 1 | Pending |
 | PROF-01 | Phase 1 | Pending |
-| PROF-02 | Phase 1 | Pending |
+| PROF-02 | Phase 1 | Complete |
 | PROF-03 | Phase 4 | Pending (schema plumbing in Phase 1) |
 | PROF-04 | Phase 4 | Pending (cascade design in Phase 1) |
-| ADMN-01 | Phase 1 | Pending |
-| ADMN-02 | Phase 1 | Pending |
+| ADMN-01 | Phase 1 | Complete |
+| ADMN-02 | Phase 1 | Complete |
 | ADMN-03 | Phase 2 | Pending |
 | ADMN-04 | Phase 2 | Pending |
 | ADMN-05 | Phase 2 | Pending |
