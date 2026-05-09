@@ -1,23 +1,19 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoginForm } from './login-form';
+import { redirect } from 'next/navigation';
+import { getSessionUser } from '@/lib/auth/guards';
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const u = await getSessionUser();
+  if (u) redirect('/dashboard');
   return (
-    <main className="w-full max-w-md px-4">
-      <Card>
+    <main className="min-h-screen flex items-center justify-center p-8">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Sign in to Cited</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-[var(--color-ink-3)]">
-            Magic link + Google OAuth wire-up lands in plan 01-07.
-          </p>
-          <Button disabled className="w-full">
-            Continue with email (coming soon)
-          </Button>
-          <Button disabled variant="outline" className="w-full">
-            Continue with Google (coming soon)
-          </Button>
+        <CardContent>
+          <LoginForm />
         </CardContent>
       </Card>
     </main>
