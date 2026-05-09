@@ -12,5 +12,11 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1",
+    "@ai-sdk/openai": "^1",
+    "ai": "^4",
+    "zod": "^3"
   }
 }
