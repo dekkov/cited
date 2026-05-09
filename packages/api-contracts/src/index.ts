@@ -1,6 +1,9 @@
-// @cited/api-contracts — API contracts package
-// Zod schemas for all API request/response types.
-// Shared between apps/web (Next.js server actions/route handlers) and apps/worker (Phase 5).
-// Job-table contract (extraction_jobs, clips_pending) lives here for the apps/worker stub.
-// Will be populated in plan 01-04 (Database Schema + RLS).
-export {};
+export const API_CONTRACT_VERSION = '0.1.0';
+
+export * from './enums';
+export * from './profiles';
+export * from './clips';
+export * from './habits';
+export * from './check-ins';
+export * from './extraction-jobs';
+export * from './clips-pending';
