@@ -22,15 +22,15 @@
 - [ ] **AUTH-01**: User can sign up via Supabase email magic link
 - [ ] **AUTH-02**: User can sign up / sign in via Google OAuth
 - [ ] **AUTH-03**: User session persists across browser refresh; sign-out works from any page
-- [ ] **AUTH-04**: User must acknowledge medical disclaimer modal before onboarding completes (recorded in `profiles.disclaimer_accepted_at`)
-- [ ] **AUTH-05**: Granular GDPR Art. 9 consent toggles at signup: (a) account creation, (b) health-adjacent data processing, (c) AI/LLM analysis of free-text answers — each independently togglable, recorded with timestamps
-- [ ] **AUTH-06**: Date-of-birth gate enforces ≥13 (US) / ≥16 (EU jurisdictions); refusal blocks signup with clear messaging
+- [x] **AUTH-04**: User must acknowledge medical disclaimer modal before onboarding completes (recorded in `profiles.disclaimer_accepted_at`)
+- [x] **AUTH-05**: Granular GDPR Art. 9 consent toggles at signup: (a) account creation, (b) health-adjacent data processing, (c) AI/LLM analysis of free-text answers — each independently togglable, recorded with timestamps
+- [x] **AUTH-06**: Date-of-birth gate enforces ≥13 (US) / ≥16 (EU jurisdictions); refusal blocks signup with clear messaging
 
 ### Profile
 
 - [x] **PROF-01**: User has a profile with display name, timezone, goals (jsonb)
 - [x] **PROF-02**: User can edit display name, timezone, privacy mode (`public` / `private`)
-- [ ] **PROF-03**: User can request one-click JSON export of all their data (account, habits, check-ins, streaks, consent records)
+- [x] **PROF-03**: User can request one-click JSON export of all their data (account, habits, check-ins, streaks, consent records)
 - [x] **PROF-04**: User can request account deletion; cascade-deletes all their rows including pgvector embeddings within 30 days; integration test verifies cascade
 
 ### Curation Admin (DOAC corpus)
@@ -230,9 +230,9 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | AUTH-01 | Phase 1 | Pending |
 | AUTH-02 | Phase 1 | Pending |
 | AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| AUTH-05 | Phase 1 | Pending |
-| AUTH-06 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Complete |
+| AUTH-05 | Phase 1 | Complete |
+| AUTH-06 | Phase 1 | Complete |
 | PROF-01 | Phase 1 | Complete |
 | PROF-02 | Phase 1 | Complete |
 | PROF-03 | Phase 4 | Pending (schema plumbing in Phase 1) |
