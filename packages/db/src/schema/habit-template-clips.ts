@@ -1,6 +1,6 @@
 import { integer, pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import { clips } from './clips.js';
-import { habitTemplates } from './habit-templates.js';
+import { clips } from './clips';
+import { habitTemplates } from './habit-templates';
 
 export const habitTemplateClips = pgTable(
   'habit_template_clips',

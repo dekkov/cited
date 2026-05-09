@@ -1,9 +1,11 @@
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { vector } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { clipDomain, clipStatus, evidenceStrength, speakerStatus } from './enums.js';
-import { episodes } from './episodes.js';
+import { clipDomain, clipStatus, evidenceStrength, speakerStatus } from './enums';
+import { episodes } from './episodes';
 
+// Note: createdBy and approvedBy reference auth.users(id) on delete set null
+// These FKs are managed in migration SQL (auth.users is Supabase Auth — not introspectable by drizzle-kit)
 export const clips = pgTable('clips', {
   id: uuid('id').primaryKey().defaultRandom(),
   episodeId: uuid('episode_id')
@@ -21,12 +23,8 @@ export const clips = pgTable('clips', {
   riskFlags: text('risk_flags').array().notNull().default(sql`'{}'::text[]`),
   status: clipStatus('status').notNull().default('pending'),
   embedding: vector('embedding', { dimensions: 1536 }),
-  createdBy: uuid('created_by').references((): any => sql`auth.users(id)`, {
-    onDelete: 'set null',
-  }),
-  approvedBy: uuid('approved_by').references((): any => sql`auth.users(id)`, {
-    onDelete: 'set null',
-  }),
+  createdBy: uuid('created_by'),
+  approvedBy: uuid('approved_by'),
   approvedAt: timestamp('approved_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),

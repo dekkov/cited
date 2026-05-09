@@ -1,8 +1,9 @@
 import { date, integer, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
-import { checkInStatus } from './enums.js';
-import { userHabits } from './user-habits.js';
+import { checkInStatus } from './enums';
+import { userHabits } from './user-habits';
 
+// Note: userId references auth.users(id) on delete cascade
+// This FK is managed in migration SQL (auth.users is Supabase Auth — not introspectable by drizzle-kit)
 export const checkIns = pgTable(
   'check_ins',
   {
@@ -10,9 +11,7 @@ export const checkIns = pgTable(
     userHabitId: uuid('user_habit_id')
       .notNull()
       .references(() => userHabits.id, { onDelete: 'cascade' }),
-    userId: uuid('user_id')
-      .notNull()
-      .references((): any => sql`auth.users(id)`, { onDelete: 'cascade' }),
+    userId: uuid('user_id').notNull(),
     checkInDate: date('check_in_date').notNull(),
     status: checkInStatus('status').notNull(),
     mood: integer('mood'),

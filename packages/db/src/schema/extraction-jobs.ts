@@ -1,7 +1,7 @@
 import { integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { extractionJobStatus } from './enums.js';
-import { podcasts } from './podcasts.js';
+import { extractionJobStatus } from './enums';
+import { podcasts } from './podcasts';
 
 export const extractionJobs = pgTable('extraction_jobs', {
   id: uuid('id').primaryKey().defaultRandom(),

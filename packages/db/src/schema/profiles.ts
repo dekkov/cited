@@ -1,11 +1,11 @@
 import { date, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { privacyMode, userRole } from './enums.js';
+import { privacyMode, userRole } from './enums';
 
+// Note: id references auth.users(id) on delete cascade
+// This FK is managed in migration SQL (auth.users is Supabase Auth — not introspectable by drizzle-kit)
 export const profiles = pgTable('profiles', {
-  id: uuid('id')
-    .primaryKey()
-    .references((): any => sql`auth.users(id)`, { onDelete: 'cascade' }),
+  id: uuid('id').primaryKey(),
   displayName: text('display_name').notNull().default(''),
   timezone: text('timezone').notNull().default('UTC'),
   goals: jsonb('goals').notNull().default(sql`'{}'::jsonb`),

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 
 describe('@cited/db schema exports', () => {
   it('exports all 16 table names', async () => {
-    const schema = await import('./index.js');
+    const schema = await import('./index');
     const expectedTables = [
       'profiles',
       'podcasts',
@@ -27,7 +27,7 @@ describe('@cited/db schema exports', () => {
 
   it('user-scoped tables have userId or id column referencing auth.users with cascade', async () => {
     const { profiles, userHabits, checkIns, streaks, streakFreezes, consentRecords } =
-      await import('./index.js');
+      await import('./index');
     // profiles uses `id` as the FK; others use `userId`
     expect(profiles).toBeDefined();
     expect(userHabits).toBeDefined();
@@ -38,7 +38,7 @@ describe('@cited/db schema exports', () => {
   });
 
   it('clips.embedding is vector(1536)', async () => {
-    const { clips } = await import('./index.js');
+    const { clips } = await import('./index');
     const embeddingCol = (clips as any).embedding;
     expect(embeddingCol).toBeDefined();
     expect(embeddingCol.columnType).toBe('PgVector');
@@ -46,7 +46,7 @@ describe('@cited/db schema exports', () => {
   });
 
   it('clips_pending.embedding is vector(1536)', async () => {
-    const { clipsPending } = await import('./index.js');
+    const { clipsPending } = await import('./index');
     const embeddingCol = (clipsPending as any).embedding;
     expect(embeddingCol).toBeDefined();
     expect(embeddingCol.columnType).toBe('PgVector');
@@ -54,7 +54,7 @@ describe('@cited/db schema exports', () => {
   });
 
   it('extraction_jobs has all required columns', async () => {
-    const { extractionJobs } = await import('./index.js');
+    const { extractionJobs } = await import('./index');
     const table = extractionJobs as any;
     expect(table.id).toBeDefined();
     expect(table.podcastId).toBeDefined();

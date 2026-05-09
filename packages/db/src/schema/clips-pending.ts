@@ -1,9 +1,9 @@
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { vector } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { clipDomain, evidenceStrength, speakerStatus } from './enums.js';
-import { episodes } from './episodes.js';
-import { extractionJobs } from './extraction-jobs.js';
+import { clipDomain, evidenceStrength, speakerStatus } from './enums';
+import { episodes } from './episodes';
+import { extractionJobs } from './extraction-jobs';
 
 export const clipsPending = pgTable('clips_pending', {
   id: uuid('id').primaryKey().defaultRandom(),

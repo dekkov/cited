@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { clipDomain, frequency } from './enums.js';
+import { clipDomain, frequency } from './enums';
 
 export const habitTemplates = pgTable('habit_templates', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -1,6 +1,6 @@
 import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { vector } from 'drizzle-orm/pg-core';
-import { episodes } from './episodes.js';
+import { episodes } from './episodes';
 
 export const transcriptChunks = pgTable('transcript_chunks', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { episodeAvailability } from './enums.js';
-import { podcasts } from './podcasts.js';
+import { episodeAvailability } from './enums';
+import { podcasts } from './podcasts';
 
 export const episodes = pgTable('episodes', {
   id: uuid('id').primaryKey().defaultRandom(),

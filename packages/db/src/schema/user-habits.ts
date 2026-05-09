@@ -1,13 +1,12 @@
 import { boolean, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
-import { frequency } from './enums.js';
-import { habitTemplates } from './habit-templates.js';
+import { frequency } from './enums';
+import { habitTemplates } from './habit-templates';
 
+// Note: userId references auth.users(id) on delete cascade
+// This FK is managed in migration SQL (auth.users is Supabase Auth — not introspectable by drizzle-kit)
 export const userHabits = pgTable('user_habits', {
   id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id')
-    .notNull()
-    .references((): any => sql`auth.users(id)`, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull(),
   habitTemplateId: uuid('habit_template_id')
     .notNull()
     .references(() => habitTemplates.id, { onDelete: 'restrict' }),
