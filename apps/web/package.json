@@ -10,7 +10,7 @@
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --config ../../playwright.config.ts"
   },
   "dependencies": {
     "@cited/api-contracts": "workspace:*",
