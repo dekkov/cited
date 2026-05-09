@@ -1,0 +1,92 @@
+name: Clip Submission
+description: Submit a DOAC clip for curation review
+labels: ["clip-submission", "needs-medical-review", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to submit a clip from The Diary of a CEO for review and potential inclusion in Cited.
+        Every clip must have a named credentialed guest and a clear, falsifiable claim.
+  - type: input
+    id: youtube_video_id
+    attributes:
+      label: YouTube video ID
+      description: The 11-character ID from the YouTube URL (e.g. `dQw4w9WgXcQ` from `youtube.com/watch?v=dQw4w9WgXcQ`)
+      placeholder: "e.g. dQw4w9WgXcQ"
+    validations:
+      required: true
+  - type: input
+    id: start_seconds
+    attributes:
+      label: Start time (seconds)
+      description: When does the relevant claim start? (e.g. 1234 for 20:34)
+      placeholder: "1234"
+    validations:
+      required: true
+  - type: input
+    id: end_seconds
+    attributes:
+      label: End time (seconds)
+      description: When does the relevant claim end?
+      placeholder: "1267"
+    validations:
+      required: true
+  - type: input
+    id: claim
+    attributes:
+      label: Claim (≤200 characters)
+      description: One sentence stating the specific, falsifiable health claim made in this clip.
+      placeholder: "Getting 7–9 hours of sleep improves next-day glucose regulation."
+    validations:
+      required: true
+  - type: input
+    id: speaker
+    attributes:
+      label: Speaker (named credentialed guest)
+      description: Full name of the credentialed guest making the claim. Do NOT enter the host's name.
+      placeholder: "Dr. Matthew Walker"
+    validations:
+      required: true
+  - type: dropdown
+    id: speaker_credentials
+    attributes:
+      label: Speaker credentials
+      options:
+        - MD
+        - RD
+        - "PhD (relevant field)"
+        - other_credentialed
+        - host_no_credential
+    validations:
+      required: true
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Health domain
+      options:
+        - sleep
+        - "nutrition+gut"
+        - "exercise+longevity"
+        - "mental health"
+    validations:
+      required: true
+  - type: checkboxes
+    id: risk_flags
+    attributes:
+      label: Risk flags
+      description: Check all that apply. Flagged submissions require medical reviewer approval.
+      options:
+        - label: medical_advice
+        - label: supplement
+        - label: contraindication
+        - label: fasting
+        - label: sleep_pharmacology
+        - label: hormones
+        - label: none
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why is this a good clip for Cited?
+      description: Why is this claim actionable? Why is this speaker credentialed for this claim?
+    validations:
+      required: true
