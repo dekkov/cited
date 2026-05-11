@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: true
 preset: existing (apps/web/components.json — style=default, baseColor=neutral, lucide icons)
 created: 2026-05-10
+revised: 2026-05-10
 ---
 
 # Phase 2 — UI Design Contract: Curator Tooling
@@ -35,7 +36,7 @@ Phase 2 surfaces (all under `(admin)/curate/*`):
 | Preset | `style=default`, `baseColor=neutral`, `cssVariables=true` |
 | Component library | Radix (via shadcn primitives) |
 | Icon library | **Hybrid:** `lucide-react` permitted for admin-only chrome (icon density, board affordances, toolbar). Hand-rolled SVGs from `UI-DESIGN.md` reserved for product/marketing surfaces — admin is NOT product. |
-| Fonts | Geist Sans (UI body, buttons, dense tables) + Geist Mono (timestamps, video IDs, JSON previews) + Newsreader (italic claim quote preview in metadata panel only — admin is otherwise sans-serif for density) |
+| Fonts | Geist Sans (UI body, buttons, dense tables, kanban card titles, eyebrows) + Geist Mono (timestamps, video IDs, JSON previews, audit toasts) + Newsreader (italic claim quote preview in metadata panel only — admin is otherwise sans-serif for density) |
 
 **Stack picks locked from CONTEXT Open Items:**
 - `react-resizable-panels` — three-pane workspace (drag dividers between transcript / player / tabbed panel).
@@ -67,19 +68,20 @@ Declared values (multiples of 4, inherited from UI-DESIGN.md spacing language):
 
 ## Typography
 
-Admin is **sans-first** for density. Newsreader (serif) appears only where the curator previews how the claim will read on the public habit card.
+Admin is **sans-first** for density. Newsreader (serif) appears only where the curator previews how the claim will read on the public habit card — and that preview reuses the existing 16px product token from `UI-DESIGN.md` ("Card rationale" role) rather than introducing a new admin-scale size.
+
+**Admin chrome type scale — exactly 4 sizes:**
 
 | Role | Family | Size | Weight | Line Height | Use |
 |------|--------|------|--------|-------------|-----|
 | Page H1 (admin shell) | Geist Sans | 24px | 600 | 1.2 | "Curation Board", "Editor — {clip_title}" |
-| Section H2 (panel header) | Geist Sans | 16px | 600 | 1.3 | "Metadata", "AI Co-pilot", "Inbox" column header |
-| Body (forms, table cells) | Geist Sans | 14px | 400 | 1.5 | Default UI body, form input text, transcript words |
-| Small / caption | Geist Sans | 12px | 400 | 1.4 | Field hints, kanban card metadata row, badge text |
-| Mono (timestamps, IDs, JSON) | Geist Mono | 12px | 400 (500 for emphasis) | 1.4 | `HH:MM:SS` ranges, `youtube_video_id`, transcript word timestamps tooltip |
-| Eyebrow / mono label | Geist Mono | 10px | 400, tracking 0.14em | 1 | "CITED IN" preview, column count badges, "AI SUGGESTION" tag |
-| Claim quote preview | Newsreader italic | 17px | 400 | 1.5 | Inside the metadata-form "preview" subpanel ONLY — matches how the claim will render on the public habit card per UI-DESIGN.md |
+| Section H2 / claim preview | Geist Sans (Newsreader italic 400 for claim preview only) | 16px | 600 (sans) / 400 (serif italic) | 1.3 (header) / 1.5 (preview) | Panel headers ("Metadata", "AI Co-pilot", "Inbox" column header) AND the italic claim quote preview block in the metadata form |
+| Body / button / kanban card title | Geist Sans | 14px | 400 body · 500 button · 600 kanban card title | 1.5 body · 1.2 button · 1.3 card title | Default UI body, form input text, transcript words, all button labels, kanban card claim line, dense tables |
+| Small / caption / mono / eyebrow | Geist Sans (sans) · Geist Mono (mono, 0.14em tracking on eyebrows) | 12px | 400 (500 for mono emphasis) | 1.4 | Field hints, kanban card metadata row, badge text, `HH:MM:SS` timestamps, `youtube_video_id`, mono audit toasts, eyebrow labels ("CITED IN", "AI SUGGESTION"), column count badges |
 
-**Weight rule:** Two weights only across admin chrome — Geist Sans 400 (body) and 600 (headers/emphasis). Mono uses 400 with 500 for emphasis. Newsreader italic 400 only.
+**Weight rule:** Two weights only across admin chrome — Geist Sans 400 (body) and 600 (headers/emphasis), with 500 reserved for button labels (single-purpose). Mono uses 400 with 500 for emphasis. Newsreader italic 400 only.
+
+**Product token cited (not part of admin scale):** Claim quote preview inside the metadata-form preview subpanel renders in Newsreader italic 400 at the 16px / line-height 1.5 product-card-rationale token from `UI-DESIGN.md` — same row in this table as the H2, so it does not expand the admin scale. (UI-DESIGN.md defines a 17px claim quote for product surfaces; the admin preview deliberately renders one step smaller to fit the dense form column. This is an editorial preview, not a final render.)
 
 ---
 
@@ -140,6 +142,8 @@ Voice: **direct, terse, second-person curator-internal**. No marketing voice. No
 | Removal modal confirm | `Remove clip` (in amber `--color-warn`) |
 | Kanban "next" shortcut | `Jump to next ↩` (with `g n` keyboard hint) |
 
+All button labels render at 14px Geist Sans 500 per the type scale.
+
 ### Empty states
 
 | Column / Surface | Heading | Body |
@@ -157,7 +161,7 @@ Voice: **direct, terse, second-person curator-internal**. No marketing voice. No
 | Event | Copy |
 |-------|------|
 | Transcript fetching (YouTube auto-captions) | `Fetching captions…` (with subtle pulse on word "Fetching") |
-| Deepgram fallback queued | `Transcribing — ~2 min` (mono, `--color-ink-3`) |
+| Deepgram fallback queued | `Transcribing — ~2 min` (12px mono, `--color-ink-3`) |
 | Embedding on approve | `Embedding clip… (≤5s)` |
 | AI co-pilot streaming | `Co-pilot thinking…` |
 
@@ -190,7 +194,7 @@ Voice: **direct, terse, second-person curator-internal**. No marketing voice. No
 
 ### Mono "system" lines (curator audit feedback)
 
-These render in Geist Mono `--color-ink-3` at 11px, appearing as ephemeral toasts in the bottom-right of the admin shell:
+These render in Geist Mono `--color-ink-3` at **12px** (the small/caption/mono row of the type scale), appearing as ephemeral toasts in the bottom-right of the admin shell:
 
 - `[ai_suggested] start/end → 00:42:18 / 00:43:55`
 - `[ai_accepted] claim refined`
@@ -208,55 +212,55 @@ Mirrors the `clip_edits` audit shape — curator sees their own audit log in rea
 
 - Outer padding: `lg` (24px). Background `--color-paper`.
 - 4 columns side-by-side, each min-width 280px, max-width 360px, `--color-paper-2` bg, `--color-rule` 1px border, `--radius-lg` (16px), padding `md` (16px).
-- Column header: H2 (Geist Sans 16/600) + mono count badge `12` in `--color-paper-3` pill. `Published` header label uses `--color-accent-deep` text.
+- Column header: Section H2 (Geist Sans 16/600) + 12px Geist Mono count badge `12` in `--color-paper-3` pill. `Published` header label uses `--color-accent-deep` text.
 - Column body: vertical stack of clip cards, `sm` (8px) gap. Each card:
   - Surface `--color-paper`, `--radius-md` (10px), 1px `--color-rule`, padding `md` (16px), min-height 96px.
-  - Row 1: 13.5px Geist Sans 600 — clip claim (truncate 2 lines).
-  - Row 2: 12px caption row — domain pill (sage dot + label) · `M:SS` duration · `2d ago`.
-  - Row 3 (only if AI-touched): mono 10px tag `[ai_suggested]` in `--color-ink-3`.
+  - Row 1: **14px Geist Sans 600** — clip claim (truncate 2 lines), line-height 1.3.
+  - Row 2: **12px Geist Sans** caption row — domain pill (sage dot + label) · `M:SS` duration (12px Geist Mono) · `2d ago`.
+  - Row 3 (only if AI-touched): **12px Geist Mono** eyebrow tag `[AI SUGGESTED]` in `--color-ink-3`, tracking 0.14em.
   - Drag handle: full card; cursor `grab` on hover, `grabbing` while dragging (via `@dnd-kit/core`).
 - Manual priority pin: small pin icon top-right (lucide `Pin`); pinned cards float to top within their column with sage outline.
-- "Next" affordance: top-right of admin shell — button `Jump to next ↩` with mono `g n` keyboard hint to the right.
+- "Next" affordance: top-right of admin shell — button `Jump to next ↩` (14px Geist Sans 500) with 12px Geist Mono `g n` keyboard hint to the right.
 
 ### 2. Clip editor (three-pane workspace)
 
 `react-resizable-panels` with horizontal split first (left transcript vs right column), then right column has a vertical split (player on top, tabbed panel on bottom).
 
-- **Left pane (transcript):** Min-width 40% / default 50%. `--color-paper-2` bg, padding `md`. Sticky top toolbar: search input (corpus-wide tsv search, mono placeholder `find a phrase…`), domain filter, "captions | deepgram" source pill.
+- **Left pane (transcript):** Min-width 40% / default 50%. `--color-paper-2` bg, padding `md`. Sticky top toolbar: search input (corpus-wide tsv search, 12px Geist Mono placeholder `find a phrase…`), domain filter, "captions | deepgram" source pill.
   - Word-level virtualized list via `@tanstack/react-virtual`.
-  - Each word: 14px Geist Sans, `--color-ink`, hover bg `--color-paper-3`, click = set anchor, shift+click = set end. Selected range bg `--color-accent-soft`.
-  - Timestamp marker every paragraph break: `00:42:18` in 11px Geist Mono `--color-ink-3`.
-  - Floating "selection chip" appears at top of pane when a selection is active: `00:42:18 → 00:43:55 · 1:37` with `[` / `]` keyboard hints and `± nudge` buttons.
+  - Each word: 14px Geist Sans 400, `--color-ink`, hover bg `--color-paper-3`, click = set anchor, shift+click = set end. Selected range bg `--color-accent-soft`.
+  - Timestamp marker every paragraph break: `00:42:18` in 12px Geist Mono `--color-ink-3`.
+  - Floating "selection chip" appears at top of pane when a selection is active: `00:42:18 → 00:43:55 · 1:37` (12px Geist Mono) with `[` / `]` keyboard hints and `± nudge` buttons.
 - **Top-right pane (player):** ~360px height, default 40% of right column. `<YouTubeEmbed>` from `@next/third-parties/google` (per UI-DESIGN.md product rule — real iframe in product surfaces). `--radius-md`. Player auto-seeks when transcript selection changes.
 - **Bottom-right pane (tabbed):** ~60% of right column. Two tabs:
-  - **Metadata** — `react-hook-form` form. Fields: claim (textarea 3 rows, Newsreader-italic preview to the right inside a `--color-paper-2` `--radius-md` block), rationale, speaker (autocomplete from `podcasts` host/guest list, inline-add per ADMN-16), speaker_status (radio: `verified` / `unverified` / `host`), domain (4-radio), evidence_strength (1–5), risk_flags (multi-select chips in `--color-warn` background when selected). Inline hint for ADMN-15 below the claim field: `Length: as detailed as needed to convey the claim, not more.` (mono, `--color-ink-3`).
+  - **Metadata** — `react-hook-form` form. Fields: claim (textarea 3 rows, with Newsreader-italic preview to the right inside a `--color-paper-2` `--radius-md` block — preview renders at 16px Newsreader italic 400 / line-height 1.5, cited from `UI-DESIGN.md` product token), rationale, speaker (autocomplete from `podcasts` host/guest list, inline-add per ADMN-16), speaker_status (radio: `verified` / `unverified` / `host`), domain (4-radio), evidence_strength (1–5), risk_flags (multi-select chips in `--color-warn` background when selected). Inline hint for ADMN-15 below the claim field: `Length: as detailed as needed to convey the claim, not more.` (12px Geist Mono, `--color-ink-3`).
   - **AI Co-pilot** — see next surface.
-- Footer of editor: sticky bottom bar, `--color-paper` bg, `--color-rule` top border. Left: `Save draft`. Right: status-aware primary (`Save & move to Review` or `Approve & publish`).
+- Footer of editor: sticky bottom bar, `--color-paper` bg, `--color-rule` top border. Left: `Save draft`. Right: status-aware primary (`Save & move to Review` or `Approve & publish`). All buttons 14px Geist Sans 500.
 
 ### 3. AI co-pilot panel
 
-- Top: three preset buttons (`Suggest start/end`, `Refine claim`, `Propose alternative phrasing`) — Geist Sans 13/500, `--color-paper-2` bg, `--color-rule` border, `--radius-sm`. Active/loading state replaces icon with spinner.
+- Top: three preset buttons (`Suggest start/end`, `Refine claim`, `Propose alternative phrasing`) — **14px Geist Sans 500**, `--color-paper-2` bg, `--color-rule` border, `--radius-sm`. Active/loading state replaces icon with spinner.
 - Below presets: single-line free-text input (`Ask the co-pilot…`) with submit on Enter.
 - Suggestion list (newest first): each suggestion is a card.
   - Card surface `--color-paper`, `--radius-md`, 1px `--color-rule`. Padding `md`.
-  - Header row: 10px Geist Mono `AI SUGGESTION` eyebrow · 11px Geist Mono timestamp · AION-10 badge (`⚠ may be unsupported`) if similarity <0.85.
+  - Header row: **12px Geist Mono** `AI SUGGESTION` eyebrow (tracking 0.14em) · **12px Geist Mono** timestamp · AION-10 badge (`⚠ may be unsupported`, 12px) if similarity <0.85.
   - Body: side-by-side diff —
-    - Removed lines: strikethrough text in `--color-ink-4`, left border `--color-rule` 2px.
+    - Removed lines: strikethrough text in `--color-ink-4`, left border `--color-rule` 2px, 14px Geist Sans.
     - Added lines: `--color-accent-soft` bg, left border `--color-accent-deep` 2px, 14px Geist Sans.
-  - Action row: ghost `Discard` (left) · primary `Apply suggestion` (right, sage bg).
-- Every accept/reject writes a `clip_edits` row and emits a mono audit-toast.
+  - Action row: ghost `Discard` (left, 14/500) · primary `Apply suggestion` (right, 14/500, sage bg).
+- Every accept/reject writes a `clip_edits` row and emits a 12px Geist Mono audit-toast.
 
 ### 4. Transcript ingestion form
 
 - Single card on `(admin)/curate/ingest`. `--color-paper-2` bg, `--radius-lg`, padding `lg`.
-- Field: URL input (Geist Mono placeholder `https://www.youtube.com/watch?v=…`).
-- Submit: `Fetch transcript` (sage primary).
+- Field: URL input (12px Geist Mono placeholder `https://www.youtube.com/watch?v=…`, 14px Geist Sans for entered value).
+- Submit: `Fetch transcript` (14px Geist Sans 500, sage primary).
 - After submit, replace form body with a status block:
   - Step 1: `Resolving video metadata…` → `✓ {episode title}` (sage check).
   - Step 2: `Fetching auto-captions…` → either `✓ Captions found ({N} words)` OR `⚠ No captions — queuing Deepgram`.
   - Step 3 (only when fallback): `Transcribing — ~2 min` with a determinate progress bar (`--color-accent` fill, `--color-rule` track).
   - Step 4: `✓ Indexed into corpus (tsvector + chunks).`
-- All step copy in 13/400 Geist Sans, status icons sage, fallback amber.
+- All step copy in 14px Geist Sans 400, status icons sage, fallback amber.
 
 ### 5. Removal modal
 
@@ -313,4 +317,10 @@ Explicitly NOT in this contract (deferred):
 
 ---
 
-*Generated 2026-05-10 by gsd-ui-researcher. Pre-populated from CONTEXT.md (7/7 gray areas locked) and UI-DESIGN.md (all tokens). No user input required — upstream artifacts fully answered the design contract.*
+## Revision Notes
+
+**2026-05-10 — Dimension 4 Typography consolidation.** Previous draft declared 7 sizes (24/17/16/14/13.5/13/12/11/10) and failed the 4-size rubric. Consolidated to exactly 4 admin-chrome sizes: **24 / 16 / 14 / 12**. Applied throughout: kanban card claim title is 14/600 (was 13.5), buttons are 14/500 (were 13/500), eyebrows and mono audit toasts are 12px Geist Mono (were 10/11), timestamps are 12px Geist Mono (were 11). The Newsreader italic claim-preview block remains at 16px — same row as the H2 size in the admin scale — and is explicitly cited from the existing `UI-DESIGN.md` product "card rationale" token (16px Newsreader 1.5) rather than introduced as a new admin size. All other locked GA1–GA7 decisions unchanged.
+
+---
+
+*Generated 2026-05-10 by gsd-ui-researcher. Pre-populated from CONTEXT.md (7/7 gray areas locked) and UI-DESIGN.md (all tokens). Revised 2026-05-10 after checker BLOCK on Dimension 4.*
