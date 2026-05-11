@@ -90,7 +90,15 @@ Plans:
 - **Pitfall 11** (sponsor-read contamination, quote-mining): Editorial guidance in `MEDICAL_REVIEW.md` (LGL-08) — sponsor-read offset rule; qualifier-must-be-in-window rule; curator-facing prompt at approve. Curation is the discipline gate.
 - **Pitfall 17** (domain over-coverage): 4 domains locked (per PROJECT.md Key Decisions); ADMN-09 enforces the 30-clip × 4-domain target.
 
-**Plans:** TBD
+**Plans:** 6 plans
+
+Plans:
+- [ ] 02-curation-tooling-doac-corpus/01-PLAN.md — DB schema: transcripts + clip_edits extension + clip removal + episode_blacklist + AION-10 fixture candidates + RLS [Wave 1]
+- [ ] 02-curation-tooling-doac-corpus/02-PLAN.md — packages/core/transcripts TranscriptProvider (YouTube + Deepgram + manual VTT/SRT) [Wave 2]
+- [ ] 02-curation-tooling-doac-corpus/03-PLAN.md — Ingestion route + chunking + batched embeddings + ADMN-16 inline add-podcast [Wave 3]
+- [ ] 02-curation-tooling-doac-corpus/04-PLAN.md — Three-pane clip editor + AI co-pilot + approveClip + AION-10 grounding check [Wave 4]
+- [ ] 02-curation-tooling-doac-corpus/05-PLAN.md — Kanban board + ingestion form + removal cascade + oEmbed pg_cron [Wave 5]
+- [ ] 02-curation-tooling-doac-corpus/06-PLAN.md — AION-10 eval CI + LGL-01 disclaimer + LGL-02 /legal/dmca + LGL-08 MEDICAL_REVIEW.md + curation tracker [Wave 1]
 
 ---
 
