@@ -1,11 +1,12 @@
 ---
 phase: 2
 slug: curation-tooling-doac-corpus
-status: draft
+status: approved
 shadcn_initialized: true
 preset: existing (apps/web/components.json — style=default, baseColor=neutral, lucide icons)
 created: 2026-05-10
 revised: 2026-05-10
+reviewed_at: 2026-05-10
 ---
 
 # Phase 2 — UI Design Contract: Curator Tooling
