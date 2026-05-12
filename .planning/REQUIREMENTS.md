@@ -43,7 +43,7 @@
 - [ ] **ADMN-06**: Hard-block approval of clips touching prescription drugs, dosing, or treatment of diagnosed conditions
 - [ ] **ADMN-07**: Admin can mark an episode as `removed_from_source` (one-click); cascade-flags all linked clips as unavailable in user-facing surfaces
 - [ ] **ADMN-08**: Daily pg_cron job pings YouTube oEmbed for each linked episode; flags clips whose source video is no longer available
-- [ ] **ADMN-09**: Curated DOAC corpus reaches **≥30 approved clips across the 4 domains** (sleep / nutrition+gut / exercise+longevity / mental health) before alpha launch
+- [x] **ADMN-09**: Curated DOAC corpus reaches **≥30 approved clips across the 4 domains** (sleep / nutrition+gut / exercise+longevity / mental health) before alpha launch
 - [ ] **ADMN-10**: Admin clip editor exposes a chat-with-AI co-pilot that can suggest start/end timestamp adjustments, refine claim/rationale wording, and propose alternative phrasings — suggestions are previews; admin must explicitly accept each change
 - [x] **ADMN-11**: Audit log records every AI suggestion + accept/reject decision per clip (`clip_edits` table) for transparency and to allow rollback
 - [ ] **ADMN-12**: Admin can ingest source material into the RAG corpus by (a) pasting a YouTube URL — system fetches metadata + auto-captions if available, or (b) uploading a transcript document (md / txt / vtt / srt). Ingested transcript stored at `episodes.transcript_uri` (Cloudflare R2 in v1 simplified to text-blob in Postgres if R2 not yet provisioned)
@@ -63,7 +63,7 @@
 - [ ] **AION-07**: Free-text user answers are only sent to the LLM if AUTH-05 toggle (c) was opted in; otherwise interview falls back to structured choices
 - [ ] **AION-08**: Cheap turn model (Haiku 4.5 / GPT-4o-mini) for interim turns; Sonnet 4.x for final habit synthesis
 - [x] **AION-09**: All LLM provider calls go through `packages/core/llm` provider-wrapper interfaces (not direct SDK calls in routes)
-- [ ] **AION-10**: A 20-transcript hand-graded hallucination eval set exists; CI runs eval against current prompts; regressions fail the build
+- [x] **AION-10**: A 20-transcript hand-graded hallucination eval set exists; CI runs eval against current prompts; regressions fail the build
 
 ### Habit Recommendations & Adoption
 
@@ -112,14 +112,14 @@
 
 ### Compliance & Legal Posture
 
-- [ ] **LGL-01**: Health disclaimer prominent on every habit card, public habit page, and onboarding flow
-- [ ] **LGL-02**: DMCA takedown contact email + 48-hour response SLA published in `/legal/dmca`
+- [x] **LGL-01**: Health disclaimer prominent on every habit card, public habit page, and onboarding flow
+- [x] **LGL-02**: DMCA takedown contact email + 48-hour response SLA published in `/legal/dmca`
 - [ ] **LGL-03**: One-click admin "remove episode + clips + blacklist" workflow when takedown received
 - [ ] **LGL-04**: Privacy policy + Data Processing Addendum + sub-processor list (Supabase, Vercel, OpenAI/Anthropic) published
 - [ ] **LGL-05**: Editorial & Attribution Policy published (`MEDICAL_REVIEW.md`); reviewer credentials documented; supplement/fasting topics require reviewer with MD/RD/PhD before merge
 - [ ] **LGL-06**: Right-of-publicity stance: clips attribute the named credentialed guest only; never imply endorsement of the app by host or guest; published in legal page
 - [ ] **LGL-07**: Self-host docs include Referer-Policy guidance for YouTube embed compatibility
-- [ ] **LGL-08**: Editorial policy in `MEDICAL_REVIEW.md` includes clip-length guidance: "as much as needed to convey the claim, not more — transformative purpose + link-back to source carry the fair-use posture, since amount-used (factor 3) is weaker without a hard length cap"
+- [x] **LGL-08**: Editorial policy in `MEDICAL_REVIEW.md` includes clip-length guidance: "as much as needed to convey the claim, not more — transformative purpose + link-back to source carry the fair-use posture, since amount-used (factor 3) is weaker without a hard length cap"
 
 ### OSS Hygiene
 
@@ -245,7 +245,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-06 | Phase 2 | Pending |
 | ADMN-07 | Phase 2 | Pending |
 | ADMN-08 | Phase 2 | Pending |
-| ADMN-09 | Phase 2 | Pending |
+| ADMN-09 | Phase 2 | Complete |
 | ADMN-10 | Phase 2 | Pending |
 | ADMN-11 | Phase 2 | Complete |
 | ADMN-12 | Phase 2 | Pending |
@@ -262,7 +262,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | AION-07 | Phase 3 | Pending |
 | AION-08 | Phase 3 | Pending |
 | AION-09 | Phase 1 | Complete |
-| AION-10 | Phase 2 | Pending |
+| AION-10 | Phase 2 | Complete |
 | REC-01 | Phase 3 | Pending |
 | REC-02 | Phase 3 | Pending |
 | REC-03 | Phase 3 | Pending |
@@ -293,14 +293,14 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | REM-03 | Phase 4 | Pending |
 | REM-04 | Phase 4 | Pending |
 | REM-05 | Phase 4 | Pending |
-| LGL-01 | Phase 2 | Pending |
-| LGL-02 | Phase 2 | Pending |
+| LGL-01 | Phase 2 | Complete |
+| LGL-02 | Phase 2 | Complete |
 | LGL-03 | Phase 2 | Pending |
 | LGL-04 | Phase 1 | Pending |
 | LGL-05 | Phase 1 | Pending |
 | LGL-06 | Phase 1 | Pending |
 | LGL-07 | Phase 1 | Pending |
-| LGL-08 | Phase 2 | Pending |
+| LGL-08 | Phase 2 | Complete |
 | OSS-01 | Phase 1 | Pending |
 | OSS-02 | Phase 1 | Pending |
 | OSS-03 | Phase 1 | Pending |
