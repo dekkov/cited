@@ -26,6 +26,10 @@ export const clips = pgTable('clips', {
   createdBy: uuid('created_by'),
   approvedBy: uuid('approved_by'),
   approvedAt: timestamp('approved_at', { withTimezone: true }),
+  removedAt: timestamp('removed_at', { withTimezone: true }),
+  removalReason: text('removal_reason'),
+  removalNotes: text('removal_notes'),
+  takedownRefUrl: text('takedown_ref_url'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

@@ -1,4 +1,5 @@
 import { boolean, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { clipEditAction } from './enums';
 import { clips } from './clips';
 
 // Note: actorId references auth.users(id) on delete set null
@@ -11,6 +12,8 @@ export const clipEdits = pgTable('clip_edits', {
   actorId: uuid('actor_id'),
   source: text('source').notNull(),
   field: text('field').notNull(),
+  action: clipEditAction('action').notNull(),
+  payload: jsonb('payload'),
   beforeValue: jsonb('before_value'),
   afterValue: jsonb('after_value'),
   accepted: boolean('accepted'),

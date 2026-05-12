@@ -49,3 +49,17 @@ export const episodeAvailability = pgEnum('episode_availability', [
   'removed_from_source',
   'unknown',
 ]);
+
+export const clipEditAction = pgEnum('clip_edit_action', [
+  'created',
+  'updated',
+  'approved',
+  'rejected',
+  'ai_suggested',
+  'ai_accepted',
+  'ai_rejected',
+  'removed',
+  'unremoved',
+  'embedded',
+  'embed_failed',
+]);

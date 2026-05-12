@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { episodeAvailability } from './enums';
 import { podcasts } from './podcasts';
 
@@ -14,6 +14,8 @@ export const episodes = pgTable('episodes', {
   transcriptText: text('transcript_text'),
   availability: episodeAvailability('availability').notNull().default('available'),
   lastOembedCheckAt: timestamp('last_oembed_check_at', { withTimezone: true }),
+  sourceUnavailableAt: timestamp('source_unavailable_at', { withTimezone: true }),
+  oembed404Count: integer('oembed_404_count').notNull().default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
