@@ -45,19 +45,25 @@ export type ManualTranscriptInput = z.infer<typeof manualTranscriptSchema>;
 
 // ADMN-05 (mandatory risk flags) + ADMN-06 (hard-block prescription/dosing/condition_treatment)
 // + ADMN-15 (no fixed length cap). Used by approveClip server action.
-export const approveClipSchema = z
-  .object({
-    clipId: z.string().uuid(),
-    claim: z.string().min(10).max(2000),
-    rationale: z.string().min(10).max(4000),
-    speaker: z.string().min(1).max(200),
-    speakerStatus: speakerStatusEnum,
-    domain: domainEnum,
-    riskFlags: z.array(riskFlagEnum).min(1, 'risk_flags is mandatory at approval (ADMN-05)'),
-    startSec: z.number().min(0),
-    endSec: z.number(),
-    evidenceStrength: evidenceStrengthEnum.optional(),
-  })
+//
+// approveClipBaseSchema: plain ZodObject (no .refine) — used for form schemas in the UI
+// where zodResolver needs a ZodObject shape.  Exported for MetadataTab + other form uses.
+export const approveClipBaseSchema = z.object({
+  clipId: z.string().uuid(),
+  claim: z.string().min(10).max(2000),
+  rationale: z.string().min(10).max(4000),
+  speaker: z.string().min(1).max(200),
+  speakerStatus: speakerStatusEnum,
+  domain: domainEnum,
+  riskFlags: z.array(riskFlagEnum).min(1, 'risk_flags is mandatory at approval (ADMN-05)'),
+  startSec: z.number().min(0),
+  endSec: z.number(),
+  evidenceStrength: evidenceStrengthEnum.optional(),
+});
+
+// approveClipSchema: full server-side schema with .refine() cross-field checks + hard-block.
+// ZodEffects — do NOT use directly with zodResolver; use approveClipBaseSchema.omit({clipId:true}) instead.
+export const approveClipSchema = approveClipBaseSchema
   .refine((d) => d.endSec > d.startSec, { message: 'end must be > start' })
   .refine(
     (d) => !matchesHardBlock(`${d.claim}\n${d.rationale}`),

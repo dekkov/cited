@@ -26,16 +26,17 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9",
+    "@cited/core": "workspace:*",
     "@playwright/test": "^1.48",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^16",
+    "@testing-library/user-event": "^14.6.1",
     "@vitest/ui": "^2",
     "husky": "^9",
     "jsdom": "^25",
     "jsonwebtoken": "^9",
     "lint-staged": "^15",
     "turbo": "^2",
-    "@cited/core": "workspace:*",
     "typescript": "~5.6",
     "vitest": "^2",
     "zod": "^3.23"
