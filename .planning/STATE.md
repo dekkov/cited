@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v0.5
 milestone_name: Extraction Worker
-status: Ready to execute
-last_updated: "2026-05-12T01:29:54.224Z"
+status: Phase complete — ready for verification
+last_updated: "2026-05-12T12:14:39.333Z"
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State: Hdiary (working title — rename pre-launch)
@@ -49,6 +49,7 @@ Plan: 6 of 6
 | Phase 02-curation-tooling-doac-corpus P02 | 30 | 3 tasks | 13 files |
 | Phase 02-curation-tooling-doac-corpus P03 | 30 | 3 tasks | 14 files |
 | Phase 02-curation-tooling-doac-corpus P04 | 12 | 4 tasks | 32 files |
+| Phase 02-curation-tooling-doac-corpus P05 | 60 | 4 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -87,7 +88,7 @@ None — ready to begin Phase 1 planning.
 
 ## Session Continuity
 
-**Last session:** 2026-05-12T01:29:54.219Z
+**Last session:** 2026-05-12T12:14:39.329Z
 
 **Next session:** Begin Phase 1 planning via `/gsd:plan-phase 1`. Phase 1 should decompose into plans covering: (a) repo bootstrap + monorepo + Biome + Husky + docker-compose CI smoke, (b) Drizzle schema + RLS policies + extraction_jobs/clips_pending placeholders + api-contracts zod schemas, (c) Supabase Auth integration with magic-link + Google OAuth + granular GDPR consent UI + DOB gate + disclaimer ack, (d) OSS hygiene: LICENSE / CONTRIBUTING / DCO bot / CODE_OF_CONDUCT / MEDICAL_REVIEW / issue templates / gitleaks / Open Collective.
 

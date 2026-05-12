@@ -41,8 +41,8 @@
 - [x] **ADMN-04**: Approving a clip triggers OpenAI `text-embedding-3-small` write to the `clips.embedding` vector column (embed-on-approve, not on read)
 - [x] **ADMN-05**: Risk flags are mandatory on approval; clips with `risk_flags @> '{medical_advice,supplement,contraindication}'` show a banner in user UI: "Consult a doctor before trying this."
 - [x] **ADMN-06**: Hard-block approval of clips touching prescription drugs, dosing, or treatment of diagnosed conditions
-- [ ] **ADMN-07**: Admin can mark an episode as `removed_from_source` (one-click); cascade-flags all linked clips as unavailable in user-facing surfaces
-- [ ] **ADMN-08**: Daily pg_cron job pings YouTube oEmbed for each linked episode; flags clips whose source video is no longer available
+- [x] **ADMN-07**: Admin can mark an episode as `removed_from_source` (one-click); cascade-flags all linked clips as unavailable in user-facing surfaces
+- [x] **ADMN-08**: Daily pg_cron job pings YouTube oEmbed for each linked episode; flags clips whose source video is no longer available
 - [x] **ADMN-09**: Curated DOAC corpus reaches **≥30 approved clips across the 4 domains** (sleep / nutrition+gut / exercise+longevity / mental health) before alpha launch
 - [x] **ADMN-10**: Admin clip editor exposes a chat-with-AI co-pilot that can suggest start/end timestamp adjustments, refine claim/rationale wording, and propose alternative phrasings — suggestions are previews; admin must explicitly accept each change
 - [x] **ADMN-11**: Audit log records every AI suggestion + accept/reject decision per clip (`clip_edits` table) for transparency and to allow rollback
@@ -114,7 +114,7 @@
 
 - [x] **LGL-01**: Health disclaimer prominent on every habit card, public habit page, and onboarding flow
 - [x] **LGL-02**: DMCA takedown contact email + 48-hour response SLA published in `/legal/dmca`
-- [ ] **LGL-03**: One-click admin "remove episode + clips + blacklist" workflow when takedown received
+- [x] **LGL-03**: One-click admin "remove episode + clips + blacklist" workflow when takedown received
 - [ ] **LGL-04**: Privacy policy + Data Processing Addendum + sub-processor list (Supabase, Vercel, OpenAI/Anthropic) published
 - [ ] **LGL-05**: Editorial & Attribution Policy published (`MEDICAL_REVIEW.md`); reviewer credentials documented; supplement/fasting topics require reviewer with MD/RD/PhD before merge
 - [ ] **LGL-06**: Right-of-publicity stance: clips attribute the named credentialed guest only; never imply endorsement of the app by host or guest; published in legal page
@@ -243,8 +243,8 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-04 | Phase 2 | Complete |
 | ADMN-05 | Phase 2 | Complete |
 | ADMN-06 | Phase 2 | Complete |
-| ADMN-07 | Phase 2 | Pending |
-| ADMN-08 | Phase 2 | Pending |
+| ADMN-07 | Phase 2 | Complete |
+| ADMN-08 | Phase 2 | Complete |
 | ADMN-09 | Phase 2 | Complete |
 | ADMN-10 | Phase 2 | Complete |
 | ADMN-11 | Phase 2 | Complete |
@@ -295,7 +295,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | REM-05 | Phase 4 | Pending |
 | LGL-01 | Phase 2 | Complete |
 | LGL-02 | Phase 2 | Complete |
-| LGL-03 | Phase 2 | Pending |
+| LGL-03 | Phase 2 | Complete |
 | LGL-04 | Phase 1 | Pending |
 | LGL-05 | Phase 1 | Pending |
 | LGL-06 | Phase 1 | Pending |

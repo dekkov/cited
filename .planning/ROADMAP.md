@@ -19,7 +19,7 @@ The DOAC pitch demo follows: T1 → T17 → D2 → D5 → D1 → D15 → T2 → 
 ## Phases
 
 - [x] **Phase 1: Foundation** — Repo, schema, RLS, auth, granular GDPR consent, three-layer legal posture, OSS hygiene scaffolding, license + DCO, name candidates produced (completed 2026-05-09)
-- [ ] **Phase 2: Curation Tooling + DOAC Corpus** — Admin clip CRUD, AI co-pilot, document ingestion, manual cutter, embed-on-approve, ≥30 approved clips × 4 domains (~15 editorial hours, lowered by AI co-pilot to ~10–12)
+- [x] **Phase 2: Curation Tooling + DOAC Corpus** — Admin clip CRUD, AI co-pilot, document ingestion, manual cutter, embed-on-approve, ≥30 approved clips × 4 domains (~15 editorial hours, lowered by AI co-pilot to ~10–12) (completed 2026-05-12)
 - [ ] **Phase 3: User AI Loop (the Demo)** — Hybrid RAG, 6–10 turn interview with citation grounding, habit recommendations, habit cards with `<YouTubeEmbed>`, tri-state check-in, consistency-view-primary + Streak Freeze (demoted), public `/h/[slug]`, swap
 - [ ] **Phase 4: Re-engagement + OSS Polish + Alpha Launch** — Email reminders + weekly compassionate digest + `.ics`, GDPR export + cascade-delete, Fumadocs site, hosted demo, rename to chosen name, sponsorship live, alpha metrics flowing
 - [ ] **Phase 5: DOAC Pitch + v0.5 Extraction Worker** — Pitch deck pre-empting 5 concerns, one-page MoU, soft outreach (named contact, non-objection), `apps/worker/` Python promotion via existing job-table contract
@@ -90,7 +90,7 @@ Plans:
 - **Pitfall 11** (sponsor-read contamination, quote-mining): Editorial guidance in `MEDICAL_REVIEW.md` (LGL-08) — sponsor-read offset rule; qualifier-must-be-in-window rule; curator-facing prompt at approve. Curation is the discipline gate.
 - **Pitfall 17** (domain over-coverage): 4 domains locked (per PROJECT.md Key Decisions); ADMN-09 enforces the 30-clip × 4-domain target.
 
-**Plans:** 6 plans
+**Plans:** 6/6 plans complete
 
 Plans:
 - [ ] 02-curation-tooling-doac-corpus/01-PLAN.md — DB schema: transcripts + clip_edits extension + clip removal + episode_blacklist + AION-10 fixture candidates + RLS [Wave 1]
