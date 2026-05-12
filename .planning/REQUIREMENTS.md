@@ -38,7 +38,7 @@
 - [x] **ADMN-01**: `(admin)` route group inside `apps/web` with separate auth-gate layout, gated by `profiles.role = 'curator' | 'admin'`
 - [x] **ADMN-02**: Trusted-curator role exists in schema from MVP (single curator at launch — the user)
 - [ ] **ADMN-03**: Admin UI to create/edit/approve/reject clips with fields: claim, rationale, speaker (named guest), `speaker_status` (verified | unverified | host), domain (one of 4), start/end seconds, evidence_strength, risk_flags (mandatory), youtube_video_id, episode_id
-- [ ] **ADMN-04**: Approving a clip triggers OpenAI `text-embedding-3-small` write to the `clips.embedding` vector column (embed-on-approve, not on read)
+- [x] **ADMN-04**: Approving a clip triggers OpenAI `text-embedding-3-small` write to the `clips.embedding` vector column (embed-on-approve, not on read)
 - [ ] **ADMN-05**: Risk flags are mandatory on approval; clips with `risk_flags @> '{medical_advice,supplement,contraindication}'` show a banner in user UI: "Consult a doctor before trying this."
 - [ ] **ADMN-06**: Hard-block approval of clips touching prescription drugs, dosing, or treatment of diagnosed conditions
 - [ ] **ADMN-07**: Admin can mark an episode as `removed_from_source` (one-click); cascade-flags all linked clips as unavailable in user-facing surfaces
@@ -47,10 +47,10 @@
 - [ ] **ADMN-10**: Admin clip editor exposes a chat-with-AI co-pilot that can suggest start/end timestamp adjustments, refine claim/rationale wording, and propose alternative phrasings — suggestions are previews; admin must explicitly accept each change
 - [x] **ADMN-11**: Audit log records every AI suggestion + accept/reject decision per clip (`clip_edits` table) for transparency and to allow rollback
 - [x] **ADMN-12**: Admin can ingest source material into the RAG corpus by (a) pasting a YouTube URL — system fetches metadata + auto-captions if available, or (b) uploading a transcript document (md / txt / vtt / srt). Ingested transcript stored at `episodes.transcript_uri` (Cloudflare R2 in v1 simplified to text-blob in Postgres if R2 not yet provisioned)
-- [ ] **ADMN-13**: Ingested transcripts are indexed into the RAG corpus (chunked + embedded) even before any clips are extracted, so the AI interview can reference the source material in onboarding RAG retrieval
+- [x] **ADMN-13**: Ingested transcripts are indexed into the RAG corpus (chunked + embedded) even before any clips are extracted, so the AI interview can reference the source material in onboarding RAG retrieval
 - [ ] **ADMN-14**: Admin manual clip cutter UI: scrubs through ingested transcript with timestamp anchors; admin selects start/end; clip enters `pending` lifecycle and goes through normal approve flow (ADMN-04..06)
 - [ ] **ADMN-15**: Clip length is not capped; editorial guidance is "as detailed as needed to convey the claim, not more" — surface this guideline inline in the clip editor as a non-blocking hint
-- [ ] **ADMN-16**: When admin ingests a podcast that is NOT in `podcasts` table yet, an inline form lets admin add the podcast (name, host, trust_tier) — keeps schema podcast-agnostic in practice, not just on paper
+- [x] **ADMN-16**: When admin ingests a podcast that is NOT in `podcasts` table yet, an inline form lets admin add the podcast (name, host, trust_tier) — keeps schema podcast-agnostic in practice, not just on paper
 
 ### AI Onboarding Interview
 
@@ -240,7 +240,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-01 | Phase 1 | Complete |
 | ADMN-02 | Phase 1 | Complete |
 | ADMN-03 | Phase 2 | Pending |
-| ADMN-04 | Phase 2 | Pending |
+| ADMN-04 | Phase 2 | Complete |
 | ADMN-05 | Phase 2 | Pending |
 | ADMN-06 | Phase 2 | Pending |
 | ADMN-07 | Phase 2 | Pending |
@@ -249,10 +249,10 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-10 | Phase 2 | Pending |
 | ADMN-11 | Phase 2 | Complete |
 | ADMN-12 | Phase 2 | Complete |
-| ADMN-13 | Phase 2 | Pending |
+| ADMN-13 | Phase 2 | Complete |
 | ADMN-14 | Phase 2 | Pending |
 | ADMN-15 | Phase 2 | Pending |
-| ADMN-16 | Phase 2 | Pending |
+| ADMN-16 | Phase 2 | Complete |
 | AION-01 | Phase 3 | Pending |
 | AION-02 | Phase 3 | Pending |
 | AION-03 | Phase 3 | Pending |
