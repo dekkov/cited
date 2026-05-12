@@ -1,9 +1,11 @@
+import { matchesHardBlock } from '@/lib/curate/hardBlockKeywords';
 import { z } from 'zod';
 
 // Shared editorial enums — re-exported here so curation UI + server actions share one source of truth.
 export const domainEnum = z.enum(['sleep', 'nutrition_gut', 'exercise_longevity', 'mental_health']);
 export const speakerStatusEnum = z.enum(['verified', 'unverified', 'host']);
 export const riskFlagEnum = z.enum(['medical_advice', 'supplement', 'contraindication', 'general']);
+export const evidenceStrengthEnum = z.enum(['anecdotal', 'observational', 'rct', 'meta_analysis']);
 
 export type Domain = z.infer<typeof domainEnum>;
 export type SpeakerStatus = z.infer<typeof speakerStatusEnum>;
@@ -40,3 +42,31 @@ export const ingestUrlSchema = z
 
 export type IngestInput = z.infer<typeof ingestUrlSchema>;
 export type ManualTranscriptInput = z.infer<typeof manualTranscriptSchema>;
+
+// ADMN-05 (mandatory risk flags) + ADMN-06 (hard-block prescription/dosing/condition_treatment)
+// + ADMN-15 (no fixed length cap). Used by approveClip server action.
+export const approveClipSchema = z
+  .object({
+    clipId: z.string().uuid(),
+    claim: z.string().min(10).max(2000),
+    rationale: z.string().min(10).max(4000),
+    speaker: z.string().min(1).max(200),
+    speakerStatus: speakerStatusEnum,
+    domain: domainEnum,
+    riskFlags: z.array(riskFlagEnum).min(1, 'risk_flags is mandatory at approval (ADMN-05)'),
+    startSec: z.number().min(0),
+    endSec: z.number(),
+    evidenceStrength: evidenceStrengthEnum.optional(),
+  })
+  .refine((d) => d.endSec > d.startSec, { message: 'end must be > start' })
+  .refine(
+    (d) => !matchesHardBlock(`${d.claim}\n${d.rationale}`),
+    (d) => {
+      const hit = matchesHardBlock(`${d.claim}\n${d.rationale}`);
+      return {
+        message: `Can't publish: this clip touches prescription / dosing / treatment of a diagnosed condition (matched: "${hit?.match ?? ''}"). See MEDICAL_REVIEW.md.`,
+      };
+    },
+  );
+
+export type ApproveClipInput = z.infer<typeof approveClipSchema>;
