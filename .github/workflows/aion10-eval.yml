@@ -1,0 +1,27 @@
+name: AION-10 Hallucination Eval
+
+on:
+  pull_request:
+    paths:
+      - 'packages/core/llm/**'
+      - 'packages/core/src/llm/**'
+      - '**/prompts/**'
+      - 'tests/eval/aion-10/**'
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm vitest run tests/eval/aion-10/runner.ts --reporter=verbose
+        env:
+          AION10_LIVE_EVAL: '1'
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_EVAL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_EVAL }}

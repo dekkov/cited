@@ -6,7 +6,10 @@ export default defineConfig({
     globals: true,
     setupFiles: [],
     coverage: { provider: 'v8', reporter: ['text', 'lcov'] },
-    include: ['{apps,packages}/**/*.{test,spec}.{ts,tsx}'],
+    include: [
+      '{apps,packages}/**/*.{test,spec}.{ts,tsx}',
+      'tests/**/*.{test,spec}.{ts,tsx}',
+    ],
     exclude: ['**/node_modules/**', '**/.next/**', '**/dist/**', '**/e2e/**'],
   },
 });

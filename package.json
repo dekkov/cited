@@ -35,8 +35,10 @@
     "jsonwebtoken": "^9",
     "lint-staged": "^15",
     "turbo": "^2",
+    "@cited/core": "workspace:*",
     "typescript": "~5.6",
-    "vitest": "^2"
+    "vitest": "^2",
+    "zod": "^3.23"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md}": ["biome check --write --no-errors-on-unmatched"]
