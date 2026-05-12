@@ -14,3 +14,6 @@ export * from './streak-freezes';
 export * from './extraction-jobs';
 export * from './clips-pending';
 export * from './consent-records';
+export * from './transcripts';
+export * from './episode-blacklist';
+export * from './aion10-fixture-candidates';
