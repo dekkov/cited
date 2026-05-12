@@ -46,7 +46,7 @@
 - [x] **ADMN-09**: Curated DOAC corpus reaches **≥30 approved clips across the 4 domains** (sleep / nutrition+gut / exercise+longevity / mental health) before alpha launch
 - [ ] **ADMN-10**: Admin clip editor exposes a chat-with-AI co-pilot that can suggest start/end timestamp adjustments, refine claim/rationale wording, and propose alternative phrasings — suggestions are previews; admin must explicitly accept each change
 - [x] **ADMN-11**: Audit log records every AI suggestion + accept/reject decision per clip (`clip_edits` table) for transparency and to allow rollback
-- [ ] **ADMN-12**: Admin can ingest source material into the RAG corpus by (a) pasting a YouTube URL — system fetches metadata + auto-captions if available, or (b) uploading a transcript document (md / txt / vtt / srt). Ingested transcript stored at `episodes.transcript_uri` (Cloudflare R2 in v1 simplified to text-blob in Postgres if R2 not yet provisioned)
+- [x] **ADMN-12**: Admin can ingest source material into the RAG corpus by (a) pasting a YouTube URL — system fetches metadata + auto-captions if available, or (b) uploading a transcript document (md / txt / vtt / srt). Ingested transcript stored at `episodes.transcript_uri` (Cloudflare R2 in v1 simplified to text-blob in Postgres if R2 not yet provisioned)
 - [ ] **ADMN-13**: Ingested transcripts are indexed into the RAG corpus (chunked + embedded) even before any clips are extracted, so the AI interview can reference the source material in onboarding RAG retrieval
 - [ ] **ADMN-14**: Admin manual clip cutter UI: scrubs through ingested transcript with timestamp anchors; admin selects start/end; clip enters `pending` lifecycle and goes through normal approve flow (ADMN-04..06)
 - [ ] **ADMN-15**: Clip length is not capped; editorial guidance is "as detailed as needed to convey the claim, not more" — surface this guideline inline in the clip editor as a non-blocking hint
@@ -248,7 +248,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-09 | Phase 2 | Complete |
 | ADMN-10 | Phase 2 | Pending |
 | ADMN-11 | Phase 2 | Complete |
-| ADMN-12 | Phase 2 | Pending |
+| ADMN-12 | Phase 2 | Complete |
 | ADMN-13 | Phase 2 | Pending |
 | ADMN-14 | Phase 2 | Pending |
 | ADMN-15 | Phase 2 | Pending |
