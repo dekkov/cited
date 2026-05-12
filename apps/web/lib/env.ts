@@ -7,6 +7,10 @@ const Env = z.object({
   DATABASE_URL: z.string().url().optional(),
   OPENAI_API_KEY: z.string().min(20).optional(),
   ANTHROPIC_API_KEY: z.string().min(20).optional(),
+  // Phase 2 — transcript fallback (GA3 path D)
+  DEEPGRAM_API_KEY: z.string().min(20).optional(),
+  // Phase 2 — pg_cron oEmbed handler shared secret (ADMN-08)
+  CRON_SECRET: z.string().min(16).optional(),
 });
 
 export const env = Env.parse(process.env);
