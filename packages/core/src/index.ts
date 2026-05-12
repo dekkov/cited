@@ -1,2 +1,3 @@
 export * from './llm/index';
 export * from './transcripts';
+export * from './embeddings';
