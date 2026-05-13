@@ -1,2 +1,4 @@
 export * from './schemas';
-// stateMachine.ts, voiceSpec.ts, tools.ts ship in Plan 03-02.
+export * from './voiceSpec';
+export * from './stateMachine';
+export * from './tools';
