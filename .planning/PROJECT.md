@@ -183,4 +183,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-07 after initialization*
+*Last updated: 2026-05-12 — Phase 02 complete (curation tooling: transcript pipeline, Kanban board, clip editor, AI copilot, oEmbed cron, AION-10 eval CI, legal artifacts)*
