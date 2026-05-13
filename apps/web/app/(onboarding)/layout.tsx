@@ -1,4 +1,5 @@
 import { requireUser } from '@/lib/auth/guards';
+import { HealthDisclaimer } from '@/components/disclaimer/HealthDisclaimer';
 
 /**
  * Onboarding route group layout.
@@ -12,6 +13,7 @@ export default async function OnboardingLayout({ children }: { children: React.R
   return (
     <div className="min-h-screen bg-[var(--color-paper)] flex items-start justify-center pt-16">
       <div className="w-full max-w-xl px-4">{children}</div>
+      <HealthDisclaimer variant="footer" />
     </div>
   );
 }
