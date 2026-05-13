@@ -54,11 +54,11 @@
 
 ### AI Onboarding Interview
 
-- [ ] **AION-01**: After signup + consent + disclaimer, user enters AI-driven onboarding interview
-- [ ] **AION-02**: Interview is a 6–10 turn adaptive conversation covering 4 domains (sleep / nutrition+gut / exercise+longevity / mental health)
+- [x] **AION-01**: After signup + consent + disclaimer, user enters AI-driven onboarding interview
+- [x] **AION-02**: Interview is a 6–10 turn adaptive conversation covering 4 domains (sleep / nutrition+gut / exercise+longevity / mental health)
 - [ ] **AION-03**: Each turn is grounded in real DOAC content via hybrid RAG (pgvector cosine + tsvector full-text) over the curated clip corpus
 - [ ] **AION-04**: After turn 3, the agent prioritizes the largest identified gap domain
-- [ ] **AION-05**: Interview output is a structured user profile (jsonb) with identified gap domains and one-sentence summaries
+- [x] **AION-05**: Interview output is a structured user profile (jsonb) with identified gap domains and one-sentence summaries
 - [ ] **AION-06**: LLM never gives medical advice; if user mentions symptoms, the agent suggests seeing a doctor and continues
 - [ ] **AION-07**: Free-text user answers are only sent to the LLM if AUTH-05 toggle (c) was opted in; otherwise interview falls back to structured choices
 - [ ] **AION-08**: Cheap turn model (Haiku 4.5 / GPT-4o-mini) for interim turns; Sonnet 4.x for final habit synthesis
@@ -70,9 +70,9 @@
 - [ ] **REC-01**: After interview, LLM proposes 3–5 personalized habit candidates ranked by expected impact
 - [ ] **REC-02**: Each habit candidate has 2–3 evidence clip citations validated against the actual `clips` table (post-generation citation grounding check; broken citations dropped, recommendation regenerated if <2 valid)
 - [ ] **REC-03**: At least one habit per identified-gap domain
-- [ ] **REC-04**: Each habit candidate includes a `trigger` (when/where — implementation-intention) and an `tiny_action` (BJ Fogg-style minimum)
+- [x] **REC-04**: Each habit candidate includes a `trigger` (when/where — implementation-intention) and an `tiny_action` (BJ Fogg-style minimum)
 - [ ] **REC-05**: User can adopt 1, several, or all proposed habits; adoption creates `user_habits` rows linked to a `habit_templates` row + clip citations
-- [ ] **REC-06**: User can re-run the interview at any time from settings (creates a new run, doesn't overwrite history)
+- [x] **REC-06**: User can re-run the interview at any time from settings (creates a new run, doesn't overwrite history)
 
 ### Habit Cards & Daily Check-In
 
@@ -90,7 +90,7 @@
 ### Habit Swap
 
 - [ ] **SWAP-01**: User can request a swap with reason (too hard / dislike / schedule conflict / other free-text)
-- [ ] **SWAP-02**: System retrieves substantively-different clip in same domain (cosine similarity > 0.7 to current AND from a different cluster), proposes alternative habit
+- [x] **SWAP-02**: System retrieves substantively-different clip in same domain (cosine similarity > 0.7 to current AND from a different cluster), proposes alternative habit
 - [ ] **SWAP-03**: Alternative habit includes 2 evidence citations validated as in REC-02
 - [ ] **SWAP-04**: User can accept the swap (replaces user_habit) or keep current
 
@@ -253,11 +253,11 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-14 | Phase 2 | Complete |
 | ADMN-15 | Phase 2 | Complete |
 | ADMN-16 | Phase 2 | Complete |
-| AION-01 | Phase 3 | Pending |
-| AION-02 | Phase 3 | Pending |
+| AION-01 | Phase 3 | Complete |
+| AION-02 | Phase 3 | Complete |
 | AION-03 | Phase 3 | Pending |
 | AION-04 | Phase 3 | Pending |
-| AION-05 | Phase 3 | Pending |
+| AION-05 | Phase 3 | Complete |
 | AION-06 | Phase 3 | Pending |
 | AION-07 | Phase 3 | Pending |
 | AION-08 | Phase 3 | Pending |
@@ -266,9 +266,9 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | REC-01 | Phase 3 | Pending |
 | REC-02 | Phase 3 | Pending |
 | REC-03 | Phase 3 | Pending |
-| REC-04 | Phase 3 | Pending |
+| REC-04 | Phase 3 | Complete |
 | REC-05 | Phase 3 | Pending |
-| REC-06 | Phase 3 | Pending |
+| REC-06 | Phase 3 | Complete |
 | HAB-01 | Phase 3 | Pending |
 | HAB-02 | Phase 3 | Pending |
 | HAB-03 | Phase 3 | Pending |
@@ -280,7 +280,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | HAB-09 | Phase 3 | Pending |
 | HAB-10 | Phase 3 | Pending |
 | SWAP-01 | Phase 3 | Pending |
-| SWAP-02 | Phase 3 | Pending |
+| SWAP-02 | Phase 3 | Complete |
 | SWAP-03 | Phase 3 | Pending |
 | SWAP-04 | Phase 3 | Pending |
 | PUB-01 | Phase 3 | Pending |

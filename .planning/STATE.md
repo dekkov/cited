@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v0.5
 milestone_name: Extraction Worker
-status: Ready to plan
-last_updated: "2026-05-13T01:54:14.230Z"
+status: Ready to execute
+last_updated: "2026-05-13T22:53:00.451Z"
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 20
+  completed_plans: 15
 ---
 
 # Project State: Hdiary (working title — rename pre-launch)
@@ -22,12 +22,12 @@ progress:
 
 **Strategic Goal:** OSS traction (stars, contributors, self-hosters) + DOAC pitch readiness (non-objection ladder, endorsement aspirational). 12-month success metric: meaningful DOAC interaction + active OSS community.
 
-**Current Focus:** Phase 02 — curation-tooling-doac-corpus
+**Current Focus:** Phase 03 — user-ai-loop-the-demo
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (user-ai-loop-the-demo) — EXECUTING
+Plan: 2 of 6
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Plan: Not started
 | Phase 02-curation-tooling-doac-corpus P03 | 30 | 3 tasks | 14 files |
 | Phase 02-curation-tooling-doac-corpus P04 | 12 | 4 tasks | 32 files |
 | Phase 02-curation-tooling-doac-corpus P05 | 60 | 4 tasks | 20 files |
+| Phase 03-user-ai-loop-the-demo P01 | 375 | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -88,7 +89,7 @@ None — ready to begin Phase 1 planning.
 
 ## Session Continuity
 
-**Last session:** 2026-05-13T01:54:14.222Z
+**Last session:** 2026-05-13T22:53:00.446Z
 
 **Next session:** Begin Phase 1 planning via `/gsd:plan-phase 1`. Phase 1 should decompose into plans covering: (a) repo bootstrap + monorepo + Biome + Husky + docker-compose CI smoke, (b) Drizzle schema + RLS policies + extraction_jobs/clips_pending placeholders + api-contracts zod schemas, (c) Supabase Auth integration with magic-link + Google OAuth + granular GDPR consent UI + DOB gate + disclaimer ack, (d) OSS hygiene: LICENSE / CONTRIBUTING / DCO bot / CODE_OF_CONDUCT / MEDICAL_REVIEW / issue templates / gitleaks / Open Collective.
 
