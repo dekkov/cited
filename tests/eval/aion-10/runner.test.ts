@@ -47,11 +47,11 @@ describe('AION-10 runner', () => {
 
   it('runEval() with grounded rate <90% → fails thresholds', async () => {
     const fixtures = parseFixtures(FIXTURES_PATH);
-    // 2 of 5 not grounded (and not hallucinated either — ambiguous) → 60% grounded
+    // 3 not grounded (ambiguous) → 85% grounded, below the 90% threshold
     let count = 0;
     const judge: JudgeFn = async () => {
       count += 1;
-      if (count <= 2) return { grounded: false, hallucinated: false, reasoning: 'mock' };
+      if (count <= 3) return { grounded: false, hallucinated: false, reasoning: 'mock' };
       return { grounded: true, hallucinated: false, reasoning: 'mock' };
     };
     const report = await runEval({ fixtures, judge });
