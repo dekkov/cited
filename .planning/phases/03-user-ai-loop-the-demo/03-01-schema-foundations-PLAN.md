@@ -26,7 +26,6 @@ requirements:
   - REC-04
   - REC-06
   - SWAP-02
-  - HAB-09
 user_setup: []
 must_haves:
   truths:

@@ -336,7 +336,7 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
     - Test 3: POST /api/swap returns up to 3 candidates with ≥2 validated citations each (SWAP-03); domain matches current
     - Test 4: When current template has cluster_id, returned candidates have different cluster_id
     - Test 5: Accept swap replaces user_habits.habit_template_id with the chosen alternative; check_ins/streaks reset is left at status quo (don't carry old data over)
-    - Test 6: Reason text from swap form is persisted (e.g. in a new `swap_requests` table OR added to `user_habits` audit notes — pick simplest; if no migration, just log via pino)
+    - Test 6: Reason enum from swap form is logged via pino (no free-text capture in this phase — deferred to Phase 4 subject to AUTH-05c)
   </behavior>
   <action>
     1. `apps/web/app/(app)/habits/[id]/page.tsx` (Server Component): fetch user_habit + habit_template + first habit_template_clip → clip → episode for the owner. Render `<HabitDetail>`.
@@ -351,9 +351,9 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
        - Risk-flag banner if `risk_flags` non-empty (per ADMN-05 banner copy from Phase 2)
        - Swap button → opens `<SwapPanel />` (Radix Dialog as slide-in panel from right; on mobile becomes fullscreen)
 
-    3. `_components/SwapPanel.tsx`:
-       - Form with reason chips (Too hard / Dislike / Schedule conflict / Other) + optional free-text (gated by AUTH-05c if logging the free-text)
-       - On submit: POST /api/swap with `{ userHabitId, reason, reasonText? }` → renders returned candidates
+    3. `_components/SwapPanel.tsx` (D-10 discretion exercised: slide-in panel via Radix Dialog right-side, fullscreen on mobile):
+       - Form with reason chips (Too hard / Dislike / Schedule conflict / Other). NO free-text input — reasonText capture is deferred to Phase 4 (subject to AUTH-05c).
+       - On submit: POST /api/swap with `{ userHabitId, reason }` → renders returned candidates
        - Each candidate card: title, claim italic, "Use this instead" primary + "Keep current" ghost
        - "Use this instead" → calls `acceptSwapAction({ userHabitId, newTemplateId })` → router.refresh()
 
@@ -369,7 +369,7 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
        const Input = z.object({
          userHabitId: z.string().uuid(),
          reason: z.enum(['too_hard','dislike','schedule_conflict','other']),
-         reasonText: z.string().max(500).optional(),
+         // reasonText intentionally OMITTED — deferred to Phase 4 (subject to AUTH-05c).
        });
 
        export async function POST(req: Request) {
@@ -442,7 +442,7 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
            if (v.valid.length >= 2) validated.push({ ...s, citations: v.valid });
          }
 
-         // Log reason via pino (or a swap_requests table if cheap to add — DEFER to Phase 4 if not trivial)
+         // Log reason (enum only — no free text) via pino. swap_requests table + reasonText deferred to Phase 4 (AUTH-05c).
          return Response.json({ candidates: validated });
        }
        ```
@@ -534,10 +534,14 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
          const tpl = await loadPublicHabit(slug);
          if (!tpl) return {};
          const noindex = templateShouldNoIndex(tpl.citedClips);
+         const firstClip = tpl.citedClips[0];
+         const youtubeId = firstClip?.youtube_video_id ?? '';
+         const startSec = firstClip?.start_seconds ?? 0;
          return {
            title: `${tpl.title} — Cited`,
            description: tpl.firstClaim.slice(0, 160),
            robots: noindex ? { index: false, follow: true } : undefined,
+           alternates: { canonical: `https://www.youtube.com/watch?v=${youtubeId}&t=${startSec}s` },
          };
        }
 
@@ -711,9 +715,11 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
     - `grep -q "ImageResponse" apps/web/app/h/\[slug\]/opengraph-image.tsx` returns 0
     - `grep -q "templateShouldNoIndex" apps/web/app/sitemap.ts` returns 0
     - `grep -q "templateShouldNoIndex" apps/web/app/h/\[slug\]/page.tsx` returns 0
+    - `grep -q "alternates: { canonical:" apps/web/app/h/\[slug\]/page.tsx` returns 0 (Pitfall 18 — canonical points to YouTube)
+    - `grep -q "youtube.com/watch" apps/web/app/h/\[slug\]/page.tsx` returns 0 (canonical references YouTube URL with start timestamp)
     - `pnpm --filter @cited/web typecheck` exits 0
   </acceptance_criteria>
-  <done>Public /h/[slug] is rich, anon-only, OG-imaged, sitemap-listed, RLS-proofed via Playwright.</done>
+  <done>Public /h/[slug] is rich, anon-only, OG-imaged, sitemap-listed, RLS-proofed via Playwright. Canonical link points to YouTube (Pitfall 18).</done>
 </task>
 
 <task type="auto">
@@ -726,14 +732,16 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
     1. Open `.planning/phases/03-user-ai-loop-the-demo/03-CONTEXT.md`. Find decision **D-12** (currently: `OG image (/api/og/h/[slug] route handler via @vercel/og): ...`). Replace with:
 
        ```
-       - **D-12 (AMENDED 2026-05-13 per user decision):** OG image via file convention `app/h/[slug]/opengraph-image.tsx` using `next/og` `ImageResponse`. This replaces the earlier `/api/og/h/[slug]` route handler proposal. Rationale: Next 16 idiomatic, auto-injected `og:image` meta tag, auto-cached at the edge, sized correctly, fewer lines. Behavior is identical to the user. Content unchanged: habit title + YouTube video thumbnail (fetched at generation time) + speaker name on warm paper palette.
+       - **D-12 (AMENDED 2026-05-13 per user decision):** OG image via file convention `app/h/[slug]/opengraph-image.tsx` using `next/og` `ImageResponse`. This replaces the earlier route-handler-based OG image proposal. Rationale: Next 16 idiomatic, auto-injected `og:image` meta tag, auto-cached at the edge, sized correctly, fewer lines. Behavior is identical to the user. Content unchanged: habit title + YouTube video thumbnail (fetched at generation time) + speaker name on warm paper palette.
        ```
 
        Add a short note at the bottom of the `<decisions>` block:
        ```
        ### Decision Amendments
-       - 2026-05-13: D-12 updated from `/api/og/h/[slug]` to `app/h/[slug]/opengraph-image.tsx` (file convention) per user lock-in following research recommendation.
+       - 2026-05-13: D-12 updated to the file-convention OG image approach (replaces the earlier route-handler-based proposal) per user lock-in following research recommendation.
        ```
+
+       IMPORTANT: When applying the amendment text above to CONTEXT.md, DELETE any prior occurrences of the literal string `/api/og/h/[slug]` from the original D-12 entry. The amendment must NOT contain that literal string (use the phrase "route-handler-based OG image proposal" instead). The acceptance criterion below greps for zero occurrences after the rewrite.
 
     2. Open `CLAUDE.md`. This was partially done in Plan 03-01 Task 2 — verify the change took. If the table row still says `Vercel AI SDK 5.x`, fix it now. If already `6.x`, no-op.
 
@@ -745,7 +753,7 @@ Existing /legal/dmca page (Phase 2) — public; CTA "Report this clip" link on /
   <acceptance_criteria>
     - `grep -q "AMENDED 2026-05-13" .planning/phases/03-user-ai-loop-the-demo/03-CONTEXT.md` returns 0
     - `grep -q "opengraph-image.tsx" .planning/phases/03-user-ai-loop-the-demo/03-CONTEXT.md` returns 0
-    - `grep -q "/api/og/h/\[slug\]" .planning/phases/03-user-ai-loop-the-demo/03-CONTEXT.md` returns 1 (no remaining mention of the old route — except inside the amendment text itself, which is fine)
+    - `grep -c "/api/og/h/\\[slug\\]" .planning/phases/03-user-ai-loop-the-demo/03-CONTEXT.md` returns 0 (after the paraphrase, there must be zero verbatim mentions of the old route path anywhere in the file)
     - `grep -E "AI SDK.*6\.x|Vercel AI SDK.*6" CLAUDE.md` returns 0
   </acceptance_criteria>
   <done>CONTEXT.md D-12 amended; CLAUDE.md AI SDK bumped to 6.x; user decisions locked in writing.</done>

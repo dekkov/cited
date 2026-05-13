@@ -582,7 +582,17 @@ From existing code:
          ].join('\n');
        }
 
-       async function validateOutput(/* ... */) { /* per RESEARCH §Pattern 4 — REC-02 + REC-03 */ }
+       async function validateOutput(output: import('@cited/core').SynthesisOutput, clipLookup: import('@cited/core').ClipLookup, nearest: import('@cited/core').NearestChunkQuery) {
+         const gapDomains = output.profileSummary.gapDomains;
+         const candidates = await Promise.all(output.candidates.map(async (c) => {
+           const result = await validateCitations(c.citations, clipLookup, nearest);
+           return { candidate: c, validCitations: result.valid, dropped: result.dropped, valid: result.valid.length >= 2 };
+         }));
+         const domainsPresent = new Set(candidates.filter((c) => c.valid).map((c) => c.candidate.domain));
+         const allCandidatesOk = candidates.every((c) => c.valid) && gapDomains.every((d) => domainsPresent.has(d));
+         const allDropped = candidates.flatMap((c) => c.dropped);
+         return { candidates, domainsPresent, allCandidatesOk, allDropped };
+       }
        ```
 
     2. Implement `validateOutput` to:
