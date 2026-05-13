@@ -63,3 +63,5 @@ export const clipEditAction = pgEnum('clip_edit_action', [
   'embedded',
   'embed_failed',
 ]);
+
+export const userHabitStatus = pgEnum('user_habit_status', ['active', 'archived', 'graduated']);

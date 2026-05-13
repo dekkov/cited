@@ -148,4 +148,37 @@ describe('@cited/db schema exports', () => {
     expect(table.result).toBeDefined();
     expect(table.error).toBeDefined();
   });
+
+  describe('phase 3 schema additions', () => {
+    it('userHabits has status, archivedAt, graduatedAt columns', async () => {
+      const { userHabits } = await import('./index');
+      const table = userHabits as any;
+      expect(table.status).toBeDefined();
+      expect(table.archivedAt).toBeDefined();
+      expect(table.graduatedAt).toBeDefined();
+    });
+
+    it('habitTemplates has clusterId column', async () => {
+      const { habitTemplates } = await import('./index');
+      const table = habitTemplates as any;
+      expect(table.clusterId).toBeDefined();
+    });
+
+    it('interviewRuns table exists with required columns', async () => {
+      const { interviewRuns } = await import('./index');
+      const table = interviewRuns as any;
+      expect(table.id).toBeDefined();
+      expect(table.userId).toBeDefined();
+      expect(table.runIndex).toBeDefined();
+      expect(table.profileJson).toBeDefined();
+      expect(table.candidatesJson).toBeDefined();
+      expect(table.startedAt).toBeDefined();
+      expect(table.completedAt).toBeDefined();
+    });
+
+    it('exports interviewRuns from barrel', async () => {
+      const schema = await import('./index');
+      expect(schema).toHaveProperty('interviewRuns');
+    });
+  });
 });

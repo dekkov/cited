@@ -17,3 +17,4 @@ export * from './consent-records';
 export * from './transcripts';
 export * from './episode-blacklist';
 export * from './aion10-fixture-candidates';
+export * from './interview-runs';
