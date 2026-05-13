@@ -63,7 +63,7 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 | **`zod`** | 3.x | Schema validation | All API route handlers; LLM structured outputs; form validation |
 | **`react-hook-form`** + `@hookform/resolvers/zod` | latest | Forms | Onboarding interview, admin clip editor, settings |
 | **`@tanstack/react-query`** | 5.x | Client-side data fetching/caching | Daily check-in interactions, swap requests; *not* needed for SSR-driven pages |
-| **`vercel/ai`** SDK (`ai` package) | 4.x or 5.x | Streaming LLM responses + tool calling | Onboarding interview chat; swap reasoning |
+| **`vercel/ai`** SDK (`ai` package) | 6.x | Streaming LLM responses + tool calling | Onboarding interview chat; swap reasoning |
 | **`resend`** + **`react-email`** | latest | Transactional email | Magic-link customization, GDPR data-export delivery, weekly digest (post-v1). Abstract behind a small interface so SMTP can be swapped in for self-hosters. |
 | **`pino`** + **`pino-pretty`** | latest | Structured logging | Server logging across web + admin + worker |
 | **`@sentry/nextjs`** | latest | Error tracking | Hosted demo only; opt-out for self-hosters via env var |
@@ -135,7 +135,7 @@ An open-source, evidence-backed health habit tracker. Each recommended habit is 
 | pgvector 0.8.2 | Postgres 17.3+ | **Avoid Postgres 17.0–17.2** — linker bug with `float_to_shortest_decimal_bufn`. Supabase tracks this; just check your local Docker image. |
 | Drizzle + Supabase pooled connection | Use `postgres` driver with `prepare: false` | Required for Supabase's "Transaction" pooler mode (PgBouncer). "Session" mode is fine without the flag but loses pooling benefits. |
 | `@supabase/ssr` | Next.js 16 App Router | Use `createServerClient` in Server Components; `createBrowserClient` in client. The older `@supabase/auth-helpers-nextjs` is deprecated — do not use. |
-| Vercel AI SDK 5.x | Next.js 16 | Streaming + tool calling; works with both OpenAI and Anthropic providers via `@ai-sdk/openai` / `@ai-sdk/anthropic`. |
+| Vercel AI SDK 6.x | Next.js 16 | Streaming + tool calling; works with both OpenAI and Anthropic providers via `@ai-sdk/openai` / `@ai-sdk/anthropic`. Note: v6 introduces `UIMessage.parts` array (was `content` string in v5) and `convertToModelMessages` / `DefaultChatTransport`. |
 ## Confidence Assessment
 | Decision | Confidence | Source basis |
 |----------|------------|--------------|

@@ -14,10 +14,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^1",
-    "@ai-sdk/openai": "^1",
+    "@ai-sdk/anthropic": "^3.0.77",
+    "@ai-sdk/openai": "^3.0.63",
     "@deepgram/sdk": "^5.1.0",
-    "ai": "^4",
+    "ai": "^6.0.182",
     "subtitle": "^4.2.2",
     "youtube-transcript-plus": "^2.0.0",
     "zod": "^3"

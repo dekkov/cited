@@ -44,8 +44,8 @@ export const anthropicLlm: LlmProvider = {
     };
     if (result.usage) {
       response.usage = {
-        inputTokens: result.usage.promptTokens,
-        outputTokens: result.usage.completionTokens,
+        inputTokens: result.usage.inputTokens ?? 0,
+        outputTokens: result.usage.outputTokens ?? 0,
       };
     }
     return response;
