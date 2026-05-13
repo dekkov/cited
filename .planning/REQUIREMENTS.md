@@ -56,7 +56,7 @@
 
 - [x] **AION-01**: After signup + consent + disclaimer, user enters AI-driven onboarding interview
 - [x] **AION-02**: Interview is a 6–10 turn adaptive conversation covering 4 domains (sleep / nutrition+gut / exercise+longevity / mental health)
-- [ ] **AION-03**: Each turn is grounded in real DOAC content via hybrid RAG (pgvector cosine + tsvector full-text) over the curated clip corpus
+- [x] **AION-03**: Each turn is grounded in real DOAC content via hybrid RAG (pgvector cosine + tsvector full-text) over the curated clip corpus
 - [ ] **AION-04**: After turn 3, the agent prioritizes the largest identified gap domain
 - [x] **AION-05**: Interview output is a structured user profile (jsonb) with identified gap domains and one-sentence summaries
 - [ ] **AION-06**: LLM never gives medical advice; if user mentions symptoms, the agent suggests seeing a doctor and continues
@@ -68,10 +68,10 @@
 ### Habit Recommendations & Adoption
 
 - [ ] **REC-01**: After interview, LLM proposes 3–5 personalized habit candidates ranked by expected impact
-- [ ] **REC-02**: Each habit candidate has 2–3 evidence clip citations validated against the actual `clips` table (post-generation citation grounding check; broken citations dropped, recommendation regenerated if <2 valid)
+- [x] **REC-02**: Each habit candidate has 2–3 evidence clip citations validated against the actual `clips` table (post-generation citation grounding check; broken citations dropped, recommendation regenerated if <2 valid)
 - [ ] **REC-03**: At least one habit per identified-gap domain
 - [x] **REC-04**: Each habit candidate includes a `trigger` (when/where — implementation-intention) and an `tiny_action` (BJ Fogg-style minimum)
-- [ ] **REC-05**: User can adopt 1, several, or all proposed habits; adoption creates `user_habits` rows linked to a `habit_templates` row + clip citations
+- [x] **REC-05**: User can adopt 1, several, or all proposed habits; adoption creates `user_habits` rows linked to a `habit_templates` row + clip citations
 - [x] **REC-06**: User can re-run the interview at any time from settings (creates a new run, doesn't overwrite history)
 
 ### Habit Cards & Daily Check-In
@@ -255,7 +255,7 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | ADMN-16 | Phase 2 | Complete |
 | AION-01 | Phase 3 | Complete |
 | AION-02 | Phase 3 | Complete |
-| AION-03 | Phase 3 | Pending |
+| AION-03 | Phase 3 | Complete |
 | AION-04 | Phase 3 | Pending |
 | AION-05 | Phase 3 | Complete |
 | AION-06 | Phase 3 | Pending |
@@ -264,10 +264,10 @@ Populated by gsd-roadmapper on 2026-05-07. Every v1 REQ-ID maps to exactly one p
 | AION-09 | Phase 1 | Complete |
 | AION-10 | Phase 2 | Complete |
 | REC-01 | Phase 3 | Pending |
-| REC-02 | Phase 3 | Pending |
+| REC-02 | Phase 3 | Complete |
 | REC-03 | Phase 3 | Pending |
 | REC-04 | Phase 3 | Complete |
-| REC-05 | Phase 3 | Pending |
+| REC-05 | Phase 3 | Complete |
 | REC-06 | Phase 3 | Complete |
 | HAB-01 | Phase 3 | Pending |
 | HAB-02 | Phase 3 | Pending |

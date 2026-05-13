@@ -124,7 +124,7 @@ Plans:
 - **Pitfall 15** (flat / generic AI voice): Voice spec in system prompt (AION-08 model tiering plus prompt discipline); ≤3-sentence turn discipline; no emoji; A/B test with 5–10 alpha users in early Phase 4.
 - **Pitfall 18** (public habit page SEO without canonical discipline): `noindex` on dosing/supplement-touching pages; canonical link points back to YouTube source for clip-driven pages; robots.txt restricts `/h/*` until editorial policy mature (PUB-04 + LGL-08 interaction).
 
-**Plans:** 1/6 plans executed
+**Plans:** 2/6 plans executed
 
 Plans:
 - [ ] 03-user-ai-loop-the-demo/03-01-schema-foundations-PLAN.md — Drizzle migration (user_habits.status, habit_templates.cluster_id, interview_runs), AI SDK v6 install, retrieval+interview schema skeletons [Wave 1]
