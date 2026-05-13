@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v0.5
 milestone_name: Extraction Worker
-status: Phase complete — ready for verification
-last_updated: "2026-05-12T12:14:39.333Z"
+status: Ready to plan
+last_updated: "2026-05-13T01:19:59.763Z"
 progress:
   total_phases: 5
   completed_phases: 2
@@ -26,8 +26,8 @@ progress:
 
 ## Current Position
 
-Phase: 02 (curation-tooling-doac-corpus) — EXECUTING
-Plan: 6 of 6
+Phase: 3
+Plan: Not started
 
 ## Performance Metrics
 
