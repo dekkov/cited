@@ -124,7 +124,15 @@ Plans:
 - **Pitfall 15** (flat / generic AI voice): Voice spec in system prompt (AION-08 model tiering plus prompt discipline); ≤3-sentence turn discipline; no emoji; A/B test with 5–10 alpha users in early Phase 4.
 - **Pitfall 18** (public habit page SEO without canonical discipline): `noindex` on dosing/supplement-touching pages; canonical link points back to YouTube source for clip-driven pages; robots.txt restricts `/h/*` until editorial policy mature (PUB-04 + LGL-08 interaction).
 
-**Plans:** TBD
+**Plans:** 6 plans
+
+Plans:
+- [ ] 03-user-ai-loop-the-demo/03-01-schema-foundations-PLAN.md — Drizzle migration (user_habits.status, habit_templates.cluster_id, interview_runs), AI SDK v6 install, retrieval+interview schema skeletons [Wave 1]
+- [ ] 03-user-ai-loop-the-demo/03-02-hybrid-retrieval-grounding-PLAN.md — hybridRetrieve (pgvector+tsvector RRF), validateCitations (reuse Phase 2 groundingCheck), computeClusters k-means [Wave 2]
+- [ ] 03-user-ai-loop-the-demo/03-03-interview-synthesis-api-PLAN.md — /api/interview streaming + tool calling, /api/synthesize Sonnet generateObject + citation grounding + interview_runs persistence [Wave 2]
+- [ ] 03-user-ai-loop-the-demo/03-04-onboarding-ui-PLAN.md — Interview UI (chips, progress, free-text gate), synthesis loader, swipe-stack adoption, settings re-run [Wave 2]
+- [ ] 03-user-ai-loop-the-demo/03-05-dashboard-checkin-graduation-PLAN.md — Dashboard with consistency-primary HabitCard, tri-state check-in sheet, streak freeze auto-apply, graduation at 21 [Wave 3]
+- [ ] 03-user-ai-loop-the-demo/03-06-habit-detail-public-swap-PLAN.md — Habit detail + swap panel, public /h/[slug] + opengraph-image.tsx + sitemap + RLS Playwright test + CONTEXT/CLAUDE amendments [Wave 3]
 **UI hint:** yes
 
 ---
