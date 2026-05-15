@@ -2,12 +2,17 @@ import { redirect } from 'next/navigation';
 
 import { requireUser } from '@/lib/auth/guards';
 import { isLegalGatePassed } from '@/lib/auth/legal-gate';
+import { getDb } from '@/lib/db';
+import { userHabits, eq } from '@cited/db';
 import { LegalGateForm } from './legal-gate-form';
 
 export default async function LegalGatePage() {
   const user = await requireUser();
   if (await isLegalGatePassed(user.id)) {
-    redirect('/dashboard');
+    // Send to dashboard if they already have habits (interview done), otherwise interview
+    const db = getDb();
+    const habit = await db.query.userHabits.findFirst({ where: eq(userHabits.userId, user.id) });
+    redirect(habit ? '/dashboard' : '/onboarding/interview');
   }
   return (
     <main className="py-8">

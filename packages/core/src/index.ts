@@ -1,5 +1,6 @@
 export * from './llm/index';
-export * from './transcripts';
+// transcripts intentionally excluded — server-only (uses node:fs/promises via youtube-transcript-plus)
+// import directly from '@cited/core/src/transcripts' in server-side code
 export * from './embeddings';
 export * from './retrieval';
 export * from './interview';

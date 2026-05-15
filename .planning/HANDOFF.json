@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-15T16:43:38.239Z",
+  "phase": "03",
+  "phase_name": "user-ai-loop-the-demo",
+  "phase_dir": ".planning/phases/03-user-ai-loop-the-demo",
+  "plan": 4,
+  "task": 3,
+  "total_tasks": 3,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Interview surface — page + InterviewClient + chips + progress + domain badge + free-text gate", "status": "done", "commit": "aaee6bf"},
+    {"id": 2, "name": "Recommendations page + RecommendationStack swipe + AdoptionSummary + settings re-run button", "status": "done", "commit": "a61f8a6"},
+    {"id": 3, "name": "Visual verification of full onboarding flow", "status": "in_progress", "progress": "Awaiting human visual verification — user has not yet completed the UI walkthrough"}
+  ],
+  "remaining_tasks": [
+    {"id": 3, "name": "Visual verification checkpoint — user must run through full flow in browser and reply approved", "status": "not_started"}
+  ],
+  "blockers": [],
+  "human_actions_pending": [
+    {
+      "action": "Sign out via dashboard Sign out button, log back in via magic link, complete consent form, then run through the 19-step UI verification checklist",
+      "context": "Plan 03-04 Task 3 is a human-verify checkpoint. The executor built all UI (Tasks 1+2 committed). User needs to walk the full onboarding flow: /onboarding/interview → /onboarding/recommendations → /dashboard. Reply 'approved' or describe issues.",
+      "blocking": true
+    }
+  ],
+  "decisions": [
+    {"decision": "Removed transcripts from @cited/core barrel export", "rationale": "youtube-transcript-plus uses node:fs/promises — cannot bundle into client components", "phase": "03"},
+    {"decision": "legal-gate redirect logic: has user_habits → /dashboard, else → /onboarding/interview", "rationale": "Prevents already-interviewed users from being sent back to interview on re-login", "phase": "03"},
+    {"decision": "interview/page.tsx guard: if userHabits exist → redirect /dashboard", "rationale": "Same as above — skip interview for returning users who already adopted habits", "phase": "03"},
+    {"decision": "New Supabase instance: iepikclxhwuefutuqpzu / aws-1-us-west-2", "rationale": "Previous instance had IPv6/DNS issues from WSL2; fresh instance needed", "phase": "03"},
+    {"decision": "DB_PASSWORD separate from DATABASE_URL", "rationale": "drizzle-kit only: avoids URL-encoding issues with # in passwords. Runtime client uses full URL with password embedded.", "phase": "03"}
+  ],
+  "uncommitted_files": [
+    "CLAUDE.md",
+    "apps/web/app/(app)/dashboard/page.tsx",
+    "apps/web/app/(onboarding)/onboarding/interview/page.tsx",
+    "apps/web/app/(onboarding)/onboarding/legal-gate/actions.ts",
+    "apps/web/app/(onboarding)/onboarding/legal-gate/page.tsx",
+    "packages/core/src/index.ts",
+    "packages/db/drizzle.config.ts",
+    "packages/db/migrations/meta/_journal.json",
+    ".planning/phases/03-user-ai-loop-the-demo/03-01-schema-foundations-SUMMARY.md (rename)",
+    ".planning/phases/03-user-ai-loop-the-demo/03-02-hybrid-retrieval-grounding-SUMMARY.md (rename)",
+    ".planning/phases/03-user-ai-loop-the-demo/03-03-interview-synthesis-api-SUMMARY.md (rename)"
+  ],
+  "next_action": "Commit outstanding changes, then present the 19-step UI checklist to user and await 'approved' before spawning continuation agent for Wave 3 (plans 03-05 and 03-06)",
+  "context_notes": "Plan 03-04 Tasks 1+2 are committed and built. Task 3 is the human-verify gate. The continuation agent ID was a5e844f9cba19e810 but context is exhausted — spawn a fresh continuation rather than resuming it. Wave 3 plans (03-05 dashboard+checkin, 03-06 habit-detail+swap+public-page) are ready to execute once 03-04 is approved."
+}

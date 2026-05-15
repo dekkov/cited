@@ -196,6 +196,14 @@ All frontend plans MUST read `.planning/UI-DESIGN.md` before specifying componen
 - **Landing page** — planned for Phase 4. Full section specs in `UI-DESIGN.md`.
 
 Do not invent new color values, font families, or spacing scales — derive everything from tokens in `UI-DESIGN.md`.
+
+### Human-Action Items
+
+When a task requires action from the user (running a command, enabling a setting in a dashboard, copying credentials, etc.):
+
+1. **Surface it in a dedicated, clearly labelled section** — never bury it in prose. Use a heading like `## Action Required` or a blockquote block so it's impossible to miss.
+2. **Wait for explicit confirmation** before marking the step complete or continuing to the next step. Ask: "Let me know once this is done and I'll continue."
+3. **Never auto-advance** past a human-action gate — even if the next steps are obvious.
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
@@ -203,6 +211,19 @@ Do not invent new color values, font families, or spacing scales — derive ever
 
 Architecture not yet mapped. Follow existing patterns found in the codebase.
 <!-- GSD:architecture-end -->
+
+## Code Navigation — Use the Graph First
+
+**Always use `code-review-graph` MCP tools before reading files manually.** This saves significant context vs. grepping/reading raw files.
+
+Key tools:
+- `semantic_search_nodes_tool` — find where a function/type/component is defined (replaces grep + read)
+- `get_architecture_overview_tool` — understand module structure before diving in
+- `get_impact_radius_tool` — see what a file change would affect before editing
+- `get_review_context_tool` — load all context for a file being reviewed/edited
+- `query_graph_tool` — answer "what imports X?" or "what does Y call?" questions
+
+**Workflow:** Before reading any source file, run a graph query first. Only fall back to `Read`/`Grep`/`Bash` if the graph doesn't have what you need or the graph hasn't been built yet (`build_or_update_graph_tool`).
 
 <!-- GSD:workflow-start source:GSD defaults -->
 ## GSD Workflow Enforcement

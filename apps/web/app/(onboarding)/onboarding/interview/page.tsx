@@ -9,7 +9,7 @@
 import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth/guards';
 import { getDb } from '@/lib/db';
-import { interviewRuns, consentRecords, eq, and, isNull } from '@cited/db';
+import { interviewRuns, userHabits, consentRecords, eq, and, isNull } from '@cited/db';
 import { startInterviewAction } from '@/app/actions/start-interview';
 import { InterviewClient } from './_components/InterviewClient';
 
@@ -18,6 +18,10 @@ export default async function InterviewPage() {
   if (!user) redirect('/login');
 
   const db = getDb();
+
+  // Guard: if user already has habits they've completed the interview — send to dashboard
+  const existingHabit = await db.query.userHabits.findFirst({ where: eq(userHabits.userId, user.id) });
+  if (existingHabit) redirect('/dashboard');
 
   // AUTH-05c: check consent for LLM free-text analysis
   const consentRecord = await db.query.consentRecords.findFirst({

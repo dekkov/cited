@@ -79,5 +79,5 @@ export async function submitLegalGate(_prev: FormState, formData: FormData): Pro
   });
 
   // redirect throws — not caught
-  redirect('/dashboard');
+  redirect('/onboarding/interview');
 }
