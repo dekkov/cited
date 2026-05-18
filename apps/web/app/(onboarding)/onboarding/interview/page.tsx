@@ -4,14 +4,14 @@
  * - Requires a signed-in user (redirects to /login if not).
  * - Finds an in-progress interview run, or starts one via startInterviewAction.
  * - Reads auth consent for AI free-text (AUTH-05c) from profiles.
- * - Passes runId + freeTextOptIn down to InterviewClient (client component).
+ * - Passes runId + freeTextOptIn down to InterviewFlow (client component).
  */
 import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth/guards';
 import { getDb } from '@/lib/db';
 import { interviewRuns, userHabits, consentRecords, eq, and, isNull } from '@cited/db';
 import { startInterviewAction } from '@/app/actions/start-interview';
-import { InterviewClient } from './_components/InterviewClient';
+import { InterviewFlow } from './_components/InterviewFlow';
 
 export default async function InterviewPage() {
   const user = await getSessionUser();
@@ -49,5 +49,5 @@ export default async function InterviewPage() {
     runId = started.runId;
   }
 
-  return <InterviewClient runId={runId} freeTextOptIn={freeTextOptIn} />;
+  return <InterviewFlow runId={runId} freeTextOptIn={freeTextOptIn} />;
 }

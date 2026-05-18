@@ -1,4 +1,4 @@
-import type { WordTimestamped } from '@cited/core';
+import type { WordTimestamped } from '@cited/core/transcripts';
 
 export type TranscriptChunk = {
   chunkIndex: number;

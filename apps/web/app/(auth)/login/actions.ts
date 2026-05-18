@@ -4,14 +4,36 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
-const EmailSchema = z.object({ email: z.string().email() });
+const CredentialsSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
 
-export async function signInWithMagicLink(
+export async function signInWithPassword(
   _: unknown,
   formData: FormData,
 ): Promise<{ error?: string; ok?: boolean; message?: string }> {
-  const parsed = EmailSchema.safeParse({ email: formData.get('email') });
-  if (!parsed.success) return { error: 'Enter a valid email address.' };
+  const parsed = CredentialsSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+  if (!parsed.success) return { error: parsed.error.errors[0]?.message ?? 'Invalid input.' };
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error) return { error: error.message };
+  redirect('/dashboard');
+}
+
+export async function signUp(
+  _: unknown,
+  formData: FormData,
+): Promise<{ error?: string; ok?: boolean; message?: string }> {
+  const parsed = CredentialsSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+  if (!parsed.success) return { error: parsed.error.errors[0]?.message ?? 'Invalid input.' };
 
   const supabase = await createServerSupabaseClient();
   const origin =
@@ -19,13 +41,12 @@ export async function signInWithMagicLink(
     process.env.NEXT_PUBLIC_SITE_URL ??
     'http://localhost:3000';
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email: parsed.data.email,
-    options: { emailRedirectTo: `${origin}/auth/callback?next=/dashboard` },
+  const { error } = await supabase.auth.signUp({
+    ...parsed.data,
+    options: { emailRedirectTo: `${origin}/auth/callback?next=/onboarding/legal-gate` },
   });
-
   if (error) return { error: error.message };
-  return { ok: true, message: 'Check your inbox — magic link sent.' };
+  return { ok: true, message: 'Account created — check your inbox to confirm, or sign in if email confirmation is disabled.' };
 }
 
 export async function signInWithGoogle(): Promise<{ error?: string }> {

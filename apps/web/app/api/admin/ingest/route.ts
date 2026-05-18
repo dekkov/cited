@@ -2,7 +2,8 @@ import 'server-only';
 
 import { NextResponse } from 'next/server';
 
-import { embedTranscriptChunks, extractVideoId, fetchTranscript } from '@cited/core';
+import { embedTranscriptChunks } from '@cited/core';
+import { extractVideoId, fetchTranscript } from '@cited/core/transcripts';
 import {
   createDb,
   episodeBlacklist,

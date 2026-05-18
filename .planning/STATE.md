@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v0.5
 milestone_name: Extraction Worker
 status: Ready to execute
-last_updated: "2026-05-15T07:21:20.439Z"
+last_updated: "2026-05-17T19:00:00.000Z"
 progress:
   total_phases: 5
   completed_phases: 2
@@ -93,9 +93,21 @@ None — ready to begin Phase 1 planning.
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T07:21:20.436Z
+**Last session:** 2026-05-17T19:00:00.000Z
 
-**Next session:** Begin Phase 1 planning via `/gsd:plan-phase 1`. Phase 1 should decompose into plans covering: (a) repo bootstrap + monorepo + Biome + Husky + docker-compose CI smoke, (b) Drizzle schema + RLS policies + extraction_jobs/clips_pending placeholders + api-contracts zod schemas, (c) Supabase Auth integration with magic-link + Google OAuth + granular GDPR consent UI + DOB gate + disclaimer ack, (d) OSS hygiene: LICENSE / CONTRIBUTING / DCO bot / CODE_OF_CONDUCT / MEDICAL_REVIEW / issue templates / gitleaks / Open Collective.
+**Stopped at:** Plan 03-04 Task 3 (human visual verification) — surface was rebuilt mid-session.
+
+**This session's pivot (2026-05-17):**
+- Onboarding interview rebuilt: free-form dump → ONE GPT-4o-mini call selects 8 of 30 pre-written questions → chip answers → ONE GPT-4o synthesis call. Per-turn LLM streaming removed.
+- Login switched to email+password (Supabase OTP rate-limited during dev).
+- LLM provider switched to OpenAI-only (no Anthropic key). `LLM_PROVIDER=openai` env var set.
+- New files: `packages/core/src/interview/{question-pool,select-questions}.ts`, `apps/web/app/api/interview/select-questions/route.ts`, `InterviewFlow.tsx`.
+- Deleted: old `InterviewClient.tsx` + 7 helper components + `/api/interview` streaming route.
+- Backlog captured: `.planning/backlog/admin-question-pool-editor.md` (admin UI for question pool, post-MVP).
+
+**Resume file:** `.planning/HANDOFF.json` (full machine-readable state) + `.planning/phases/03-user-ai-loop-the-demo/.continue-here.md`
+
+**Next session:** User runs the new flow end-to-end in the browser, reports issues. If clean → draft new visual-verification checklist for 03-04 Task 3, amend 03-04 SUMMARY to document the pivot, then proceed to Wave 3 (plans 03-05 + 03-06).
 
 **Key context for resuming:**
 

@@ -14,8 +14,17 @@ vi.mock('@cited/core', async () => {
   const actual = await vi.importActual<typeof import('@cited/core')>('@cited/core');
   return {
     ...actual,
-    fetchTranscript: (...args: unknown[]) => mockFetchTranscript(...args),
     embedTranscriptChunks: (...args: unknown[]) => mockEmbedTranscriptChunks(...args),
+  };
+});
+vi.mock('@cited/core/transcripts', async () => {
+  const actual =
+    await vi.importActual<typeof import('@cited/core/transcripts')>(
+      '@cited/core/transcripts',
+    );
+  return {
+    ...actual,
+    fetchTranscript: (...args: unknown[]) => mockFetchTranscript(...args),
     extractVideoId: actual.extractVideoId,
   };
 });
