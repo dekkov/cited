@@ -6,3 +6,4 @@ export * from './retrieval';
 export * from './interview';
 export * from './recommendations';
 export * from './swap';
+export * from './habits';
