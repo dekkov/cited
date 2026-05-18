@@ -38,7 +38,7 @@ Complete user AI loop from post-signup into a RAG-grounded onboarding interview 
 ### Public Pages /h/[slug] (PUB-01–05)
 
 - **D-11:** **Rich editorial page** (not minimal card). Content: claim (Newsreader italic, block-quoted), speaker name + credentials + attribution note ("never implies endorsement"), DOAC episode context (episode title, date), embedded `<YouTubeEmbed>` (lite-embed, start/end timestamps, no player chrome disabled), trigger + tiny action, prominent "Watch on Diary of a CEO" CTA, "Adopt this habit" CTA (links to signup if logged-out; auto-adopts if logged-in).
-- **D-12:** OG image (`/api/og/h/[slug]` route handler via `@vercel/og`): habit title + YouTube video thumbnail (fetched at generation time) + speaker name. Warm paper palette.
+- **D-12 (AMENDED 2026-05-13 per user decision):** OG image via file convention `app/h/[slug]/opengraph-image.tsx` using `next/og` `ImageResponse`. This replaces the earlier route-handler-based OG image proposal. Rationale: Next 16 idiomatic, auto-injected `og:image` meta tag, auto-cached at the edge, sized correctly, fewer lines. Behavior is identical to the user. Content unchanged: habit title + YouTube video thumbnail (fetched at generation time) + speaker name on warm paper palette.
 
 ### Claude's Discretion
 - Swap presentation style (slide-in panel vs. inline modal vs. dedicated page) — choose simplest that works.
@@ -46,6 +46,10 @@ Complete user AI loop from post-signup into a RAG-grounded onboarding interview 
 - Loading skeleton design for interview turns and dashboard.
 - Error state handling throughout.
 - Exact `noindex` rules for dosing/supplement-adjacent public pages (per PUB-04 + LGL-08 interaction).
+
+### Decision Amendments
+
+- 2026-05-13: D-12 updated to the file-convention OG image approach (replaces the earlier route-handler-based proposal) per user lock-in following research recommendation.
 
 </decisions>
 
@@ -106,7 +110,7 @@ Complete user AI loop from post-signup into a RAG-grounded onboarding interview 
 - Citation grounding: post-generation re-fetch against `clips` table by ID (REC-02); if <2 valid → regenerate
 - Streak Freeze auto-apply: application-layer logic (not DB trigger) in the check-in server action — more testable
 - Public pages: `app/(public)/h/[slug]/page.tsx` (or a new `(public)` route group; check if one exists already)
-- OG image: `app/api/og/h/[slug]/route.ts` using `@vercel/og`
+- OG image: `app/h/[slug]/opengraph-image.tsx` using `next/og` `ImageResponse` (file convention, per D-12 amendment)
 
 </code_context>
 
