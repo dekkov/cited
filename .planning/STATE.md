@@ -2,8 +2,9 @@
 gsd_state_version: 1.0
 milestone: v0.5
 milestone_name: Extraction Worker
-status: Ready to execute
-last_updated: "2026-05-17T19:00:00.000Z"
+status: Executing Phase 03
+stopped_at: "Plan 03-04 complete (Task 3 verified 2026-05-17). Wave 3 pending: plans 03-05 + 03-06."
+last_updated: "2026-05-18T04:32:07.541Z"
 progress:
   total_phases: 5
   completed_phases: 2
@@ -27,7 +28,7 @@ progress:
 ## Current Position
 
 Phase: 03 (user-ai-loop-the-demo) — EXECUTING
-Plan: 2 of 6
+Plan: 1 of 6
 
 ## Performance Metrics
 
@@ -93,21 +94,11 @@ None — ready to begin Phase 1 planning.
 
 ## Session Continuity
 
-**Last session:** 2026-05-17T19:00:00.000Z
+**Last session:** 2026-05-17 — Plan 03-04 closed. Pivot documented in SUMMARY addendum.
 
-**Stopped at:** Plan 03-04 Task 3 (human visual verification) — surface was rebuilt mid-session.
+**Stopped at:** Plan 03-04 complete (Task 3 verified 2026-05-17). Wave 3 pending: plans 03-05 + 03-06.
 
-**This session's pivot (2026-05-17):**
-- Onboarding interview rebuilt: free-form dump → ONE GPT-4o-mini call selects 8 of 30 pre-written questions → chip answers → ONE GPT-4o synthesis call. Per-turn LLM streaming removed.
-- Login switched to email+password (Supabase OTP rate-limited during dev).
-- LLM provider switched to OpenAI-only (no Anthropic key). `LLM_PROVIDER=openai` env var set.
-- New files: `packages/core/src/interview/{question-pool,select-questions}.ts`, `apps/web/app/api/interview/select-questions/route.ts`, `InterviewFlow.tsx`.
-- Deleted: old `InterviewClient.tsx` + 7 helper components + `/api/interview` streaming route.
-- Backlog captured: `.planning/backlog/admin-question-pool-editor.md` (admin UI for question pool, post-MVP).
-
-**Resume file:** `.planning/HANDOFF.json` (full machine-readable state) + `.planning/phases/03-user-ai-loop-the-demo/.continue-here.md`
-
-**Next session:** User runs the new flow end-to-end in the browser, reports issues. If clean → draft new visual-verification checklist for 03-04 Task 3, amend 03-04 SUMMARY to document the pivot, then proceed to Wave 3 (plans 03-05 + 03-06).
+**Next:** Execute Wave 3 — `/gsd:execute-phase 03` to run plans 03-05 (dashboard + check-in + graduation) and 03-06 (habit detail + swap + public page).
 
 **Key context for resuming:**
 

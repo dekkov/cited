@@ -23,10 +23,19 @@ export const HabitCandidateSchema = z.object({
 });
 export type HabitCandidate = z.infer<typeof HabitCandidateSchema>;
 
+// One summary entry per domain (fixed shape — OpenAI strict schemas reject `propertyNames`)
+export const DomainSummariesSchema = z.object({
+  sleep: z.string(),
+  nutrition_gut: z.string(),
+  exercise_longevity: z.string(),
+  mental_health: z.string(),
+});
+export type DomainSummaries = z.infer<typeof DomainSummariesSchema>;
+
 export const SynthesisOutputSchema = z.object({
   profileSummary: z.object({
     gapDomains: z.array(DomainSchema).min(1),
-    summaries: z.record(DomainSchema, z.string()),  // per-domain one-sentence summary
+    summaries: DomainSummariesSchema, // per-domain one-sentence summary
   }),
   candidates: z.array(HabitCandidateSchema).min(3).max(5),  // REC-01
 });

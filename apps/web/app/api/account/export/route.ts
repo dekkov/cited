@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
-import { createDb, profiles, consentRecords, eq } from '@cited/db';
 import { requireUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { consentRecords, eq, profiles } from '@cited/db';
 
 export const runtime = 'nodejs';
 
@@ -13,18 +14,11 @@ export const runtime = 'nodejs';
  */
 export async function GET() {
   const user = await requireUser();
-  const db = createDb(process.env.DATABASE_URL!);
+  const db = getDb();
 
-  const profileRows = await db
-    .select()
-    .from(profiles)
-    .where(eq(profiles.id, user.id))
-    .limit(1);
+  const profileRows = await db.select().from(profiles).where(eq(profiles.id, user.id)).limit(1);
 
-  const consents = await db
-    .select()
-    .from(consentRecords)
-    .where(eq(consentRecords.userId, user.id));
+  const consents = await db.select().from(consentRecords).where(eq(consentRecords.userId, user.id));
 
   // Phase 1: profile + consent_records only.
   // Phase 4 expands to habits, check-ins, streaks (PROF-03 full UX).
@@ -33,7 +27,8 @@ export async function GET() {
     exported_at: new Date().toISOString(),
     profile: profileRows[0] ?? null,
     consent_records: consents,
-    _note: 'Phase 1 export covers profile + consent only. Habits/check-ins/streaks land in Phase 4 (PROF-03).',
+    _note:
+      'Phase 1 export covers profile + consent only. Habits/check-ins/streaks land in Phase 4 (PROF-03).',
   };
 
   return new NextResponse(JSON.stringify(payload, null, 2), {

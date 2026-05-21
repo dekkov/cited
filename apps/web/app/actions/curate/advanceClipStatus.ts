@@ -3,17 +3,12 @@
 import 'server-only';
 
 import { getSessionUser } from '@/lib/auth/guards';
-import { clipEdits, clips, createDb, eq } from '@cited/db';
+import { getDb } from '@/lib/db';
+import { clipEdits, clips, eq } from '@cited/db';
 import { z } from 'zod';
 
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 // Board columns are field-completeness-derived (see boardQueries).

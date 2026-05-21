@@ -1,8 +1,9 @@
 'use server';
-import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth/guards';
-import { createDb, profiles, eq } from '@cited/db';
+import { getDb } from '@/lib/db';
+import { eq, profiles } from '@cited/db';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
 const Schema = z.object({
   display_name: z.string().min(0).max(80),
@@ -24,7 +25,7 @@ export async function updateProfile(
     return { error: parsed.error.issues[0]?.message ?? 'Invalid input' };
   }
 
-  const db = createDb(process.env.DATABASE_URL!);
+  const db = getDb();
   await db
     .update(profiles)
     .set({

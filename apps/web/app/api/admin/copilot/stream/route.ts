@@ -1,7 +1,8 @@
 import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { copilot, grounding } from '@cited/core';
-import { clipEdits, createDb, sql } from '@cited/db';
+import { clipEdits, sql } from '@cited/db';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -15,14 +16,8 @@ const inputSchema = z.object({
   freeText: z.string().optional(),
 });
 
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 // pgvector nearest-chunk query — passed into groundingCheck so @cited/core stays

@@ -2,30 +2,17 @@ import 'server-only';
 
 import { NextResponse } from 'next/server';
 
+import { getDb } from '@/lib/db';
 import { embedTranscriptChunks } from '@cited/core';
 import { extractVideoId, fetchTranscript } from '@cited/core/transcripts';
-import {
-  createDb,
-  episodeBlacklist,
-  episodes,
-  eq,
-  podcasts,
-  transcriptChunks,
-  transcripts,
-} from '@cited/db';
+import { episodeBlacklist, episodes, eq, podcasts, transcriptChunks, transcripts } from '@cited/db';
 
 import { ingestUrlSchema } from '@/app/actions/curate/schemas';
 import { getSessionUser } from '@/lib/auth/guards';
 import { chunkTranscript } from '@/lib/curate/chunking';
 
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 /**

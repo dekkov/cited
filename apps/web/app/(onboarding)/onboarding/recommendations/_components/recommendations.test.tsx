@@ -1,10 +1,10 @@
 /**
- * Tests for recommendations surface components.
- * Task 2: RecommendationStack swipe, AdoptionSummary, ReRunInterviewButton.
+ * Tests for the recommendations surface.
+ * Phase 03 redesign: AdoptBoard (3-card adopt/swap board) + ReRunInterviewButton.
  */
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { HabitCandidate } from '@cited/core';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { BoardCandidate } from './AdoptHabitCard';
 
 // ── Mock router ──────────────────────────────────────────────────────────────
 const mockPush = vi.fn();
@@ -28,116 +28,98 @@ const makeCitation = (n: number) => ({
   clipId: `00000000-0000-0000-0000-00000000000${n}`,
   claim: `Expert claim ${n} about health habits`,
   speaker: `Dr. Expert ${n}`,
+  // No youtubeVideoId → YouTubeEmbed is not rendered (avoids third-party script in jsdom).
 });
 
-const makeCandidate = (n: number): HabitCandidate => ({
+const makeCandidate = (n: number): BoardCandidate => ({
   templateSlug: `habit-slug-${n}`,
   title: `Habit ${n}: Do something healthy`,
-  rationale: `This habit is recommended because of strong scientific evidence showing improvements in overall wellbeing.`,
+  rationale: `This habit is recommended because of strong scientific evidence about wellbeing.`,
   domain: 'sleep',
   trigger: 'Every morning after waking up',
   tinyAction: 'Do it for 2 minutes',
   citations: [makeCitation(n), makeCitation(n + 1)],
 });
 
-const candidates = [makeCandidate(1), makeCandidate(2), makeCandidate(3)];
+// 4 candidates: 3 visible + 1 in the queue
+const candidates = [makeCandidate(1), makeCandidate(2), makeCandidate(3), makeCandidate(4)];
+const habitTemplateIds = ['tpl-uuid-1', 'tpl-uuid-2', 'tpl-uuid-3', 'tpl-uuid-4'];
 
-// ── Imports (after mocks are set up) ─────────────────────────────────────────
-import { RecommendationStack } from './RecommendationStack';
-import { AdoptionSummary } from './AdoptionSummary';
 import { ReRunInterviewButton } from '@/app/(app)/settings/_components/ReRunInterviewButton';
+// ── Imports (after mocks are set up) ─────────────────────────────────────────
+import { AdoptBoard } from './AdoptBoard';
 
-// ── RecommendationStack ───────────────────────────────────────────────────────
+function startingSet() {
+  return screen.getByText('Your starting set').closest('section') as HTMLElement;
+}
 
-describe('RecommendationStack', () => {
+// ── AdoptBoard ────────────────────────────────────────────────────────────────
+
+describe('AdoptBoard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders the first candidate on mount', () => {
-    render(<RecommendationStack candidates={candidates} />);
+  it('shows the first 3 candidates and reports the queue count', () => {
+    render(<AdoptBoard candidates={candidates} habitTemplateIds={habitTemplateIds} />);
     expect(screen.getByText('Habit 1: Do something healthy')).toBeInTheDocument();
-  });
-
-  it('moves to next card on Adopt click (swipe right)', async () => {
-    vi.useFakeTimers();
-    render(<RecommendationStack candidates={candidates} />);
-    const adoptBtn = screen.getByRole('button', { name: /adopt/i });
-    act(() => {
-      fireEvent.click(adoptBtn);
-      vi.advanceTimersByTime(600);
-    });
     expect(screen.getByText('Habit 2: Do something healthy')).toBeInTheDocument();
-    vi.useRealTimers();
+    expect(screen.getByText('Habit 3: Do something healthy')).toBeInTheDocument();
+    expect(screen.queryByText('Habit 4: Do something healthy')).not.toBeInTheDocument();
+    expect(screen.getByText(/3 CANDIDATES · 1 MORE IN QUEUE/i)).toBeInTheDocument();
   });
 
-  it('adds adopt CSS class on adopt action', () => {
-    const { container } = render(<RecommendationStack candidates={candidates} />);
-    const adoptBtn = screen.getByRole('button', { name: /adopt/i });
-    fireEvent.click(adoptBtn);
-    // The adopt-animation class should be present immediately after click
-    expect(container.querySelector('.adopt-animation')).not.toBeNull();
+  it('Adopt moves the habit into the starting set and pulls the next from the queue', () => {
+    render(<AdoptBoard candidates={candidates} habitTemplateIds={habitTemplateIds} />);
+    fireEvent.click(screen.getByRole('button', { name: /Adopt Habit 1/i }));
+
+    // Habit 1 now appears in the starting set
+    expect(within(startingSet()).getByText('Habit 1: Do something healthy')).toBeInTheDocument();
+    // The freed slot is filled by the queued Habit 4
+    expect(screen.getByText('Habit 4: Do something healthy')).toBeInTheDocument();
   });
 
-  it('moves to next card on Skip click without adopt animation', () => {
-    vi.useFakeTimers();
-    render(<RecommendationStack candidates={candidates} />);
-    const skipBtn = screen.getByRole('button', { name: /skip/i });
-    act(() => {
-      fireEvent.click(skipBtn);
-      vi.advanceTimersByTime(400);
-    });
-    expect(screen.getByText('Habit 2: Do something healthy')).toBeInTheDocument();
-    vi.useRealTimers();
+  it('Swap discards the card and surfaces the next queued candidate', () => {
+    render(<AdoptBoard candidates={candidates} habitTemplateIds={habitTemplateIds} />);
+    fireEvent.click(screen.getByRole('button', { name: /Swap Habit 1/i }));
+
+    // Habit 1 is gone from the visible cards; Habit 4 replaces it
+    expect(screen.queryByText('Habit 1: Do something healthy')).not.toBeInTheDocument();
+    expect(screen.getByText('Habit 4: Do something healthy')).toBeInTheDocument();
+    // Nothing adopted by swapping
+    expect(
+      within(startingSet()).queryByText('Habit 1: Do something healthy'),
+    ).not.toBeInTheDocument();
   });
 
-  it('renders AdoptionSummary after all candidates are processed', () => {
-    vi.useFakeTimers();
-    render(<RecommendationStack candidates={[makeCandidate(1)]} />);
-    const adoptBtn = screen.getByRole('button', { name: /adopt/i });
-    act(() => {
-      fireEvent.click(adoptBtn);
-      vi.advanceTimersByTime(600);
-    });
-    // AdoptionSummary should now be visible — singular "habit"
-    expect(screen.getByText(/habit adopted/i)).toBeInTheDocument();
-    vi.useRealTimers();
-  });
-});
+  it('Remove takes a habit back out of the starting set', () => {
+    render(<AdoptBoard candidates={candidates} habitTemplateIds={habitTemplateIds} />);
+    fireEvent.click(screen.getByRole('button', { name: /Adopt Habit 1/i }));
+    expect(within(startingSet()).getByText('Habit 1: Do something healthy')).toBeInTheDocument();
 
-// ── AdoptionSummary ───────────────────────────────────────────────────────────
-
-describe('AdoptionSummary', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+    fireEvent.click(within(startingSet()).getByRole('button', { name: /Remove Habit 1/i }));
+    expect(
+      within(startingSet()).queryByText('Habit 1: Do something healthy'),
+    ).not.toBeInTheDocument();
   });
 
-  it('renders adopted count', () => {
-    render(<AdoptionSummary adopted={[candidates[0]!, candidates[1]!]} templateIdMap={{}} />);
-    expect(screen.getByText(/2 habits adopted/i)).toBeInTheDocument();
+  it('Progress to Dashboard is disabled until something is adopted', () => {
+    render(<AdoptBoard candidates={candidates} habitTemplateIds={habitTemplateIds} />);
+    expect(screen.getByRole('button', { name: /progress to dashboard/i })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: /Adopt Habit 1/i }));
+    expect(screen.getByRole('button', { name: /progress to dashboard/i })).toBeEnabled();
   });
 
-  it('renders adopted habit titles', () => {
-    render(<AdoptionSummary adopted={[candidates[0]!]} templateIdMap={{}} />);
-    expect(screen.getByText('Habit 1: Do something healthy')).toBeInTheDocument();
-  });
+  it('persists the adopted set and redirects on Progress to Dashboard', async () => {
+    render(<AdoptBoard candidates={candidates} habitTemplateIds={habitTemplateIds} />);
+    fireEvent.click(screen.getByRole('button', { name: /Adopt Habit 1/i }));
 
-  it('renders the confirm button', () => {
-    render(<AdoptionSummary adopted={[candidates[0]!]} templateIdMap={{}} />);
-    expect(screen.getByRole('button', { name: /continue to dashboard/i })).toBeInTheDocument();
-  });
-
-  it('calls finalizeInterviewAction and redirects to /dashboard on confirm', async () => {
-    render(<AdoptionSummary adopted={[candidates[0]!]} templateIdMap={{ 'habit-slug-1': 'uuid-1' }} />);
-    const confirmBtn = screen.getByRole('button', { name: /continue to dashboard/i });
     await act(async () => {
-      fireEvent.click(confirmBtn);
+      fireEvent.click(screen.getByRole('button', { name: /progress to dashboard/i }));
     });
+
     await waitFor(() => {
-      expect(mockFinalizeInterviewAction).toHaveBeenCalledWith(
-        [{ templateSlug: 'habit-slug-1' }],
-        { 'habit-slug-1': 'uuid-1' },
-      );
+      expect(mockFinalizeInterviewAction).toHaveBeenCalledWith([{ habitTemplateId: 'tpl-uuid-1' }]);
       expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });

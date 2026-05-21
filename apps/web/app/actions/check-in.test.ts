@@ -30,19 +30,21 @@ const USER_ID = '00000000-0000-0000-0000-000000000001';
 const HABIT_ID = '00000000-0000-0000-0000-000000000002';
 
 function makeDbMock() {
+  // streaks upsert path still uses onConflictDoUpdate
   const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
-  const valuesInsert = vi.fn(() => ({ onConflictDoUpdate }));
+  const valuesInsert = vi.fn(() => ({
+    onConflictDoUpdate,
+    // Plain insert (check_ins now) — awaiting values() should resolve.
+    then: (resolve: (v: unknown) => void) => resolve(undefined),
+  }));
   const whereUpdate = vi.fn().mockResolvedValue(undefined);
   const setUpdate = vi.fn(() => ({ where: whereUpdate }));
 
   const findFirstUserHabits = vi.fn();
   const findFirstConsentRecords = vi.fn();
   const findFirstStreaks = vi.fn();
-  const findManyFreezesAvailable = vi.fn();
-  const findManyFreezesAll = vi.fn();
+  const findFirstCheckIns = vi.fn();
 
-  // streakFreezes.findMany is called twice: once for available, once for all (to check usedThisWeek)
-  // We use a counter to return different values on each call
   const findManyStub = vi.fn();
 
   return {
@@ -51,6 +53,7 @@ function makeDbMock() {
       consentRecords: { findFirst: findFirstConsentRecords },
       streaks: { findFirst: findFirstStreaks },
       streakFreezes: { findMany: findManyStub },
+      checkIns: { findFirst: findFirstCheckIns },
     },
     insert: vi.fn(() => ({ values: valuesInsert })),
     update: vi.fn(() => ({ set: setUpdate })),
@@ -61,6 +64,7 @@ function makeDbMock() {
     _findFirstUserHabits: findFirstUserHabits,
     _findFirstConsentRecords: findFirstConsentRecords,
     _findFirstStreaks: findFirstStreaks,
+    _findFirstCheckIns: findFirstCheckIns,
     _findManyStreakFreezes: findManyStub,
   };
 }
@@ -95,6 +99,9 @@ beforeEach(() => {
 
   // Default: no freezes (called multiple times, always returns empty)
   db._findManyStreakFreezes.mockResolvedValue([]);
+
+  // Default: no existing check-in for today
+  db._findFirstCheckIns.mockResolvedValue(null);
 
   // Default: applyCheckIn returns normal increment
   vi.mocked(applyCheckIn).mockReturnValue({
@@ -222,5 +229,17 @@ describe('checkInAction', () => {
     await expect(checkInAction({ userHabitId: HABIT_ID, status: 'done' })).rejects.toThrow(
       'Unauthorized',
     );
+  });
+
+  it('rejects re-check-in on the same day (once-per-day rule)', async () => {
+    db._findFirstCheckIns.mockResolvedValue({ id: 'existing-checkin-id' });
+
+    await expect(
+      checkInAction({ userHabitId: HABIT_ID, status: 'done' }),
+    ).rejects.toThrow('AlreadyCheckedIn');
+
+    // No insert, no streak update, no graduation flip.
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.update).not.toHaveBeenCalled();
   });
 });

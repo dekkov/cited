@@ -1,18 +1,12 @@
 import 'server-only';
 
-import { redirect } from 'next/navigation';
+import { getDb } from '@/lib/db';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { createDb, profiles, eq } from '@cited/db';
+import { eq, profiles } from '@cited/db';
+import { redirect } from 'next/navigation';
 
 export type UserRole = 'user' | 'curator' | 'admin';
 export type SessionUser = { id: string; email: string; role: UserRole };
-
-// Singleton DB connection — reused across requests in the same process
-let _db: ReturnType<typeof createDb> | null = null;
-function db() {
-  if (!_db) _db = createDb(process.env.DATABASE_URL!);
-  return _db;
-}
 
 /**
  * Resolves the current Supabase session user + their profile.role.
@@ -28,7 +22,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const rows = await db()
+  const rows = await getDb()
     .select({ role: profiles.role })
     .from(profiles)
     .where(eq(profiles.id, user.id))

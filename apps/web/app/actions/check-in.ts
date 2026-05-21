@@ -40,6 +40,14 @@ export async function checkInAction(raw: unknown): Promise<CheckInResult> {
   });
   if (!habit) throw new Error('NotFound');
 
+  // One check-in per habit per day. Reject re-attempts instead of silently overwriting.
+  const existing = await db.query.checkIns.findFirst({
+    where: (c, { eq, and }) =>
+      and(eq(c.userHabitId, input.userHabitId), eq(c.checkInDate, today)),
+    columns: { id: true },
+  });
+  if (existing) throw new Error('AlreadyCheckedIn');
+
   // AUTH-05c gate: check ai_free_text consent before storing note
   const consentRecord = await db.query.consentRecords.findFirst({
     where: (c, { eq, and }) =>
@@ -47,22 +55,16 @@ export async function checkInAction(raw: unknown): Promise<CheckInResult> {
   });
   const noteToStore = consentRecord?.granted ? input.note : undefined;
 
-  // Upsert check-in (UNIQUE on userHabitId + checkInDate)
-  // Note: null is used for optional nullable columns to satisfy exactOptionalPropertyTypes
-  await db
-    .insert(checkIns)
-    .values({
-      userHabitId: input.userHabitId,
-      userId: user.id,
-      checkInDate: today,
-      status: input.status,
-      mood: input.mood ?? null,
-      note: noteToStore ?? null,
-    })
-    .onConflictDoUpdate({
-      target: [checkIns.userHabitId, checkIns.checkInDate],
-      set: { status: input.status, mood: input.mood ?? null, note: noteToStore ?? null },
-    });
+  // Insert today's check-in. We guarded above for duplicates; the UNIQUE on
+  // (userHabitId, checkInDate) is a final safety net.
+  await db.insert(checkIns).values({
+    userHabitId: input.userHabitId,
+    userId: user.id,
+    checkInDate: today,
+    status: input.status,
+    mood: input.mood ?? null,
+    note: noteToStore ?? null,
+  });
 
   // Load current streak state
   const streak = await db.query.streaks.findFirst({

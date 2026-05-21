@@ -1,6 +1,7 @@
 import 'server-only';
 
-import { createDb, episodes, eq, ne } from '@cited/db';
+import { getDb } from '@/lib/db';
+import { episodes, eq, ne } from '@cited/db';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -14,14 +15,8 @@ export function __setOembedFetchImpl(impl: typeof oembedFetchImpl) {
   oembedFetchImpl = impl;
 }
 
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 export async function POST(req: Request): Promise<Response> {

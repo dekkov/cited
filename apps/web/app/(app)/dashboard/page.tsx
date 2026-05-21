@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/guards';
 import { getDb } from '@/lib/db';
 import {
@@ -8,9 +9,11 @@ import {
   checkIns,
   streaks,
   streakFreezes,
+  interviewRuns,
   eq,
   and,
   isNull,
+  isNotNull,
 } from '@cited/db';
 import { computeConsistency } from '@cited/core';
 import { HabitCard } from './_components/HabitCard';
@@ -18,6 +21,17 @@ import { HabitCard } from './_components/HabitCard';
 export default async function DashboardPage() {
   const user = await requireUser();
   const db = getDb();
+
+  // Guard: redirect new users who have never finished onboarding
+  const completedRun = await db.query.interviewRuns.findFirst({
+    where: and(
+      eq(interviewRuns.userId, user.id),
+      isNotNull(interviewRuns.completedAt),
+    ),
+    columns: { id: true },
+  });
+  if (!completedRun) redirect('/onboarding/interview');
+
   const today = new Date();
   const todayStr = today.toISOString().slice(0, 10);
 
@@ -69,6 +83,8 @@ export default async function DashboardPage() {
         today,
       );
 
+      const todayCheckIn = recentCheckIns.find((ci) => ci.date === todayStr) ?? null;
+
       // Fetch streak
       const streakRow = await db.query.streaks.findFirst({
         where: (s, { eq }) => eq(s.userHabitId, habit.habitId),
@@ -102,6 +118,7 @@ export default async function DashboardPage() {
           longestLength: streakRow?.longestLength ?? 0,
           freezesAvailable: availableFreezes.length,
         },
+        todayCheckIn: todayCheckIn ? { status: todayCheckIn.status } : null,
       };
     }),
   );
@@ -131,12 +148,13 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="grid gap-4">
-          {habitCards.map(({ habit, consistency, streak }) => (
+          {habitCards.map(({ habit, consistency, streak, todayCheckIn }) => (
             <HabitCard
               key={habit.id}
               habit={habit}
               consistency={consistency}
               streak={streak}
+              todayCheckIn={todayCheckIn}
             />
           ))}
         </div>

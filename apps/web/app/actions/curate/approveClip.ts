@@ -3,20 +3,15 @@
 import 'server-only';
 
 import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { embedClip } from '@cited/core';
-import { clipEdits, clips, createDb, eq } from '@cited/db';
+import { clipEdits, clips, eq } from '@cited/db';
 import { type ApproveClipInput, approveClipSchema } from './schemas';
 
 // Singleton DB connection — reused across requests in the same process.
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 export type ApproveClipResult = {

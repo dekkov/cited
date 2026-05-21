@@ -3,20 +3,15 @@
 import 'server-only';
 
 import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
 import { copilot } from '@cited/core';
-import { clipEdits, createDb } from '@cited/db';
+import { clipEdits } from '@cited/db';
 import { z } from 'zod';
 
 const { copilotKindSchema } = copilot;
 
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 const acceptSchema = z.object({

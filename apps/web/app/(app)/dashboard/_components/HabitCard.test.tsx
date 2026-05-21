@@ -52,6 +52,7 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(10)}
+        todayCheckIn={null}
       />,
     );
     expect(screen.getByTestId('consistency-bar')).toBeTruthy();
@@ -63,6 +64,7 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(10)}
+        todayCheckIn={null}
       />,
     );
     const bar = container.querySelector('[data-testid="consistency-bar"]');
@@ -81,6 +83,7 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(30)}
+        todayCheckIn={null}
       />,
     );
     expect(screen.queryByTestId('streak-strip')).toBeNull();
@@ -92,6 +95,7 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(10)}
+        todayCheckIn={null}
       />,
     );
     expect(screen.getByTestId('streak-strip')).toBeTruthy();
@@ -103,6 +107,7 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(29)}
+        todayCheckIn={null}
       />,
     );
     expect(screen.getByTestId('streak-strip')).toBeTruthy();
@@ -114,6 +119,7 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(10)}
+        todayCheckIn={null}
       />,
     );
     const html = container.innerHTML;
@@ -128,8 +134,22 @@ describe('HabitCard', () => {
         habit={makeHabit()}
         consistency={makeConsistency()}
         streak={makeStreak(10)}
+        todayCheckIn={null}
       />,
     );
     expect(screen.getByText('Morning walk')).toBeTruthy();
+  });
+
+  it('shows a passive "Done today" pill (no Check in button) when already checked in today', () => {
+    render(
+      <HabitCard
+        habit={makeHabit()}
+        consistency={makeConsistency()}
+        streak={makeStreak(10)}
+        todayCheckIn={{ status: 'done' }}
+      />,
+    );
+    expect(screen.getByText(/done today/i)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /check in/i })).toBeNull();
   });
 });

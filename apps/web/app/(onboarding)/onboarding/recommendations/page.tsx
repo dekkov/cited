@@ -2,20 +2,21 @@
  * Recommendations page (Server Component).
  *
  * Receives runId from search params; fetches candidatesJson from interview_runs
- * (RLS scopes to owner). Also looks up habit_templates to build a
- * templateSlug → habitTemplateId map for finalizeInterviewAction.
+ * (RLS scopes to owner). For each candidate, resolves its habit_template UUID via
+ * the first citation's clipId joined through habit_template_clips — we do not trust
+ * LLM-produced templateSlug to match anything in the DB.
  *
  * Enriches each citation with youtubeVideoId + startSeconds from the clips table
- * so HabitCandidateCard can render the YouTubeEmbed.
+ * so AdoptHabitCard can render the YouTubeEmbed.
  */
-import { redirect, notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth/guards';
 import { getDb } from '@/lib/db';
-import { interviewRuns, clips, habitTemplates, eq, and, inArray, isNull } from '@cited/db';
+import { interviewRuns, clips, habitTemplateClips, eq, and, inArray, isNull } from '@cited/db';
 import { HabitCandidateSchema } from '@cited/core';
 import type { HabitCandidate } from '@cited/core';
 import { z } from 'zod';
-import { RecommendationStack } from './_components/RecommendationStack';
+import { AdoptBoard } from './_components/AdoptBoard';
 
 interface SearchParams {
   runId?: string;
@@ -55,14 +56,22 @@ export default async function RecommendationsPage({
   });
 
   if (!run || !run.candidatesJson) {
-    // Run not found or synthesis not complete yet — redirect back
+    console.warn('[recommendations] redirect → interview: run or candidatesJson missing', {
+      runId,
+      runFound: !!run,
+      hasCandidatesJson: !!run?.candidatesJson,
+      completedAt: run?.completedAt,
+    });
     redirect('/onboarding/interview');
   }
 
   // Parse candidates from JSON
   const candidatesResult = z.array(HabitCandidateSchema).safeParse(run.candidatesJson);
   if (!candidatesResult.success) {
-    // Data integrity error — redirect to re-run
+    console.warn('[recommendations] redirect → interview: schema parse failed', {
+      runId,
+      errors: candidatesResult.error.issues,
+    });
     redirect('/onboarding/interview');
   }
   const candidates: HabitCandidate[] = candidatesResult.data;
@@ -105,21 +114,46 @@ export default async function RecommendationsPage({
     }),
   }));
 
-  // Build templateSlug → habitTemplateId map for finalizeInterviewAction
-  const slugs = candidates.map((c) => c.templateSlug);
-  const templateRows =
-    slugs.length > 0
+  // Map each candidate → habit_template via its first citation's clipId (clips ↔ templates
+  // is a real DB junction). We do NOT trust LLM-produced templateSlug to match anything.
+  const clipTemplateRows =
+    uniqueClipIds.length > 0
       ? await db
-          .select({ id: habitTemplates.id, slug: habitTemplates.slug })
-          .from(habitTemplates)
-          .where(inArray(habitTemplates.slug, slugs))
+          .select({
+            clipId: habitTemplateClips.clipId,
+            habitTemplateId: habitTemplateClips.habitTemplateId,
+          })
+          .from(habitTemplateClips)
+          .where(inArray(habitTemplateClips.clipId, uniqueClipIds))
       : [];
 
-  const templateIdMap = Object.fromEntries(templateRows.map((r) => [r.slug, r.id]));
+  const clipToTemplateId = new Map(clipTemplateRows.map((r) => [r.clipId, r.habitTemplateId]));
 
-  if (enrichedCandidates.length === 0) notFound();
+  // Per-candidate habitTemplateId, indexed by candidate position (preserves duplicates).
+  const candidateHabitTemplateIds: (string | null)[] = enrichedCandidates.map((c) => {
+    const firstClipId = c.citations[0]?.clipId;
+    return firstClipId ? (clipToTemplateId.get(firstClipId) ?? null) : null;
+  });
+
+  if (enrichedCandidates.length === 0) {
+    return (
+      <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-6 bg-[var(--color-paper)] px-5 py-10 text-center">
+        <h1 className="font-[family-name:var(--font-newsreader)] text-3xl text-[var(--color-ink)]">
+          No recommendations yet
+        </h1>
+        <p className="font-[family-name:var(--font-geist-sans)] text-sm text-[var(--color-ink-4)]">
+          The habit corpus doesn&apos;t have enough approved clips to generate personalised
+          recommendations for your profile. Ask an admin to approve some clips, then re-run
+          the interview from <a href="/settings" className="underline">Settings</a>.
+        </p>
+      </main>
+    );
+  }
 
   return (
-    <RecommendationStack candidates={enrichedCandidates} templateIdMap={templateIdMap} />
+    <AdoptBoard
+      candidates={enrichedCandidates}
+      habitTemplateIds={candidateHabitTemplateIds}
+    />
   );
 }

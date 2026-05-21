@@ -1,6 +1,7 @@
-import Link from 'next/link';
-import { YouTubeEmbed } from '@next/third-parties/google';
 import { DisclaimerBanner } from '@/components/disclaimer-banner';
+import { YouTubeEmbed } from '@next/third-parties/google';
+import Link from 'next/link';
+import { AdoptButton, type AdoptionState } from './AdoptButton';
 
 type EpisodeData = {
   title: string | null;
@@ -34,6 +35,7 @@ type TemplateData = {
 
 interface HabitEditorialProps {
   template: TemplateData;
+  adoptionState: AdoptionState;
 }
 
 const DOMAIN_LABELS: Record<string, string> = {
@@ -65,7 +67,7 @@ function SpeakerStatusBadge({ status }: { status: string }) {
   );
 }
 
-export function HabitEditorial({ template }: HabitEditorialProps) {
+export function HabitEditorial({ template, adoptionState }: HabitEditorialProps) {
   const firstClip = template.citedClips[0];
 
   const youtubeUrl = firstClip
@@ -200,14 +202,9 @@ export function HabitEditorial({ template }: HabitEditorialProps) {
           </div>
         )}
 
-        {/* Secondary CTA: Adopt this habit */}
+        {/* Secondary CTA: Adopt this habit (session-aware) */}
         <div className="mb-8 flex gap-3">
-          <Link
-            href={`/signup?adopt=${template.slug}`}
-            className="inline-flex items-center gap-1 rounded-full border border-[var(--color-accent)] px-6 py-2 text-sm font-medium text-[var(--color-accent)] transition-colors hover:bg-[var(--color-accent)] hover:text-white"
-          >
-            Adopt this habit
-          </Link>
+          <AdoptButton templateId={template.id} initialState={adoptionState} />
         </div>
 
         {/* Report this clip */}

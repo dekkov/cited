@@ -3,18 +3,13 @@
 import 'server-only';
 
 import { getSessionUser } from '@/lib/auth/guards';
-import { createDb, podcasts } from '@cited/db';
+import { getDb } from '@/lib/db';
+import { podcasts } from '@cited/db';
 import { type AddPodcastInput, addPodcastSchema } from './schemas';
 
 // Singleton DB connection — reused across requests in the same process.
-let _db: ReturnType<typeof createDb> | null = null;
 function db() {
-  if (!_db) {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error('DATABASE_URL is required');
-    _db = createDb(url);
-  }
-  return _db;
+  return getDb();
 }
 
 export type AddedPodcast = {

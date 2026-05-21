@@ -20,7 +20,7 @@ import type {
 } from '@cited/core';
 import { getDb } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth/guards';
-import { interviewRuns, consentRecords, clips, eq, and, sql } from '@cited/db';
+import { interviewRuns, consentRecords, clips, eq, and, sql, inArray } from '@cited/db';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -74,6 +74,16 @@ function buildRetrievalQuery(freeFormText: string, hydrated: HydratedAnswer[]): 
 }
 
 export async function POST(req: Request): Promise<Response> {
+  try {
+    return await handlePost(req);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[synthesize] unhandled error:', err);
+    return Response.json({ error: message }, { status: 500 });
+  }
+}
+
+async function handlePost(req: Request): Promise<Response> {
   const user = await getSessionUser();
   if (!user) return new Response('Unauthorized', { status: 401 });
 
@@ -109,6 +119,24 @@ export async function POST(req: Request): Promise<Response> {
       const excludeFlags = filters.excludeRiskFlags ? [...filters.excludeRiskFlags] : ([] as string[]);
       const excludeIds = filters.excludeClipIds ? [...filters.excludeClipIds] : null;
 
+      // Drizzle passes a JS array as a composite/record parameter, not a postgres array.
+      // Build ARRAY[$1,$2,...] using sql.join so each element is a bound scalar — the
+      // ::text[] / ::uuid[] cast then works correctly.
+      const domainsSql =
+        domains === null || domains.length === 0
+          ? sql`TRUE`
+          : sql`domain::text = ANY(ARRAY[${sql.join(domains.map((d) => sql`${d}`), sql`, `)}]::text[])`;
+
+      const excludeFlagsSql =
+        excludeFlags.length === 0
+          ? sql`FALSE`
+          : sql`coalesce(risk_flags, '{}'::text[]) && ARRAY[${sql.join(excludeFlags.map((f) => sql`${f}`), sql`, `)}]::text[]`;
+
+      const excludeIdsSql =
+        excludeIds === null || excludeIds.length === 0
+          ? sql`TRUE`
+          : sql`id <> ALL(ARRAY[${sql.join(excludeIds.map((id) => sql`${id}`), sql`, `)}]::uuid[])`;
+
       const rows = await tx.execute(sql`
         WITH params AS (SELECT 60::int AS rrf_k, 1.0::float AS vec_w, 1.0::float AS text_w),
         filtered AS (
@@ -117,9 +145,9 @@ export async function POST(req: Request): Promise<Response> {
           FROM clips
           WHERE status = 'approved'
             AND removed_at IS NULL
-            AND (${domains === null ? sql`TRUE` : sql`domain::text = ANY(${domains}::text[])`})
-            AND NOT (coalesce(risk_flags, '{}'::text[]) && ${excludeFlags}::text[])
-            AND (${excludeIds === null ? sql`TRUE` : sql`id <> ALL(${excludeIds}::uuid[])`})
+            AND (${domainsSql})
+            AND NOT (${excludeFlagsSql})
+            AND (${excludeIdsSql})
         ),
         vec_ranked AS (
           SELECT id,
@@ -183,13 +211,17 @@ export async function POST(req: Request): Promise<Response> {
     ? []
     : await db.query.clips.findMany({
         where: and(
-          // inArray gives us a clean WHERE id IN (...) filter
-          sql`${clips.id} = ANY(${retrievedIds}::uuid[])`,
+          inArray(clips.id, retrievedIds),
           eq(clips.status, 'approved'),
         ),
       });
 
   if (retrievedClips.length === 0) {
+    // Mark the run as completed (even with 0 candidates) so the recommendations page
+    // doesn't see candidatesJson=null and redirect back into the interview loop.
+    await db.update(interviewRuns)
+      .set({ candidatesJson: [], completedAt: new Date() })
+      .where(eq(interviewRuns.id, body.runId));
     return Response.json(
       {
         candidates: [],

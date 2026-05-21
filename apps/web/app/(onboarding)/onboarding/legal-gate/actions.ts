@@ -2,14 +2,15 @@
 
 import { createHash } from 'node:crypto';
 
-import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { createDb, profiles, consentRecords, eq } from '@cited/db';
-import { requireUser } from '@/lib/auth/guards';
 import { isAgeAllowed } from '@/lib/auth/age';
 import type { Jurisdiction } from '@/lib/auth/age';
+import { requireUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { consentRecords, eq, profiles } from '@cited/db';
 
 const LegalGateSchema = z.object({
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -46,7 +47,7 @@ export async function submitLegalGate(_prev: FormState, formData: FormData): Pro
   const ipRaw = h.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '';
   const ipHash = ipRaw ? createHash('sha256').update(ipRaw).digest('hex') : null;
 
-  const db = createDb(process.env.DATABASE_URL!);
+  const db = getDb();
   const now = new Date();
 
   await db.transaction(async (tx) => {

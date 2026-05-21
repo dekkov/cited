@@ -44,12 +44,14 @@ describe('groundingCheck', () => {
     expect((nearest as unknown as { mock: { calls: unknown[] } }).mock.calls).toHaveLength(1);
   });
 
-  it('returns 0 when no transcript chunk is found', async () => {
+  it('returns 1.0 (pass-through) when no transcript chunk is found', async () => {
+    // Admin-approved clips with no transcript_chunks: verification unavailable ≠ mismatch,
+    // so grounding passes through rather than dropping the citation.
     (nearest as unknown as { mockResolvedValue: (v: number | null) => void }).mockResolvedValue(
       null,
     );
     const sim = await groundingCheck(nearest, 'q', 'cid');
-    expect(sim).toBe(0);
+    expect(sim).toBe(1.0);
   });
 
   it('exposes the 0.85 threshold constant', () => {

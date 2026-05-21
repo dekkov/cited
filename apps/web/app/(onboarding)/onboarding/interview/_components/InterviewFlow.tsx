@@ -54,8 +54,8 @@ export function InterviewFlow({ runId, freeTextOptIn }: InterviewFlowProps) {
       const existing = prev[questionId];
       if (!existing) return prev;
       const next: Answer = { questionId: existing.questionId, choiceId: existing.choiceId };
-      const trimmed = freeText.trim();
-      if (trimmed) next.freeText = trimmed;
+      // Store raw input so spaces work; trimming happens server-side at synthesis time.
+      if (freeText) next.freeText = freeText;
       return { ...prev, [questionId]: next };
     });
   }
@@ -107,11 +107,20 @@ export function InterviewFlow({ runId, freeTextOptIn }: InterviewFlowProps) {
           answers: Object.values(answers),
         }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const body = await res.text();
+        let detail = body;
+        try {
+          const parsed = JSON.parse(body) as { error?: string };
+          if (parsed.error) detail = parsed.error;
+        } catch {}
+        throw new Error(detail);
+      }
       router.push(`/onboarding/recommendations?runId=${runId}`);
     } catch (err) {
-      console.error('[InterviewFlow] synthesis failed:', err);
-      setError('Could not generate recommendations. Please try again.');
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error('[InterviewFlow] synthesis failed:', msg);
+      setError(`Synthesis failed: ${msg}`);
       setPhase('questions');
     }
   }

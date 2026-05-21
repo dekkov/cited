@@ -148,3 +148,49 @@ None — all components wire to real data sources (streaming interview API, synt
   - `apps/web/app/(onboarding)/onboarding/interview/_components/InterviewClient.tsx` ✓
   - `apps/web/app/(onboarding)/onboarding/recommendations/_components/RecommendationStack.tsx` ✓
   - `apps/web/app/(app)/settings/_components/ReRunInterviewButton.tsx` ✓
+
+---
+
+## Pivot Addendum — 2026-05-17
+
+**Reason for pivot:** Per-turn LLM streaming was slow, expensive, and unreliable during Task 3 manual verification (model hanging mid-stream, Supabase OTP rate-limiting login). Architectural rethink produced a simpler, faster flow with the same UX outcome.
+
+### What changed
+
+**Deleted:**
+- `InterviewClient.tsx` + 7 helper components (`ChoiceChips`, `DomainBadge`, `ProgressDots`, `SynthesisLoader`, `TellMeMore`, `extractTurnOutput.ts`, `interview.test.tsx`)
+- `apps/web/app/api/interview/route.ts` (streaming tool-calling endpoint) + its test
+
+**Added:**
+- `packages/core/src/interview/question-pool.ts` — 30 pre-written questions, 6 per domain + 6 general, 4 chips each
+- `packages/core/src/interview/select-questions.ts` — one GPT-4o-mini call ranks 8 of 30 questions with domain-rotation fallback
+- `apps/web/app/api/interview/select-questions/route.ts` — POST endpoint calling select-questions
+- `apps/web/app/(onboarding)/onboarding/interview/_components/InterviewFlow.tsx` — 3-phase state machine: `about-you` → `questions` → `submitting`
+
+**Rewritten:**
+- `apps/web/app/api/synthesize/route.ts` — now accepts `{ runId, freeFormText, answers }`, performs hybrid retrieval internally (no `retrievedClipIds` from client)
+- `apps/web/app/(onboarding)/onboarding/interview/page.tsx` — renders `InterviewFlow` instead of `InterviewClient`
+
+**Modified:**
+- `apps/web/app/(auth)/login/actions.ts` + `login-form.tsx` — switched from magic link (Supabase OTP rate-limited in dev) to email+password with sign-up/sign-in toggle
+- `packages/core/src/llm/aisdk.ts` — fixed OpenAI reasoning tier default (was returning wrong model ID)
+- `packages/core/src/interview/index.ts` — barrel exports for question-pool + select-questions
+
+**LLM provider:** `LLM_PROVIDER=openai` only (no Anthropic key on dev machine). `cheap = gpt-4o-mini` (question selection), `reasoning = gpt-4o` (synthesis).
+
+### New onboarding flow
+
+```
+/login (email+password) → legal-gate → /onboarding/interview
+  1. About-you textarea → Continue
+  2. "Personalising your questions…" (~1–2s, one GPT-4o-mini call)
+  3. 8 chip questions + optional expander (remaining ~22) → Generate recommendations
+  4. Submitting spinner (one GPT-4o synthesis call + hybrid retrieval server-side)
+  5. /onboarding/recommendations
+```
+
+### Task 3 verification — PASSED 2026-05-17
+
+Flow executed end-to-end in browser. Recommendations page reached with correct empty-state ("No recommendations yet") and medical disclaimer banner visible. `runId` present in URL confirming synthesis completed. Empty-state is expected — no approved clips in corpus at this stage.
+
+Commits: `107f381` (pivot), `646f2c3` (bug fixes)

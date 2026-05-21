@@ -1,5 +1,6 @@
 import { getSessionUser } from '@/lib/auth/guards';
-import { clips, createDb, episodes, eq, transcripts } from '@cited/db';
+import { getDb } from '@/lib/db';
+import { clips, episodes, eq, transcripts } from '@cited/db';
 import { redirect } from 'next/navigation';
 import { ThreePanePanels } from '../../_components/editor/ThreePanePanels';
 import type { TranscriptWord } from '../../_components/editor/TranscriptPane';
@@ -13,9 +14,7 @@ type TranscriptSegment = {
 };
 
 function db() {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error('DATABASE_URL is required');
-  return createDb(url);
+  return getDb();
 }
 
 export default async function ClipEditorPage({

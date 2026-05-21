@@ -1,11 +1,12 @@
 import 'server-only';
 
+import { getDb } from '@/lib/db';
+import { eq, profiles } from '@cited/db';
 import { redirect } from 'next/navigation';
-import { createDb, profiles, eq } from '@cited/db';
 import type { SessionUser } from './guards';
 
 export async function isLegalGatePassed(userId: string): Promise<boolean> {
-  const db = createDb(process.env.DATABASE_URL!);
+  const db = getDb();
   const rows = await db
     .select({ accepted: profiles.disclaimerAcceptedAt, dob: profiles.dob })
     .from(profiles)

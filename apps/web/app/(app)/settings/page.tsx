@@ -1,16 +1,13 @@
 import { requireUser } from '@/lib/auth/guards';
-import { createDb, profiles, eq } from '@cited/db';
-import { SettingsForm } from './settings-form';
+import { getDb } from '@/lib/db';
+import { eq, profiles } from '@cited/db';
 import { ReRunInterviewButton } from './_components/ReRunInterviewButton';
+import { SettingsForm } from './settings-form';
 
 export default async function SettingsPage() {
   const user = await requireUser();
-  const db = createDb(process.env.DATABASE_URL!);
-  const [row] = await db
-    .select()
-    .from(profiles)
-    .where(eq(profiles.id, user.id))
-    .limit(1);
+  const db = getDb();
+  const [row] = await db.select().from(profiles).where(eq(profiles.id, user.id)).limit(1);
 
   return (
     <div className="space-y-8">
@@ -28,7 +25,8 @@ export default async function SettingsPage() {
           Interview
         </h2>
         <p className="font-[family-name:var(--font-geist-sans)] text-sm text-[var(--color-ink-3)] mb-4">
-          Redo the onboarding interview to get fresh habit recommendations based on your current goals.
+          Redo the onboarding interview to get fresh habit recommendations based on your current
+          goals.
         </p>
         <ReRunInterviewButton />
       </div>

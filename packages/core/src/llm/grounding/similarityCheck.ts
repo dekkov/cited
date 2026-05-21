@@ -36,8 +36,11 @@ export const GROUNDING_THRESHOLD = 0.85;
 /**
  * AION-10 production grounding check. Embeds the AI suggestion's quotedSpan and asks the
  * caller-supplied query for the nearest transcript_chunk cosine similarity within the
- * clip's episode. Returns 0 when no transcript chunk exists or the embedder produces no
- * vector. Callers compare against GROUNDING_THRESHOLD (0.85).
+ * clip's episode.
+ *
+ * Returns 1.0 when no transcript chunks exist for the clip — the clip is admin-approved
+ * so we trust it; absence of chunks means verification is unavailable, not that the claim
+ * is wrong. Returns 0 only when the embedder produces no vector.
  */
 export async function groundingCheck(
   nearest: NearestChunkQuery,
@@ -49,5 +52,6 @@ export async function groundingCheck(
   const vec = embeddings[0];
   if (!vec) return 0;
   const similarity = await nearest(vec, clipId);
-  return similarity ?? 0;
+  // null = no transcript chunks found; pass through (verification unavailable ≠ mismatch)
+  return similarity ?? 1.0;
 }

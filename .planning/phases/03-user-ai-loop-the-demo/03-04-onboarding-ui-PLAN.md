@@ -413,8 +413,15 @@ UI tokens from UI-DESIGN.md:
   <done>Swipe-stack adoption flow + summary + dashboard handoff + REC-06 re-run button all working.</done>
 </task>
 
-<task type="checkpoint:human-verify" gate="blocking">
-  <name>Task 3: Visual verification of full onboarding flow</name>
+<task type="checkpoint:human-verify" gate="superseded">
+  <name>Task 3 (ORIGINAL — SUPERSEDED 2026-05-17): Visual verification of full onboarding flow</name>
+  <supersession-note>
+    The streaming/per-turn interview was deleted on 2026-05-17 in favor of a static
+    question pool + LLM-ranked selection. Steps below referencing "stream", "turn N",
+    "SynthesisLoader", "Tell me more" textarea, and "Focusing on: {domain}" badge no
+    longer apply. See **Task 3 (REVISED)** immediately below for the authoritative
+    checklist against the current surface.
+  </supersession-note>
   <what-built>Interview UI (chips + progress + free-text gate), synthesis loader, "tell me more" textarea, swipe-stack with confetti, adoption summary, settings re-run button.</what-built>
   <how-to-verify>
     1. `pnpm dev` in repo root; visit http://localhost:3000
@@ -433,10 +440,94 @@ UI tokens from UI-DESIGN.md:
     14. Visit `/settings` — verify "Run interview again" button is present; clicking creates a new `interview_runs` row (verifiable via DB inspection) and redirects to interview
     15. Verify NO red colors, NO flame emoji anywhere; all colors from warm-paper + sage palette
   </how-to-verify>
-  <resume-signal>Type "approved" or describe issues (e.g. "chips wrap awkwardly on mobile", "free-text appears for opted-out user")</resume-signal>
-  <action>Pause for human verification. Follow the steps in &lt;how-to-verify&gt;; do not proceed until the user responds with the resume-signal.</action>
-  <verify>Human confirms each step of &lt;how-to-verify&gt; passes; reports issues otherwise.</verify>
-  <done>User types "approved" (or "approved + loom recorded ..." for the Loom step) and Claude resumes execution.</done>
+  <resume-signal>n/a — superseded</resume-signal>
+  <action>Skipped. Use Task 3 (REVISED) below.</action>
+  <verify>n/a — superseded</verify>
+  <done>Marked superseded 2026-05-17 by commit 107f381 (pivot to static question pool + OpenAI-only).</done>
+</task>
+
+<task type="checkpoint:human-verify" gate="blocking">
+  <name>Task 3 (REVISED 2026-05-17): Visual verification of rebuilt onboarding flow</name>
+  <what-built>
+    Onboarding surface rebuilt post-pivot:
+    - Email + password login (sign-up + sign-in toggle) — `apps/web/app/(auth)/login/`
+    - Legal/consent gate (unchanged from original spec) — `apps/web/app/(onboarding)/onboarding/legal-gate/`
+    - Interview as a single client component `InterviewFlow.tsx` with 4 phases:
+      `about-you` → `loading-questions` → `questions` → `submitting`
+    - Question pool: `packages/core/src/interview/question-pool.ts` (30 Qs: 6 per domain × 4 + 6 general; 4 chip choices each)
+    - LLM selection: `POST /api/interview/select-questions` → GPT-4o-mini ranks 8 of 30, domain-rotation fallback on error
+    - Synthesis: `POST /api/synthesize` → embeds free-form + answer labels server-side, runs `hybridRetrieve`, GPT-4o synthesizes habit candidates
+    - Recommendations page (unchanged from prior plan): swipe stack + adoption summary + dashboard handoff
+    - Settings: REC-06 "Run interview again" button (unchanged)
+  </what-built>
+  <env-prereqs>
+    - `LLM_PROVIDER=openai` exported
+    - `OPENAI_API_KEY=sk-...` exported (real key, billable)
+    - `DATABASE_URL=postgres://...`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` set
+    - Supabase dashboard → Auth → Email settings → **"Confirm email" DISABLED** (otherwise sign-up cannot reach interview without an inbox)
+    - ≥ N approved clips with embeddings present in DB (synthesis needs candidates; if DB is empty, recommendations page will render an empty/error state — note this and continue)
+  </env-prereqs>
+  <how-to-verify>
+    **Setup**
+    1. `pnpm dev` from repo root; open http://localhost:3000 in a fresh Chrome incognito window. Keep DevTools → Network + Console open throughout.
+
+    **Auth — sign-up path (AUTH-05c opted in)**
+    2. Visit `/login`. Verify the form shows: email input, password input, **"Sign up" / "Sign in" toggle**. No magic-link / OTP UI.
+    3. Toggle to "Sign up". Enter a brand-new email + password (≥6 chars). Submit. Verify: no email-confirmation gate; redirect lands on either `/onboarding/legal-gate` or `/onboarding/interview`.
+    4. Complete the legal gate: accept disclaimer, enter DOB (≥18), enable **all three** consent toggles including the "AI free-text analysis" one (AUTH-05c). Submit. Verify redirect → `/onboarding/interview`.
+
+    **Interview — phase 1: about-you**
+    5. Verify the page heading reads **"Tell us about yourself"** (Newsreader font, not Geist). Helper copy below mentions job/schedule/foods/hobbies.
+    6. Verify a `<textarea>` (rows=10, placeholder starting "e.g. I'm a software engineer…") and a character counter "`0 / 4000`" (Geist Mono).
+    7. With < 10 characters typed, the **Continue** button is disabled. Type ≥ 10 chars; the button enables.
+    8. Click **Continue**.
+
+    **Interview — phase 2: loading-questions**
+    9. Verify a transient screen shows italic Newsreader text **"Personalising your questions…"** centered. DevTools Network: expect a `POST /api/interview/select-questions` → 200 within ~1–3s. Inspect response body: `selectedIds: string[]` with **exactly 8 IDs**, `remainingIds: string[]` with the other ~22.
+    10. If the API errors (5xx) verify the screen still falls through to phase 3 with a domain-rotation fallback set of 8 questions (no broken state).
+
+    **Interview — phase 3: questions**
+    11. Verify the heading **"A few questions for you"** + progress line **"0 of 8 answered."** (Geist Sans).
+    12. Each question block renders: zero-padded index ("01", "02", …) in Geist Mono, question text in Newsreader, **4 chip buttons** stacked vertically (Geist Mono, tracking 0.04em).
+    13. Click a chip on Q1. Verify: chosen chip gets the sage accent border + paper bg; un-chosen chips keep rule-color border. Progress updates to "1 of 8 answered."
+    14. **Because AUTH-05c is opted in:** a per-question `<textarea>` ("Add a note (optional)…") appears below the chips of any question the user has answered. Type a 1-line note on Q1. (No save button — state is in-memory.)
+    15. Scroll to the bottom of the 8 questions. Verify a **dashed-border button "Want to go deeper? Show {N} more optional questions"** (where N ≈ 22).
+    16. Click the expander. Verify the remaining questions render below with "· optional" appended to their index label. Expander button disappears.
+    17. Answer at least 6 of 8 required questions (a couple can stay blank — the button isn't gated on completion).
+    18. Bottom of page: verify the counter ("X answered" in Geist Mono) and a **"Generate recommendations"** button.
+
+    **Interview — phase 4: submitting → recommendations**
+    19. Click **Generate recommendations**. Verify screen swaps to italic Newsreader **"Analysing your profile…"** centered.
+    20. DevTools Network: expect a `POST /api/synthesize` → 200 within ~5–15s. Body sent must be `{ runId, freeFormText, answers: Answer[] }` — **no `retrievedClipIds`** (it's now server-side). Response carries the run + candidates.
+    21. Verify redirect to `/onboarding/recommendations?runId=<uuid>`. Swipe stack renders ≥ 1 candidate card with: title, italic claim, domain badge, trigger, tiny action, YouTube **thumbnail (no autoplay)**, speaker name, two action buttons.
+    22. Swipe / tap right on the top card. Verify ~0.5s confetti-or-check affirmation animation, then next card. Swipe left = next card with no animation.
+    23. After all candidates → adoption summary with adopted count. **Confirm** → lands on `/dashboard` (stub at this point is fine).
+
+    **Auth — sign-in + AUTH-05c opt-out path**
+    24. Sign out (header menu or whatever shortcut exists in the dashboard stub). Back at `/login`, toggle to **Sign in**. Use the credentials from step 3. Verify redirect → `/dashboard` (returning user — no re-interview).
+    25. Hit `/settings`. Click **"Run interview again"** (REC-06). Verify a new `interview_runs` row inserts (visible via Drizzle Studio or `select * from interview_runs order by created_at desc limit 2`) and the browser redirects back to `/onboarding/interview`.
+    26. **Repeat steps 5–9** but in step 13 keep an eye out: with AUTH-05c **previously** opted in, free-text notes still show. **NOTE**: AUTH-05c opt-out re-test is deferred — covered separately by toggling the consent in `/settings` once that surface exists. For this run, just confirm the opt-in behavior is consistent across the second run.
+
+    **Cross-cutting visual rules**
+    27. Spot-check across all screens: no `text-red-*` / `bg-red-*` classes, no flame (🔥), no fire-related emoji, no Apple Health red. **EXCEPTION**: the inline error message in `InterviewFlow.tsx` uses `text-red-600` for `role="alert"` copy — this is acceptable per accessibility guidance, but it should only appear on failure.
+    28. Fonts: Newsreader on `h1` / `h2` and italic loaders; Geist Sans on body + helper copy; Geist Mono on counters, indices, and chip labels.
+    29. Colors come from `--color-paper`, `--color-paper-2`, `--color-ink`, `--color-ink-4`, `--color-rule`, `--color-accent`. Run `grep -rE "text-red-|bg-red-|🔥" apps/web/app/\(onboarding\)/` — expect **1** hit (the alert in InterviewFlow.tsx) per the exception in step 27.
+    30. Mobile: Chrome DevTools → 375 × 667. Verify chip buttons don't overflow, textareas keep their padding, expander button wraps cleanly, "Generate recommendations" button stays in view.
+
+    **Console / Network sanity**
+    31. Throughout the run, console should be clean of red errors (yellow React-strict-mode warnings tolerable). Network tab should show exactly **one** `select-questions` and **one** `synthesize` call per interview run — no per-turn `/api/interview` traffic (that route is gone).
+  </how-to-verify>
+  <known-non-blockers>
+    - Pre-existing build errors in `apps/web/app/api/admin/ingest/route.ts` and `apps/web/lib/curate/chunking.ts` (refs to removed `@cited/core` exports: `extractVideoId`, `fetchTranscript`, `WordTimestamped`). Not on the onboarding path. Track separately.
+    - Dashboard at `/dashboard` may still be a stub (real surface lands in Plan 03-05). Landing there with a stub view is acceptable; "blank dashboard" is not a Task 3 failure.
+  </known-non-blockers>
+  <resume-signal>
+    Type **"approved"** when all blocking steps pass.
+    Otherwise describe what broke (e.g. "select-questions returned 9 IDs", "free-text notes appear even though AUTH-05c was off", "synthesis 500'd with OPENAI_API_KEY undefined").
+  </resume-signal>
+  <action>Pause for human verification. Follow the steps above; do not proceed to Plan 03-05 / 03-06 until the user responds with the resume-signal.</action>
+  <verify>Human confirms each blocking step passes; logs issues otherwise.</verify>
+  <done>User types "approved"; Claude amends `03-04-onboarding-ui-SUMMARY.md` to record the pivot + final verification result, then advances to Wave 3 (Plans 03-05 + 03-06).</done>
 </task>
 
 </tasks>

@@ -1,8 +1,9 @@
 'use client';
+import type { CheckInStatus, Consistency } from '@cited/core';
+import Link from 'next/link';
+import { CheckInSheet } from './CheckInSheet';
 import { ConsistencyBar } from './ConsistencyBar';
 import { StreakStrip } from './StreakStrip';
-import { CheckInSheet } from './CheckInSheet';
-import type { Consistency } from '@cited/core';
 
 type HabitInfo = {
   readonly id: string;
@@ -18,10 +19,19 @@ type StreakInfo = {
   readonly freezesAvailable: number;
 };
 
+type TodayCheckIn = { readonly status: CheckInStatus } | null;
+
 type Props = {
   readonly habit: HabitInfo;
   readonly consistency: Consistency;
   readonly streak: StreakInfo;
+  readonly todayCheckIn: TodayCheckIn;
+};
+
+const TODAY_LABEL: Record<CheckInStatus, string> = {
+  done: 'Done today',
+  partial: 'Partial today',
+  skipped: 'Skipped today',
 };
 
 const DOMAIN_LABELS: Record<string, string> = {
@@ -44,8 +54,8 @@ const DOMAIN_LABELS: Record<string, string> = {
  *
  * NO red, NO flame emoji, NO "broken streak" language (HAB-10, Pitfall 5).
  */
-export function HabitCard({ habit, consistency, streak }: Props) {
-  const hideStreak = streak.currentLength >= 30;  // HAB-09
+export function HabitCard({ habit, consistency, streak, todayCheckIn }: Props) {
+  const hideStreak = streak.currentLength >= 30; // HAB-09
 
   return (
     <article
@@ -73,16 +83,41 @@ export function HabitCard({ habit, consistency, streak }: Props) {
         {consistency.done}/{21} Last 3 weeks
       </p>
 
-      {/* Habit title */}
-      <h3 className="font-[family-name:var(--font-newsreader)] text-[24px] tracking-[-0.018em] leading-[1.15] mt-3 text-[var(--color-ink)]">
-        {habit.title}
-      </h3>
+      {/* Habit title — links to detail page (clip, trigger/action, Swap) */}
+      <Link href={`/habits/${habit.id}`} className="group mt-3 block">
+        <h3 className="font-[family-name:var(--font-newsreader)] text-[24px] tracking-[-0.018em] leading-[1.15] text-[var(--color-ink)] underline-offset-4 group-hover:underline">
+          {habit.title}
+        </h3>
+      </Link>
 
       {/* SECONDARY — StreakStrip (hidden when currentLength >= 30, per HAB-09) */}
       {!hideStreak && <StreakStrip streak={streak} />}
 
-      {/* Check-in trigger */}
-      <CheckInSheet userHabitId={habit.id} />
+      {/* Check-in trigger — once-per-day. After today's check-in lands, the trigger
+          is replaced with a passive pill until tomorrow. */}
+      {todayCheckIn ? (
+        <div
+          className="mt-4 flex items-center justify-center gap-2 w-full rounded-full bg-[var(--color-accent-soft)] border border-[var(--color-accent)] px-4 py-2 font-[family-name:var(--font-geist-sans)] font-medium text-[13px] text-[var(--color-accent-deep)]"
+          aria-live="polite"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M2.5 7.5l3 3 6-7" />
+          </svg>
+          {TODAY_LABEL[todayCheckIn.status]}
+        </div>
+      ) : (
+        <CheckInSheet userHabitId={habit.id} />
+      )}
     </article>
   );
 }
