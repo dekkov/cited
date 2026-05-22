@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { EmbeddingProvider } from '../llm/provider';
-import { __setEmbeddingsImpl } from '../llm/grounding/similarityCheck';
 import type { Citation } from '../interview/schemas';
+import { __setEmbeddingsImpl } from '../llm/grounding/similarityCheck';
+import type { NearestChunkQuery } from '../llm/grounding/similarityCheck';
+import type { EmbeddingProvider } from '../llm/provider';
 import type { ClipLookup } from './validateCitations';
 import { validateCitations } from './validateCitations';
-import type { NearestChunkQuery } from '../llm/grounding/similarityCheck';
 
 // Set up a mock embeddings provider so groundingCheck doesn't call the real OpenAI API
 const mockEmbeddings: EmbeddingProvider = {

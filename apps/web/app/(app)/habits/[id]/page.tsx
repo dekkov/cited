@@ -1,8 +1,16 @@
-import { notFound } from 'next/navigation';
 import { requireUser } from '@/lib/auth/guards';
 import { getDb } from '@/lib/db';
+import {
+  and,
+  clips,
+  episodes,
+  eq,
+  habitTemplateClips,
+  habitTemplates,
+  userHabits,
+} from '@cited/db';
+import { notFound } from 'next/navigation';
 import { HabitDetail } from './_components/HabitDetail';
-import { userHabits, habitTemplates, habitTemplateClips, clips, episodes, eq, and } from '@cited/db';
 
 export default async function HabitDetailPage({
   params,

@@ -1,8 +1,8 @@
 'use server';
-import { z } from 'zod';
-import { userHabits, eq, and } from '@cited/db';
-import { getDb } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { and, eq, userHabits } from '@cited/db';
+import { z } from 'zod';
 
 const Input = z.object({ userHabitId: z.string().uuid() });
 

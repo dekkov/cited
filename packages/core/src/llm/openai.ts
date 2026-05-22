@@ -1,6 +1,12 @@
 import type { z } from 'zod';
 import type { EmbeddingProvider, LlmProvider } from './provider';
-import type { EmbeddingOpts, EmbeddingResponse, LlmCallOpts, LlmResponse, LlmStructuredOpts } from './types';
+import type {
+  EmbeddingOpts,
+  EmbeddingResponse,
+  LlmCallOpts,
+  LlmResponse,
+  LlmStructuredOpts,
+} from './types';
 
 function getOpenAiProvider() {
   if (!process.env['OPENAI_API_KEY']) {

@@ -1,6 +1,6 @@
-import type { MetadataRoute } from 'next';
 import { getAnonSupabase } from '@/lib/supabase/anon';
 import { templateShouldNoIndex } from '@cited/core';
+import type { MetadataRoute } from 'next';
 
 /**
  * Dynamic sitemap — lists all published habit_template pages excluding those
@@ -21,15 +21,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     )
   `);
 
-  const base =
-    process.env['NEXT_PUBLIC_SITE_URL'] ?? 'http://localhost:3000';
+  const base = process.env['NEXT_PUBLIC_SITE_URL'] ?? 'http://localhost:3000';
 
   return (data ?? [])
     .filter((row) => {
       // biome-ignore lint/suspicious/noExplicitAny: PostgREST nested type not inferred
-      const clipRiskFlags = (row.habit_template_clips as any[]).map(
-        (x) => ({ risk_flags: x.clip?.risk_flags ?? [] }),
-      );
+      const clipRiskFlags = (row.habit_template_clips as any[]).map((x) => ({
+        risk_flags: x.clip?.risk_flags ?? [],
+      }));
       return !templateShouldNoIndex(clipRiskFlags);
     })
     .map((row) => ({

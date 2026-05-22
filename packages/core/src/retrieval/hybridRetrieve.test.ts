@@ -1,10 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { type HybridQueryFn, __setHybridQueryImpl, hybridRetrieve } from './hybridRetrieve';
 import type { ClipRetrievalFilters, RankedClip } from './types';
-import {
-  __setHybridQueryImpl,
-  type HybridQueryFn,
-  hybridRetrieve,
-} from './hybridRetrieve';
 
 const makeClip = (clipId: string, similarityScore: number): RankedClip => ({
   clipId,

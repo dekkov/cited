@@ -19,9 +19,7 @@ vi.mock('@cited/core', async () => {
 });
 vi.mock('@cited/core/transcripts', async () => {
   const actual =
-    await vi.importActual<typeof import('@cited/core/transcripts')>(
-      '@cited/core/transcripts',
-    );
+    await vi.importActual<typeof import('@cited/core/transcripts')>('@cited/core/transcripts');
   return {
     ...actual,
     fetchTranscript: (...args: unknown[]) => mockFetchTranscript(...args),

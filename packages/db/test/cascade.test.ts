@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 const skip =
   !process.env['DATABASE_URL'] ||
@@ -35,9 +35,7 @@ describe.skipIf(skip)('cascade delete from auth.users', () => {
     await admin
       .from('user_habits')
       .insert({ user_id: uid, habit_template_id: ht!.id, frequency: 'daily' });
-    await admin
-      .from('consent_records')
-      .insert({ user_id: uid, scope: 'account', granted: true });
+    await admin.from('consent_records').insert({ user_id: uid, scope: 'account', granted: true });
 
     // delete user — this triggers cascade via auth.users → profiles → child tables
     await admin.auth.admin.deleteUser(uid);
@@ -53,10 +51,9 @@ describe.skipIf(skip)('cascade delete from auth.users', () => {
     ];
     for (const t of tables) {
       const idCol = t === 'profiles' ? 'id' : 'user_id';
-      const r = await sql.unsafe(
-        `select count(*)::int as c from public.${t} where ${idCol} = $1`,
-        [uid],
-      );
+      const r = await sql.unsafe(`select count(*)::int as c from public.${t} where ${idCol} = $1`, [
+        uid,
+      ]);
       expect(r[0]?.c, `${t} should have 0 rows for deleted user`).toBe(0);
     }
 

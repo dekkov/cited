@@ -6,7 +6,7 @@ export const interviewRuns = pgTable('interview_runs', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').notNull(),
   runIndex: integer('run_index').notNull(), // 1-based; user's nth interview
-  profileJson: jsonb('profile_json'),       // SynthesisOutputSchema.profileSummary; null while in-progress
+  profileJson: jsonb('profile_json'), // SynthesisOutputSchema.profileSummary; null while in-progress
   candidatesJson: jsonb('candidates_json'), // HabitCandidate[]; null while in-progress
   startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
   completedAt: timestamp('completed_at', { withTimezone: true }), // null = still running

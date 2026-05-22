@@ -1,6 +1,6 @@
 export const GRADUATION_THRESHOLD = 21;
 
-export const GRADUATION_MESSAGE = 'This habit may now be part of your life 🌱';   // D-09 verbatim
+export const GRADUATION_MESSAGE = 'This habit may now be part of your life 🌱'; // D-09 verbatim
 
 /**
  * Returns true if the habit is ready for graduation.

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { acceptSwapAction } from '@/app/actions/accept-swap';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { acceptSwapAction } from '@/app/actions/accept-swap';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type SwapReason = 'too_hard' | 'dislike' | 'schedule_conflict' | 'other';
 
@@ -41,11 +41,9 @@ type SwapCandidateData = {
 
 interface SwapPanelProps {
   userHabitId: string;
-  templateDomain: string;
-  templateClusterId: number | null;
 }
 
-export function SwapPanel({ userHabitId, templateDomain, templateClusterId }: SwapPanelProps) {
+export function SwapPanel({ userHabitId }: SwapPanelProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState<SwapReason | null>(null);
@@ -159,9 +157,7 @@ export function SwapPanel({ userHabitId, templateDomain, templateClusterId }: Sw
 
             {/* No free-text input — reasonText deferred to Phase 4 (AUTH-05c) */}
 
-            {error && (
-              <p className="text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <Button
               onClick={handleSubmitReason}
@@ -228,9 +224,7 @@ export function SwapPanel({ userHabitId, templateDomain, templateClusterId }: Sw
               </div>
             ))}
 
-            {error && (
-              <p className="text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <Button variant="ghost" className="w-full" onClick={() => setCandidates([])}>
               ← Try a different reason

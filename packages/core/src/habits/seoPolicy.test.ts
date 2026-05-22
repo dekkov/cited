@@ -35,21 +35,11 @@ describe('shouldNoIndex', () => {
 
 describe('templateShouldNoIndex', () => {
   it('returns false when no clips have no-index flags', () => {
-    expect(
-      templateShouldNoIndex([
-        { risk_flags: [] },
-        { risk_flags: ['general'] },
-      ]),
-    ).toBe(false);
+    expect(templateShouldNoIndex([{ risk_flags: [] }, { risk_flags: ['general'] }])).toBe(false);
   });
 
   it('returns true when at least one clip has a no-index flag', () => {
-    expect(
-      templateShouldNoIndex([
-        { risk_flags: [] },
-        { risk_flags: ['supplement'] },
-      ]),
-    ).toBe(true);
+    expect(templateShouldNoIndex([{ risk_flags: [] }, { risk_flags: ['supplement'] }])).toBe(true);
   });
 
   it('returns false for empty clips array', () => {

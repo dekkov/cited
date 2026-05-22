@@ -1,14 +1,14 @@
 export type StreakState = {
   readonly currentLength: number;
   readonly longestLength: number;
-  readonly lastCheckInDate: string | null;     // YYYY-MM-DD
-  readonly freezesAvailable: number;            // banked - used (this month)
+  readonly lastCheckInDate: string | null; // YYYY-MM-DD
+  readonly freezesAvailable: number; // banked - used (this month)
   readonly freezeUsedThisWeek: boolean;
 };
 
 export type ApplyResult = {
   readonly next: StreakState;
-  readonly freezeApplied: boolean;     // for gain-frame toast (HAB-08)
+  readonly freezeApplied: boolean; // for gain-frame toast (HAB-08)
   readonly daysReset: boolean;
 };
 
@@ -20,7 +20,7 @@ export const FREEZES_MAX_BANKED = 4;
  * Returns Infinity if lastDate is null.
  */
 function daysSince(lastDate: string | null, today: string): number {
-  if (lastDate === null) return Infinity;
+  if (lastDate === null) return Number.POSITIVE_INFINITY;
   const last = new Date(lastDate);
   const curr = new Date(today);
   const diffMs = curr.getTime() - last.getTime();
@@ -86,9 +86,7 @@ export function applyCheckIn(
     }
   }
 
-  const newFreezes = freezeApplied
-    ? state.freezesAvailable - 1
-    : state.freezesAvailable;
+  const newFreezes = freezeApplied ? state.freezesAvailable - 1 : state.freezesAvailable;
 
   const newLongest = Math.max(state.longestLength, newCurrentLength);
 

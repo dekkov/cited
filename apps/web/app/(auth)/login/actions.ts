@@ -1,8 +1,8 @@
 'use server';
-import { z } from 'zod';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 const CredentialsSchema = z.object({
   email: z.string().email(),
@@ -37,24 +37,24 @@ export async function signUp(
 
   const supabase = await createServerSupabaseClient();
   const origin =
-    (await headers()).get('origin') ??
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    'http://localhost:3000';
+    (await headers()).get('origin') ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
   const { error } = await supabase.auth.signUp({
     ...parsed.data,
     options: { emailRedirectTo: `${origin}/auth/callback?next=/onboarding/legal-gate` },
   });
   if (error) return { error: error.message };
-  return { ok: true, message: 'Account created — check your inbox to confirm, or sign in if email confirmation is disabled.' };
+  return {
+    ok: true,
+    message:
+      'Account created — check your inbox to confirm, or sign in if email confirmation is disabled.',
+  };
 }
 
 export async function signInWithGoogle(): Promise<{ error?: string }> {
   const supabase = await createServerSupabaseClient();
   const origin =
-    (await headers()).get('origin') ??
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    'http://localhost:3000';
+    (await headers()).get('origin') ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',

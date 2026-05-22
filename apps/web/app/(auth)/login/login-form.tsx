@@ -1,9 +1,9 @@
 'use client';
-import { useActionState, useState } from 'react';
-import { signInWithPassword, signUp, signInWithGoogle } from './actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useActionState, useState } from 'react';
+import { signInWithGoogle, signInWithPassword, signUp } from './actions';
 
 const initial: { ok?: boolean; message?: string; error?: string } = {};
 
@@ -40,25 +40,33 @@ export function LoginForm() {
           />
         </div>
         <Button type="submit" className="w-full" disabled={pending}>
-          {pending ? (isSignIn ? 'Signing in…' : 'Creating account…') : isSignIn ? 'Sign in' : 'Create account'}
+          {pending
+            ? isSignIn
+              ? 'Signing in…'
+              : 'Creating account…'
+            : isSignIn
+              ? 'Sign in'
+              : 'Create account'}
         </Button>
         {state.error && (
-          <p role="alert" className="text-sm text-red-600">{state.error}</p>
+          <p role="alert" className="text-sm text-red-600">
+            {state.error}
+          </p>
         )}
-        {state.ok && (
-          <p className="text-sm text-green-700">{state.message}</p>
-        )}
+        {state.ok && <p className="text-sm text-green-700">{state.message}</p>}
       </form>
 
       <div className="text-center text-sm">
         {isSignIn ? (
-          <>Don&apos;t have an account?{' '}
+          <>
+            Don&apos;t have an account?{' '}
             <button type="button" onClick={() => setMode('signup')} className="underline">
               Create one
             </button>
           </>
         ) : (
-          <>Already have an account?{' '}
+          <>
+            Already have an account?{' '}
             <button type="button" onClick={() => setMode('signin')} className="underline">
               Sign in
             </button>

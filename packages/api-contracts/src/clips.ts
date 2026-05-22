@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { ClipDomainSchema, ClipStatusSchema, EvidenceStrengthSchema, SpeakerStatusSchema } from './enums';
+import {
+  ClipDomainSchema,
+  ClipStatusSchema,
+  EvidenceStrengthSchema,
+  SpeakerStatusSchema,
+} from './enums';
 
 export const ClipSchema = z.object({
   id: z.string().uuid(),

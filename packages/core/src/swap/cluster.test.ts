@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  type ClusterAssignment,
-  type TemplateEmbedding,
-  computeClusters,
-  cosineDistance,
-} from './cluster';
+import { type TemplateEmbedding, computeClusters, cosineDistance } from './cluster';
 
 // Helper: create a 1536-dim vector in a specific "direction"
 // angle in degrees, maps to a unit vector with x=cos(angle), y=sin(angle), rest=0
@@ -57,13 +52,13 @@ describe('computeClusters', () => {
     // d(91°) is NOT a seed — after convergence d should cluster with c (both ~90°)
     const templates: TemplateEmbedding[] = [
       makeTemplate('t-a', 'sleep', 0),
-      makeTemplate('t-b', 'sleep', 5),     // close to t-a
+      makeTemplate('t-b', 'sleep', 5), // close to t-a
       makeTemplate('t-c', 'sleep', 90),
-      makeTemplate('t-d', 'sleep', 91),    // close to t-c
+      makeTemplate('t-d', 'sleep', 91), // close to t-c
       makeTemplate('t-e', 'sleep', 180),
-      makeTemplate('t-f', 'sleep', 181),   // close to t-e
+      makeTemplate('t-f', 'sleep', 181), // close to t-e
       makeTemplate('t-g', 'sleep', 270),
-      makeTemplate('t-h', 'sleep', 271),   // close to t-g
+      makeTemplate('t-h', 'sleep', 271), // close to t-g
     ];
 
     const result = computeClusters(templates, 4);

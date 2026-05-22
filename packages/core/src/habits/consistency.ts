@@ -2,7 +2,7 @@ export type CheckInStatus = 'done' | 'partial' | 'skipped';
 export type DayState = 'on' | 'half' | 'skipped' | 'missed' | 'pending';
 
 export type CheckInRecord = {
-  readonly date: string;       // YYYY-MM-DD
+  readonly date: string; // YYYY-MM-DD
   readonly status: CheckInStatus;
 };
 
@@ -11,7 +11,7 @@ export type Consistency = {
   readonly partial: number;
   readonly skipped: number;
   readonly missed: number;
-  readonly last21Days: readonly DayState[];   // chronological oldest→newest
+  readonly last21Days: readonly DayState[]; // chronological oldest→newest
 };
 
 export const WINDOW_DAYS = 21;
@@ -22,10 +22,7 @@ export const WINDOW_DAYS = 21;
  * Today with no check-in is rendered as 'pending' (dashed outline in UI), not 'missed'.
  * Days before today with no check-in are 'missed'.
  */
-export function computeConsistency(
-  checkIns: readonly CheckInRecord[],
-  today: Date,
-): Consistency {
+export function computeConsistency(checkIns: readonly CheckInRecord[], today: Date): Consistency {
   // Build a lookup map: date string → status
   const byDate = new Map<string, CheckInStatus>();
   for (const ci of checkIns) {

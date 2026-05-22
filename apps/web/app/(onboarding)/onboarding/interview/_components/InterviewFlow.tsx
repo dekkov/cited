@@ -1,4 +1,7 @@
 'use client';
+import { Button } from '@/components/ui/button';
+import type { PoolQuestion } from '@cited/core';
+import { useRouter } from 'next/navigation';
 /**
  * InterviewFlow — 3-phase onboarding interview.
  *
@@ -11,9 +14,6 @@
  * AUTH-05c: per-question free-text only shown if freeTextOptIn is true.
  */
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { PoolQuestion } from '@cited/core';
-import { Button } from '@/components/ui/button';
 
 type Phase = 'about-you' | 'loading-questions' | 'questions' | 'submitting';
 
@@ -132,8 +132,8 @@ export function InterviewFlow({ runId, freeTextOptIn }: InterviewFlowProps) {
           Tell us about yourself
         </h1>
         <p className="mt-3 font-[family-name:var(--font-geist-sans)] text-sm text-[var(--color-ink-4)]">
-          Anything — your job, schedule, foods you love, hobbies, what stresses you out,
-          what you&apos;ve already tried. The more you share, the better we can tailor your questions.
+          Anything — your job, schedule, foods you love, hobbies, what stresses you out, what
+          you&apos;ve already tried. The more you share, the better we can tailor your questions.
         </p>
 
         <form onSubmit={onAboutYouSubmit} className="mt-6 space-y-4">

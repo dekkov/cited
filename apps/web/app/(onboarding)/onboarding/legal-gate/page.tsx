@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/guards';
 import { isLegalGatePassed } from '@/lib/auth/legal-gate';
 import { getDb } from '@/lib/db';
-import { userHabits, eq } from '@cited/db';
+import { eq, userHabits } from '@cited/db';
 import { LegalGateForm } from './legal-gate-form';
 
 export default async function LegalGatePage() {

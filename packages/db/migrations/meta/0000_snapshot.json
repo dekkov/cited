@@ -227,12 +227,8 @@
           "name": "episodes_podcast_id_podcasts_id_fk",
           "tableFrom": "episodes",
           "tableTo": "podcasts",
-          "columnsFrom": [
-            "podcast_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["podcast_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -242,9 +238,7 @@
         "episodes_youtube_video_id_unique": {
           "name": "episodes_youtube_video_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "youtube_video_id"
-          ]
+          "columns": ["youtube_video_id"]
         }
       },
       "policies": {},
@@ -385,12 +379,8 @@
           "name": "clips_episode_id_episodes_id_fk",
           "tableFrom": "clips",
           "tableTo": "episodes",
-          "columnsFrom": [
-            "episode_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["episode_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -468,12 +458,8 @@
           "name": "clip_edits_clip_id_clips_id_fk",
           "tableFrom": "clip_edits",
           "tableTo": "clips",
-          "columnsFrom": [
-            "clip_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["clip_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -538,12 +524,8 @@
           "name": "transcript_chunks_episode_id_episodes_id_fk",
           "tableFrom": "transcript_chunks",
           "tableTo": "episodes",
-          "columnsFrom": [
-            "episode_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["episode_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -632,9 +614,7 @@
         "habit_templates_slug_unique": {
           "name": "habit_templates_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -670,12 +650,8 @@
           "name": "habit_template_clips_habit_template_id_habit_templates_id_fk",
           "tableFrom": "habit_template_clips",
           "tableTo": "habit_templates",
-          "columnsFrom": [
-            "habit_template_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["habit_template_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -683,12 +659,8 @@
           "name": "habit_template_clips_clip_id_clips_id_fk",
           "tableFrom": "habit_template_clips",
           "tableTo": "clips",
-          "columnsFrom": [
-            "clip_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["clip_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -696,10 +668,7 @@
       "compositePrimaryKeys": {
         "habit_template_clips_habit_template_id_clip_id_pk": {
           "name": "habit_template_clips_habit_template_id_clip_id_pk",
-          "columns": [
-            "habit_template_id",
-            "clip_id"
-          ]
+          "columns": ["habit_template_id", "clip_id"]
         }
       },
       "uniqueConstraints": {},
@@ -777,12 +746,8 @@
           "name": "user_habits_habit_template_id_habit_templates_id_fk",
           "tableFrom": "user_habits",
           "tableTo": "habit_templates",
-          "columnsFrom": [
-            "habit_template_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["habit_template_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -855,12 +820,8 @@
           "name": "check_ins_user_habit_id_user_habits_id_fk",
           "tableFrom": "check_ins",
           "tableTo": "user_habits",
-          "columnsFrom": [
-            "user_habit_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_habit_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -870,10 +831,7 @@
         "check_ins_user_habit_id_check_in_date_unique": {
           "name": "check_ins_user_habit_id_check_in_date_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_habit_id",
-            "check_in_date"
-          ]
+          "columns": ["user_habit_id", "check_in_date"]
         }
       },
       "policies": {},
@@ -937,12 +895,8 @@
           "name": "streaks_user_habit_id_user_habits_id_fk",
           "tableFrom": "streaks",
           "tableTo": "user_habits",
-          "columnsFrom": [
-            "user_habit_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_habit_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -952,9 +906,7 @@
         "streaks_user_habit_id_unique": {
           "name": "streaks_user_habit_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_habit_id"
-          ]
+          "columns": ["user_habit_id"]
         }
       },
       "policies": {},
@@ -1004,12 +956,8 @@
           "name": "streak_freezes_user_habit_id_user_habits_id_fk",
           "tableFrom": "streak_freezes",
           "tableTo": "user_habits",
-          "columnsFrom": [
-            "user_habit_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_habit_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1110,12 +1058,8 @@
           "name": "extraction_jobs_podcast_id_podcasts_id_fk",
           "tableFrom": "extraction_jobs",
           "tableTo": "podcasts",
-          "columnsFrom": [
-            "podcast_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["podcast_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1240,12 +1184,8 @@
           "name": "clips_pending_episode_id_episodes_id_fk",
           "tableFrom": "clips_pending",
           "tableTo": "episodes",
-          "columnsFrom": [
-            "episode_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["episode_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1253,12 +1193,8 @@
           "name": "clips_pending_extraction_job_id_extraction_jobs_id_fk",
           "tableFrom": "clips_pending",
           "tableTo": "extraction_jobs",
-          "columnsFrom": [
-            "extraction_job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["extraction_job_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1332,104 +1268,57 @@
     "public.check_in_status": {
       "name": "check_in_status",
       "schema": "public",
-      "values": [
-        "done",
-        "skipped",
-        "partial"
-      ]
+      "values": ["done", "skipped", "partial"]
     },
     "public.clip_domain": {
       "name": "clip_domain",
       "schema": "public",
-      "values": [
-        "sleep",
-        "nutrition_gut",
-        "exercise_longevity",
-        "mental_health"
-      ]
+      "values": ["sleep", "nutrition_gut", "exercise_longevity", "mental_health"]
     },
     "public.clip_status": {
       "name": "clip_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "approved",
-        "rejected",
-        "removed_from_source"
-      ]
+      "values": ["pending", "approved", "rejected", "removed_from_source"]
     },
     "public.consent_scope": {
       "name": "consent_scope",
       "schema": "public",
-      "values": [
-        "account",
-        "health_adjacent",
-        "ai_free_text"
-      ]
+      "values": ["account", "health_adjacent", "ai_free_text"]
     },
     "public.episode_availability": {
       "name": "episode_availability",
       "schema": "public",
-      "values": [
-        "available",
-        "removed_from_source",
-        "unknown"
-      ]
+      "values": ["available", "removed_from_source", "unknown"]
     },
     "public.evidence_strength": {
       "name": "evidence_strength",
       "schema": "public",
-      "values": [
-        "anecdotal",
-        "observational",
-        "rct",
-        "meta_analysis"
-      ]
+      "values": ["anecdotal", "observational", "rct", "meta_analysis"]
     },
     "public.extraction_job_status": {
       "name": "extraction_job_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "claimed",
-        "done",
-        "failed"
-      ]
+      "values": ["pending", "claimed", "done", "failed"]
     },
     "public.frequency": {
       "name": "frequency",
       "schema": "public",
-      "values": [
-        "daily",
-        "weekday",
-        "custom"
-      ]
+      "values": ["daily", "weekday", "custom"]
     },
     "public.privacy_mode": {
       "name": "privacy_mode",
       "schema": "public",
-      "values": [
-        "public",
-        "private"
-      ]
+      "values": ["public", "private"]
     },
     "public.speaker_status": {
       "name": "speaker_status",
       "schema": "public",
-      "values": [
-        "verified",
-        "unverified",
-        "host"
-      ]
+      "values": ["verified", "unverified", "host"]
     },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "user",
-        "curator",
-        "admin"
-      ]
+      "values": ["user", "curator", "admin"]
     }
   },
   "schemas": {},

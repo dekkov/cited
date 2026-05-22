@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LoginForm } from './login-form';
-import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth/guards';
+import { redirect } from 'next/navigation';
+import { LoginForm } from './login-form';
 
 export default async function LoginPage() {
   const u = await getSessionUser();

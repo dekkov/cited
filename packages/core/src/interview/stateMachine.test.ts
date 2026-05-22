@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { computeNextTurn, MAX_TURNS, MIN_TURNS } from './stateMachine';
+import { describe, expect, it } from 'vitest';
+import { MAX_TURNS, MIN_TURNS, computeNextTurn } from './stateMachine';
 import type { DomainCoverage } from './stateMachine';
 
 const fullCoverage: DomainCoverage = {

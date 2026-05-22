@@ -354,9 +354,8 @@ export const QUESTION_POOL: readonly PoolQuestion[] = [
   },
 ];
 
-export const QUESTION_POOL_BY_ID: Readonly<Record<string, PoolQuestion>> =
-  Object.freeze(
-    Object.fromEntries(QUESTION_POOL.map((q) => [q.id, q])),
-  );
+export const QUESTION_POOL_BY_ID: Readonly<Record<string, PoolQuestion>> = Object.freeze(
+  Object.fromEntries(QUESTION_POOL.map((q) => [q.id, q])),
+);
 
 export type PoolQuestionId = (typeof QUESTION_POOL)[number]['id'];

@@ -1,18 +1,18 @@
+import type { Citation } from '../interview/schemas';
 import {
   GROUNDING_THRESHOLD,
   type NearestChunkQuery,
   groundingCheck,
 } from '../llm/grounding/similarityCheck';
-import type { Citation } from '../interview/schemas';
 
 /**
  * Caller-supplied clip lookup function. The caller (e.g., a route handler with access to
  * `@cited/db`) queries the database for a clip's status and removal state. `@cited/core`
  * stays drizzle-free.
  */
-export type ClipLookup = (clipId: string) => Promise<
-  { id: string; status: string; claim: string; removedAt: Date | null } | null
->;
+export type ClipLookup = (
+  clipId: string,
+) => Promise<{ id: string; status: string; claim: string; removedAt: Date | null } | null>;
 
 export type CitationDropReason =
   | 'clip_not_found_or_unapproved'

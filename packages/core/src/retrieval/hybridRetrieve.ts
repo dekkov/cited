@@ -66,7 +66,7 @@ import type { ClipRetrievalFilters, RankedClip } from './types';
  * its job without over-filtering.
  */
 export type HybridQueryFn = (params: {
-  readonly embedQuery: number[];   // 1536-dim embedding vector
+  readonly embedQuery: number[]; // 1536-dim embedding vector
   readonly textQuery: string;
   readonly filters: ClipRetrievalFilters;
   readonly limit: number;

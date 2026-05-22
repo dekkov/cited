@@ -1,10 +1,9 @@
 'use client';
 
-import { YouTubeEmbed } from '@next/third-parties/google';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { SwapPanel } from './SwapPanel';
+import { YouTubeEmbed } from '@next/third-parties/google';
 import { AlertTriangle } from 'lucide-react';
+import { SwapPanel } from './SwapPanel';
 
 type ClipData = {
   id: string;
@@ -47,7 +46,11 @@ const DOMAIN_LABELS: Record<string, string> = {
 
 function formatDate(iso: string | null): string {
   if (!iso) return '';
-  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 }
 
 export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
@@ -100,21 +103,21 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
           <div className="flex items-center gap-2">
             <span className="font-medium text-[var(--color-ink-2)]">{clip.speaker}</span>
             {clip.speakerStatus === 'verified' && (
-              <Badge variant="secondary" className="text-xs">Verified</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Verified
+              </Badge>
             )}
             {clip.speakerStatus === 'host' && (
-              <Badge variant="secondary" className="text-xs">Host</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Host
+              </Badge>
             )}
           </div>
           {clip.episode && (
             <p>
-              {clip.episode.title && (
-                <span className="italic">{clip.episode.title}</span>
-              )}
+              {clip.episode.title && <span className="italic">{clip.episode.title}</span>}
               {clip.episode.title && clip.episode.publishedAt && ' · '}
-              {clip.episode.publishedAt && (
-                <span>{formatDate(clip.episode.publishedAt)}</span>
-              )}
+              {clip.episode.publishedAt && <span>{formatDate(clip.episode.publishedAt)}</span>}
             </p>
           )}
         </div>
@@ -166,11 +169,7 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
 
       {/* Swap button */}
       <div className="border-t border-[var(--color-rule)] pt-4">
-        <SwapPanel
-          userHabitId={habitId}
-          templateDomain={template.domain}
-          templateClusterId={template.clusterId}
-        />
+        <SwapPanel userHabitId={habitId} />
       </div>
     </article>
   );

@@ -8,7 +8,9 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noExplicitAny": "error"
+        "noExplicitAny": "error",
+        "noArrayIndexKey": "warn",
+        "noExtraNonNullAssertion": "warn"
       },
       "correctness": {
         "noUnusedVariables": "error",
@@ -16,7 +18,21 @@
       },
       "style": {
         "useImportType": "error",
-        "useNodejsImportProtocol": "error"
+        "useNodejsImportProtocol": "error",
+        "noNonNullAssertion": "warn",
+        "useTemplate": "warn",
+        "useSingleVarDeclarator": "warn"
+      },
+      "complexity": {
+        "useLiteralKeys": "warn",
+        "noUselessSwitchCase": "warn"
+      },
+      "performance": {
+        "noDelete": "warn"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useSemanticElements": "warn"
       }
     }
   },
@@ -48,5 +64,18 @@
       "Cited-design-reference/**",
       "compass_artifact_wf-*"
     ]
-  }
+  },
+  "overrides": [
+    {
+      "include": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off",
+            "noThenProperty": "off"
+          }
+        }
+      }
+    }
+  ]
 }

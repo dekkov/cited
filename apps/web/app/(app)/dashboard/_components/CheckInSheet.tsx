@@ -1,7 +1,5 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { checkInAction } from '@/app/actions/check-in';
 import {
   Dialog,
   DialogContent,
@@ -9,9 +7,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { checkInAction } from '@/app/actions/check-in';
-import { GraduationToast } from './GraduationToast';
 import type { CheckInStatus } from '@cited/core';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { GraduationToast } from './GraduationToast';
 
 type Props = {
   readonly userHabitId: string;
@@ -108,7 +108,13 @@ export function CheckInSheet({ userHabitId }: Props) {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
+      <Dialog
+        open={open}
+        onOpenChange={(v) => {
+          setOpen(v);
+          if (!v) reset();
+        }}
+      >
         <DialogTrigger asChild>
           <button
             type="button"
@@ -129,11 +135,7 @@ export function CheckInSheet({ userHabitId }: Props) {
           </DialogHeader>
 
           {/* Tri-state radio group (HAB-02, UI-DESIGN.md accessibility) */}
-          <div
-            role="radiogroup"
-            aria-label="Check-in status"
-            className="flex gap-2 mt-4"
-          >
+          <div role="radiogroup" aria-label="Check-in status" className="flex gap-2 mt-4">
             {STATUS_OPTIONS.map(({ value, label }) => (
               <button
                 key={value}
@@ -234,10 +236,7 @@ export function CheckInSheet({ userHabitId }: Props) {
 
       {/* Graduation overlay — shown post-check-in when habit hits 21 successes */}
       {showGraduation && (
-        <GraduationToast
-          userHabitId={userHabitId}
-          onClose={() => setShowGraduation(false)}
-        />
+        <GraduationToast userHabitId={userHabitId} onClose={() => setShowGraduation(false)} />
       )}
     </>
   );

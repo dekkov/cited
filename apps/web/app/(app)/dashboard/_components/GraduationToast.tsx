@@ -1,8 +1,8 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { archiveHabitAction } from '@/app/actions/archive-habit';
 import { GRADUATION_MESSAGE } from '@cited/core';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type Props = {
   readonly userHabitId: string;

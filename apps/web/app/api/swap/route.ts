@@ -1,15 +1,15 @@
-import { z } from 'zod';
+import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { logger } from '@/lib/logger';
 import {
-  findSwap,
-  validateCitations,
-  type SwapQueryFn,
   type ClipLookup,
   type NearestChunkQuery,
+  type SwapQueryFn,
+  findSwap,
+  validateCitations,
 } from '@cited/core';
-import { getDb } from '@/lib/db';
-import { getSessionUser } from '@/lib/auth/guards';
-import { logger } from '@/lib/logger';
-import { userHabits, habitTemplates, habitTemplateClips, clips, transcriptChunks, sql, eq, and } from '@cited/db';
+import { and, clips, eq, habitTemplateClips, habitTemplates, sql, userHabits } from '@cited/db';
+import { z } from 'zod';
 
 const Input = z.object({
   userHabitId: z.string().uuid(),

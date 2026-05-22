@@ -1,5 +1,5 @@
-import { date, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
+import { date, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { privacyMode, userRole } from './enums';
 
 // Note: id references auth.users(id) on delete cascade

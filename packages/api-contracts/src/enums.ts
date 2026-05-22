@@ -6,12 +6,7 @@ export type UserRole = z.infer<typeof UserRoleSchema>;
 export const PrivacyModeSchema = z.enum(['public', 'private']);
 export type PrivacyMode = z.infer<typeof PrivacyModeSchema>;
 
-export const ClipStatusSchema = z.enum([
-  'pending',
-  'approved',
-  'rejected',
-  'removed_from_source',
-]);
+export const ClipStatusSchema = z.enum(['pending', 'approved', 'rejected', 'removed_from_source']);
 export type ClipStatus = z.infer<typeof ClipStatusSchema>;
 
 export const ClipDomainSchema = z.enum([
@@ -45,9 +40,5 @@ export type ExtractionJobStatus = z.infer<typeof ExtractionJobStatusSchema>;
 export const ConsentScopeSchema = z.enum(['account', 'health_adjacent', 'ai_free_text']);
 export type ConsentScope = z.infer<typeof ConsentScopeSchema>;
 
-export const EpisodeAvailabilitySchema = z.enum([
-  'available',
-  'removed_from_source',
-  'unknown',
-]);
+export const EpisodeAvailabilitySchema = z.enum(['available', 'removed_from_source', 'unknown']);
 export type EpisodeAvailability = z.infer<typeof EpisodeAvailabilitySchema>;

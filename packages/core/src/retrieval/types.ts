@@ -4,14 +4,14 @@ export type { Domain };
 
 export type ClipRetrievalFilters = {
   readonly domains?: readonly Domain[];
-  readonly excludeRiskFlags?: readonly string[];   // e.g. ['supplement','medical_advice','contraindication']
-  readonly excludeClipIds?: readonly string[];     // for swap
+  readonly excludeRiskFlags?: readonly string[]; // e.g. ['supplement','medical_advice','contraindication']
+  readonly excludeClipIds?: readonly string[]; // for swap
   readonly speakerStatus?: readonly ('verified' | 'unverified' | 'host')[];
 };
 
 export type RankedClip = {
   readonly clipId: string;
-  readonly similarityScore: number;  // RRF-combined
+  readonly similarityScore: number; // RRF-combined
   readonly vectorScore: number;
   readonly textScore: number;
   readonly claim: string;

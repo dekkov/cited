@@ -8,7 +8,7 @@
  *
  * Run with: pnpm --filter @cited/web test:e2e -- auth.spec.ts
  */
-import { test, expect, request as pwRequest } from '@playwright/test';
+import { expect, request as pwRequest, test } from '@playwright/test';
 
 const SUPABASE_URL = process.env['SUPABASE_URL'] ?? 'http://localhost:9999';
 const SUPABASE_SERVICE_ROLE_KEY = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';
@@ -17,7 +17,10 @@ const SUPABASE_ANON_KEY = process.env['SUPABASE_ANON_KEY'] ?? '';
 const hasEnv = Boolean(SUPABASE_SERVICE_ROLE_KEY && SUPABASE_ANON_KEY);
 
 test.describe('Auth flow', () => {
-  test.skip(!hasEnv, 'Requires local Supabase stack (SUPABASE_SERVICE_ROLE_KEY + SUPABASE_ANON_KEY)');
+  test.skip(
+    !hasEnv,
+    'Requires local Supabase stack (SUPABASE_SERVICE_ROLE_KEY + SUPABASE_ANON_KEY)',
+  );
 
   test('magic-link sign-in round-trip', async ({ page }) => {
     const email = `e2e-${Date.now()}@example.com`;

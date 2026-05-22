@@ -1,9 +1,9 @@
 'use client';
-import { useActionState } from 'react';
-import { updateProfile } from './actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useActionState } from 'react';
+import { updateProfile } from './actions';
 
 interface SettingsFormProps {
   initial: {
@@ -14,16 +14,17 @@ interface SettingsFormProps {
 }
 
 export function SettingsForm({ initial }: SettingsFormProps) {
-  const [state, action, pending] = useActionState(updateProfile, {} as {
-    ok?: boolean;
-    message?: string;
-    error?: string;
-  });
+  const [state, action, pending] = useActionState(
+    updateProfile,
+    {} as {
+      ok?: boolean;
+      message?: string;
+      error?: string;
+    },
+  );
   return (
     <form action={action} className="space-y-4 max-w-md">
-      <h1 className="text-2xl font-semibold font-[family-name:var(--font-newsreader)]">
-        Settings
-      </h1>
+      <h1 className="text-2xl font-semibold font-[family-name:var(--font-newsreader)]">Settings</h1>
       <div className="space-y-2">
         <Label htmlFor="display_name">Display name</Label>
         <Input
@@ -35,12 +36,7 @@ export function SettingsForm({ initial }: SettingsFormProps) {
       </div>
       <div className="space-y-2">
         <Label htmlFor="timezone">Timezone</Label>
-        <Input
-          id="timezone"
-          name="timezone"
-          defaultValue={initial.timezone}
-          required
-        />
+        <Input id="timezone" name="timezone" defaultValue={initial.timezone} required />
       </div>
       <div className="space-y-2">
         <Label htmlFor="privacy_mode">Privacy mode</Label>
@@ -57,9 +53,7 @@ export function SettingsForm({ initial }: SettingsFormProps) {
       <Button type="submit" disabled={pending}>
         {pending ? 'Saving…' : 'Save'}
       </Button>
-      {state.ok && (
-        <p className="text-sm text-green-700">{state.message}</p>
-      )}
+      {state.ok && <p className="text-sm text-green-700">{state.message}</p>}
       {state.error && (
         <p role="alert" className="text-sm text-red-600">
           {state.error}

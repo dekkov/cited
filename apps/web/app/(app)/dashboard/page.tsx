@@ -1,21 +1,20 @@
-import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/guards';
 import { getDb } from '@/lib/db';
-import {
-  userHabits,
-  habitTemplates,
-  habitTemplateClips,
-  clips,
-  checkIns,
-  streaks,
-  streakFreezes,
-  interviewRuns,
-  eq,
-  and,
-  isNull,
-  isNotNull,
-} from '@cited/db';
 import { computeConsistency } from '@cited/core';
+import {
+  and,
+  checkIns,
+  clips,
+  eq,
+  habitTemplateClips,
+  habitTemplates,
+  interviewRuns,
+  isNotNull,
+  isNull,
+  streakFreezes,
+  userHabits,
+} from '@cited/db';
+import { redirect } from 'next/navigation';
 import { HabitCard } from './_components/HabitCard';
 
 export default async function DashboardPage() {
@@ -24,10 +23,7 @@ export default async function DashboardPage() {
 
   // Guard: redirect new users who have never finished onboarding
   const completedRun = await db.query.interviewRuns.findFirst({
-    where: and(
-      eq(interviewRuns.userId, user.id),
-      isNotNull(interviewRuns.completedAt),
-    ),
+    where: and(eq(interviewRuns.userId, user.id), isNotNull(interviewRuns.completedAt)),
     columns: { id: true },
   });
   if (!completedRun) redirect('/onboarding/interview');
@@ -48,7 +44,10 @@ export default async function DashboardPage() {
     .from(userHabits)
     .innerJoin(habitTemplates, eq(userHabits.habitTemplateId, habitTemplates.id))
     .leftJoin(habitTemplateClips, eq(habitTemplateClips.habitTemplateId, habitTemplates.id))
-    .leftJoin(clips, and(eq(habitTemplateClips.clipId, clips.id), eq(habitTemplateClips.position, 0)))
+    .leftJoin(
+      clips,
+      and(eq(habitTemplateClips.clipId, clips.id), eq(habitTemplateClips.position, 0)),
+    )
     .where(and(eq(userHabits.userId, user.id), eq(userHabits.status, 'active')))
     .orderBy(userHabits.createdAt);
 
@@ -67,12 +66,7 @@ export default async function DashboardPage() {
           status: checkIns.status,
         })
         .from(checkIns)
-        .where(
-          and(
-            eq(checkIns.userHabitId, habit.habitId),
-            eq(checkIns.userId, user.id),
-          ),
-        );
+        .where(and(eq(checkIns.userHabitId, habit.habitId), eq(checkIns.userId, user.id)));
 
       // Filter to window (last 21 days) — DB-level filtering via gte would be ideal
       // but simple filtering here is sufficient for MVP (max 21 records)

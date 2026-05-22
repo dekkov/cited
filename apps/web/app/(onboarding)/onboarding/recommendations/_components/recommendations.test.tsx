@@ -34,7 +34,7 @@ const makeCitation = (n: number) => ({
 const makeCandidate = (n: number): BoardCandidate => ({
   templateSlug: `habit-slug-${n}`,
   title: `Habit ${n}: Do something healthy`,
-  rationale: `This habit is recommended because of strong scientific evidence about wellbeing.`,
+  rationale: 'This habit is recommended because of strong scientific evidence about wellbeing.',
   domain: 'sleep',
   trigger: 'Every morning after waking up',
   tinyAction: 'Do it for 2 minutes',

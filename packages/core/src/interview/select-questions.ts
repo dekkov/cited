@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { LlmProvider } from '../llm/provider';
-import { QUESTION_POOL, QUESTION_POOL_BY_ID, type PoolQuestion } from './question-pool';
+import { type PoolQuestion, QUESTION_POOL, QUESTION_POOL_BY_ID } from './question-pool';
 import type { Domain } from './schemas';
 
 export const SelectionOutputSchema = z.object({
@@ -35,10 +35,12 @@ function buildSystemPrompt(): string {
   ].join('\n');
 }
 
-function buildUserPrompt(freeFormText: string, pool: readonly PoolQuestion[], count: number): string {
-  const poolList = pool
-    .map((q) => `- ${q.id} [${q.domain}]: ${q.text}`)
-    .join('\n');
+function buildUserPrompt(
+  freeFormText: string,
+  pool: readonly PoolQuestion[],
+  count: number,
+): string {
+  const poolList = pool.map((q) => `- ${q.id} [${q.domain}]: ${q.text}`).join('\n');
   const trimmedText = freeFormText.trim().slice(0, 4000) || '(user did not share anything)';
   return [
     `Pick ${count} question IDs from this pool:`,
@@ -88,9 +90,7 @@ function fallbackSelection(count: number, pool: readonly PoolQuestion[]): PoolQu
   return picked;
 }
 
-export async function selectQuestions(
-  input: SelectQuestionsInput,
-): Promise<SelectQuestionsResult> {
+export async function selectQuestions(input: SelectQuestionsInput): Promise<SelectQuestionsResult> {
   const pool = input.pool ?? QUESTION_POOL;
   const count = input.count ?? 8;
   const safeCount = Math.min(Math.max(count, 1), pool.length);
@@ -110,9 +110,9 @@ export async function selectQuestions(
   }
 
   const seen = new Set<string>();
-  const lookup = (input.pool
-    ? Object.fromEntries(pool.map((q) => [q.id, q]))
-    : QUESTION_POOL_BY_ID) as Record<string, PoolQuestion>;
+  const lookup = (
+    input.pool ? Object.fromEntries(pool.map((q) => [q.id, q])) : QUESTION_POOL_BY_ID
+  ) as Record<string, PoolQuestion>;
   const selected: PoolQuestion[] = [];
   for (const id of selectedIds) {
     const q = lookup[id];

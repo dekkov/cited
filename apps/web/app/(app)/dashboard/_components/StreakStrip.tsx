@@ -62,9 +62,7 @@ export function StreakStrip({ streak }: StreakProps) {
       {/* Streak number + label */}
       <div>
         <div className="flex items-baseline gap-1">
-          <span
-            className="font-[family-name:var(--font-newsreader)] text-[30px] leading-none tracking-[-0.02em] text-[var(--color-ink)]"
-          >
+          <span className="font-[family-name:var(--font-newsreader)] text-[30px] leading-none tracking-[-0.02em] text-[var(--color-ink)]">
             {currentLength}
           </span>
           <span className="text-[16px] text-[var(--color-ink-3)]">/21</span>
@@ -82,7 +80,9 @@ export function StreakStrip({ streak }: StreakProps) {
           aria-label={`${freezesAvailable} freeze${freezesAvailable === 1 ? '' : 's'} available`}
         >
           <SnowflakeIcon />
-          <span>{freezesAvailable} freeze{freezesAvailable === 1 ? '' : 's'} available</span>
+          <span>
+            {freezesAvailable} freeze{freezesAvailable === 1 ? '' : 's'} available
+          </span>
         </div>
       )}
     </div>

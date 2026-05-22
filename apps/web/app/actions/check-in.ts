@@ -1,18 +1,9 @@
 'use server';
-import { z } from 'zod';
-import { applyCheckIn, isGraduationReady } from '@cited/core';
-import {
-  checkIns,
-  streaks,
-  streakFreezes,
-  userHabits,
-  consentRecords,
-  eq,
-  and,
-  isNull,
-} from '@cited/db';
-import { getDb } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { applyCheckIn, isGraduationReady } from '@cited/core';
+import { and, checkIns, eq, streakFreezes, streaks, userHabits } from '@cited/db';
+import { z } from 'zod';
 
 const Input = z.object({
   userHabitId: z.string().uuid(),
@@ -42,8 +33,7 @@ export async function checkInAction(raw: unknown): Promise<CheckInResult> {
 
   // One check-in per habit per day. Reject re-attempts instead of silently overwriting.
   const existing = await db.query.checkIns.findFirst({
-    where: (c, { eq, and }) =>
-      and(eq(c.userHabitId, input.userHabitId), eq(c.checkInDate, today)),
+    where: (c, { eq, and }) => and(eq(c.userHabitId, input.userHabitId), eq(c.checkInDate, today)),
     columns: { id: true },
   });
   if (existing) throw new Error('AlreadyCheckedIn');
@@ -81,8 +71,7 @@ export async function checkInAction(raw: unknown): Promise<CheckInResult> {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
   const usedThisWeekRows = await db.query.streakFreezes.findMany({
-    where: (f, { eq, and }) =>
-      and(eq(f.userId, user.id), eq(f.userHabitId, input.userHabitId)),
+    where: (f, { eq, and }) => and(eq(f.userId, user.id), eq(f.userHabitId, input.userHabitId)),
   });
   const freezeUsedThisWeek = usedThisWeekRows.some(
     (row) => row.usedAt !== null && new Date(row.usedAt) > oneWeekAgo,

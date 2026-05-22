@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('/legal/dmca renders heading + SLA + contact', async ({ page }) => {
   await page.goto('/legal/dmca');

@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { ClipDomainSchema, EvidenceStrengthSchema, ExtractionJobStatusSchema, SpeakerStatusSchema } from './enums';
+import {
+  ClipDomainSchema,
+  EvidenceStrengthSchema,
+  ExtractionJobStatusSchema,
+  SpeakerStatusSchema,
+} from './enums';
 
 export const ExtractionJobPayloadSchema = z.object({
   youtube_video_id: z.string().min(1),

@@ -38,11 +38,7 @@ export const extractionJobStatus = pgEnum('extraction_job_status', [
   'failed',
 ]);
 
-export const consentScope = pgEnum('consent_scope', [
-  'account',
-  'health_adjacent',
-  'ai_free_text',
-]);
+export const consentScope = pgEnum('consent_scope', ['account', 'health_adjacent', 'ai_free_text']);
 
 export const episodeAvailability = pgEnum('episode_availability', [
   'available',

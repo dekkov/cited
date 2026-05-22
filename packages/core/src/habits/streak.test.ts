@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyCheckIn, FREEZES_PER_MONTH, FREEZES_MAX_BANKED } from './streak';
+import { FREEZES_MAX_BANKED, FREEZES_PER_MONTH, applyCheckIn } from './streak';
 import type { StreakState } from './streak';
 
 const BASE_STATE: StreakState = {

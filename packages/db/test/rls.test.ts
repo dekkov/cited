@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const SUPABASE_URL = process.env['SUPABASE_URL'];
 const SERVICE_ROLE = process.env['SUPABASE_SERVICE_ROLE_KEY'];

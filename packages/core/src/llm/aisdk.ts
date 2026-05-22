@@ -16,11 +16,12 @@ import type { LlmTier } from './types';
 export function getAiSdkModel(tier: LlmTier): LanguageModel {
   const provider = process.env['LLM_PROVIDER'] ?? 'anthropic';
   if (tier === 'cheap') {
-    const id = process.env['LLM_MODEL_CHEAP'] ?? (provider === 'openai' ? 'gpt-4o-mini' : 'claude-haiku-4-5');
+    const id =
+      process.env['LLM_MODEL_CHEAP'] ??
+      (provider === 'openai' ? 'gpt-4o-mini' : 'claude-haiku-4-5');
     return provider === 'openai' ? openai(id) : anthropic(id);
   }
   const id =
-    process.env['LLM_MODEL_REASONING'] ??
-    (provider === 'openai' ? 'gpt-4o' : 'claude-sonnet-4-5');
+    process.env['LLM_MODEL_REASONING'] ?? (provider === 'openai' ? 'gpt-4o' : 'claude-sonnet-4-5');
   return provider === 'openai' ? openai(id) : anthropic(id);
 }

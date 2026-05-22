@@ -3,7 +3,7 @@ import type { Domain } from './schemas';
 export type DomainCoverage = Readonly<Record<Domain, number>>;
 
 export type TurnPlan = {
-  readonly turnIndex: number;       // 1-based, next turn to issue
+  readonly turnIndex: number; // 1-based, next turn to issue
   readonly priorityDomain: Domain | null;
   readonly done: boolean;
   readonly doneReason: 'hard_cap' | 'coverage_complete' | 'user_signal' | null;
@@ -27,17 +27,28 @@ export function computeNextTurn(input: {
   const allDoubleTouched = Object.values(domainCoverage).every((n) => n >= 2);
 
   if (turnCount >= MIN_TURNS && allTouched && userDoneSignal) {
-    return { turnIndex: turnCount + 1, priorityDomain: null, done: true, doneReason: 'user_signal' };
+    return {
+      turnIndex: turnCount + 1,
+      priorityDomain: null,
+      done: true,
+      doneReason: 'user_signal',
+    };
   }
 
   if (turnCount >= 5 && allDoubleTouched) {
-    return { turnIndex: turnCount + 1, priorityDomain: null, done: true, doneReason: 'coverage_complete' };
+    return {
+      turnIndex: turnCount + 1,
+      priorityDomain: null,
+      done: true,
+      doneReason: 'coverage_complete',
+    };
   }
 
   let priority: Domain | null = null;
   if (turnCount >= 3) {
-    const sorted = (Object.entries(domainCoverage) as [Domain, number][])
-      .sort((a, b) => a[1] - b[1]);
+    const sorted = (Object.entries(domainCoverage) as [Domain, number][]).sort(
+      (a, b) => a[1] - b[1],
+    );
     priority = sorted[0]?.[0] ?? null;
   }
 

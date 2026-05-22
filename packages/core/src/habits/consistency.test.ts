@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeConsistency, WINDOW_DAYS } from './consistency';
+import { WINDOW_DAYS, computeConsistency } from './consistency';
 
 function makeDate(daysAgo: number, today: Date = new Date('2024-01-21')): string {
   const d = new Date(today);

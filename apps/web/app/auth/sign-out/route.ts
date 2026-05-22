@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Sign-out route handler. Must be called via POST to prevent CSRF.

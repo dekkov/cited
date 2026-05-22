@@ -9,7 +9,7 @@
  * Requires a running dev server + local Supabase DB with at least one
  * published habit_template that has slug 'test-slug'.
  */
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { createClient } from '@supabase/supabase-js';
 
 const WEB_URL = process.env['WEB_URL'] ?? process.env['BASE_URL'] ?? 'http://localhost:3000';
@@ -49,10 +49,7 @@ test.describe('RLS: public /h/[slug] page', () => {
     expect(html).not.toContain('auth.uid()');
 
     // --- Part 2: Anon role cannot read user_habits via PostgREST ---
-    const { data, error } = await anon
-      .from('user_habits')
-      .select('*')
-      .limit(1);
+    const { data } = await anon.from('user_habits').select('*').limit(1);
 
     // RLS must deny read to anon role: data should be empty array, not error
     // (Supabase returns empty result, not 403, when RLS filters all rows)

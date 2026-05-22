@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { findSwap } from './findSwap';
-import type { SwapQueryFn, SwapCandidate } from './findSwap';
+import type { SwapCandidate, SwapQueryFn } from './findSwap';
 
 const MOCK_CANDIDATE_1: SwapCandidate = {
   templateId: 'template-b',
@@ -72,9 +72,7 @@ describe('findSwap', () => {
 
     await findSwap(mockQuery, 'template-a', 'sleep', 0, 5);
 
-    expect(mockQuery).toHaveBeenCalledWith(
-      expect.objectContaining({ limit: 5 }),
-    );
+    expect(mockQuery).toHaveBeenCalledWith(expect.objectContaining({ limit: 5 }));
   });
 
   it('returns empty array when query returns no candidates', async () => {

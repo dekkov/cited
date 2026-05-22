@@ -1,3 +1,7 @@
+import { startInterviewAction } from '@/app/actions/start-interview';
+import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { and, consentRecords, eq, interviewRuns, isNull, userHabits } from '@cited/db';
 /**
  * Interview page (Server Component).
  *
@@ -7,10 +11,6 @@
  * - Passes runId + freeTextOptIn down to InterviewFlow (client component).
  */
 import { redirect } from 'next/navigation';
-import { getSessionUser } from '@/lib/auth/guards';
-import { getDb } from '@/lib/db';
-import { interviewRuns, userHabits, consentRecords, eq, and, isNull } from '@cited/db';
-import { startInterviewAction } from '@/app/actions/start-interview';
 import { InterviewFlow } from './_components/InterviewFlow';
 
 export default async function InterviewPage() {
@@ -20,24 +20,20 @@ export default async function InterviewPage() {
   const db = getDb();
 
   // Guard: if user already has habits they've completed the interview — send to dashboard
-  const existingHabit = await db.query.userHabits.findFirst({ where: eq(userHabits.userId, user.id) });
+  const existingHabit = await db.query.userHabits.findFirst({
+    where: eq(userHabits.userId, user.id),
+  });
   if (existingHabit) redirect('/dashboard');
 
   // AUTH-05c: check consent for LLM free-text analysis
   const consentRecord = await db.query.consentRecords.findFirst({
-    where: and(
-      eq(consentRecords.userId, user.id),
-      eq(consentRecords.scope, 'ai_free_text'),
-    ),
+    where: and(eq(consentRecords.userId, user.id), eq(consentRecords.scope, 'ai_free_text')),
   });
   const freeTextOptIn = consentRecord?.granted === true;
 
   // Find an in-progress run (completedAt is null)
   const existing = await db.query.interviewRuns.findFirst({
-    where: and(
-      eq(interviewRuns.userId, user.id),
-      isNull(interviewRuns.completedAt),
-    ),
+    where: and(eq(interviewRuns.userId, user.id), isNull(interviewRuns.completedAt)),
     orderBy: (r, { desc }) => desc(r.runIndex),
   });
 

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { NextResponse } from 'next/server';
 
 /**
  * OAuth + magic-link code-exchange handler.

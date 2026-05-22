@@ -1,26 +1,26 @@
-import { generateObject } from 'ai';
-import { z } from 'zod';
+import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
 import {
-  SynthesisOutputSchema,
   INTERVIEW_VOICE_SPEC,
-  validateCitations,
+  QUESTION_POOL_BY_ID,
+  SynthesisOutputSchema,
   getAiSdkModel,
   getEmbeddings,
   hybridRetrieve,
-  QUESTION_POOL_BY_ID,
+  validateCitations,
 } from '@cited/core';
 import type {
-  SynthesisOutput,
-  ClipLookup,
-  NearestChunkQuery,
-  HabitCandidate,
   Citation,
-  HybridQueryFn,
+  ClipLookup,
   Domain,
+  HabitCandidate,
+  HybridQueryFn,
+  NearestChunkQuery,
+  SynthesisOutput,
 } from '@cited/core';
-import { getDb } from '@/lib/db';
-import { getSessionUser } from '@/lib/auth/guards';
-import { interviewRuns, consentRecords, clips, eq, and, sql, inArray } from '@cited/db';
+import { and, clips, consentRecords, eq, inArray, interviewRuns, sql } from '@cited/db';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -48,9 +48,7 @@ type HydratedAnswer = {
   freeText?: string;
 };
 
-function hydrateAnswers(
-  answers: z.infer<typeof AnswerSchema>[],
-): HydratedAnswer[] {
+function hydrateAnswers(answers: z.infer<typeof AnswerSchema>[]): HydratedAnswer[] {
   const out: HydratedAnswer[] = [];
   for (const a of answers) {
     const q = QUESTION_POOL_BY_ID[a.questionId];
@@ -69,7 +67,9 @@ function hydrateAnswers(
 }
 
 function buildRetrievalQuery(freeFormText: string, hydrated: HydratedAnswer[]): string {
-  const answerLines = hydrated.map((a) => `${a.question} — ${a.choiceLabel}${a.freeText ? ` (${a.freeText})` : ''}`);
+  const answerLines = hydrated.map(
+    (a) => `${a.question} — ${a.choiceLabel}${a.freeText ? ` (${a.freeText})` : ''}`,
+  );
   return [freeFormText.trim(), ...answerLines].filter(Boolean).join('\n');
 }
 
@@ -92,17 +92,12 @@ async function handlePost(req: Request): Promise<Response> {
 
   // AION-07: Check ai_free_text consent
   const consentRecord = await db.query.consentRecords.findFirst({
-    where: and(
-      eq(consentRecords.userId, user.id),
-      eq(consentRecords.scope, 'ai_free_text'),
-    ),
+    where: and(eq(consentRecords.userId, user.id), eq(consentRecords.scope, 'ai_free_text')),
   });
   const allowFreeText = consentRecord?.granted === true;
 
   const hydrated = hydrateAnswers(body.answers);
-  const sanitized = allowFreeText
-    ? hydrated
-    : hydrated.map(({ freeText: _f, ...rest }) => rest);
+  const sanitized = allowFreeText ? hydrated : hydrated.map(({ freeText: _f, ...rest }) => rest);
   const aboutYou = allowFreeText ? body.freeFormText : '';
 
   // ── Retrieval: build a query from answers + free-form text, hybrid-retrieve top clips
@@ -116,7 +111,9 @@ async function handlePost(req: Request): Promise<Response> {
       await tx.execute(sql`SET LOCAL hnsw.max_scan_tuples = 20000`);
 
       const domains = filters.domains ? [...filters.domains] : null;
-      const excludeFlags = filters.excludeRiskFlags ? [...filters.excludeRiskFlags] : ([] as string[]);
+      const excludeFlags = filters.excludeRiskFlags
+        ? [...filters.excludeRiskFlags]
+        : ([] as string[]);
       const excludeIds = filters.excludeClipIds ? [...filters.excludeClipIds] : null;
 
       // Drizzle passes a JS array as a composite/record parameter, not a postgres array.
@@ -125,17 +122,26 @@ async function handlePost(req: Request): Promise<Response> {
       const domainsSql =
         domains === null || domains.length === 0
           ? sql`TRUE`
-          : sql`domain::text = ANY(ARRAY[${sql.join(domains.map((d) => sql`${d}`), sql`, `)}]::text[])`;
+          : sql`domain::text = ANY(ARRAY[${sql.join(
+              domains.map((d) => sql`${d}`),
+              sql`, `,
+            )}]::text[])`;
 
       const excludeFlagsSql =
         excludeFlags.length === 0
           ? sql`FALSE`
-          : sql`coalesce(risk_flags, '{}'::text[]) && ARRAY[${sql.join(excludeFlags.map((f) => sql`${f}`), sql`, `)}]::text[]`;
+          : sql`coalesce(risk_flags, '{}'::text[]) && ARRAY[${sql.join(
+              excludeFlags.map((f) => sql`${f}`),
+              sql`, `,
+            )}]::text[]`;
 
       const excludeIdsSql =
         excludeIds === null || excludeIds.length === 0
           ? sql`TRUE`
-          : sql`id <> ALL(ARRAY[${sql.join(excludeIds.map((id) => sql`${id}`), sql`, `)}]::uuid[])`;
+          : sql`id <> ALL(ARRAY[${sql.join(
+              excludeIds.map((id) => sql`${id}`),
+              sql`, `,
+            )}]::uuid[])`;
 
       const rows = await tx.execute(sql`
         WITH params AS (SELECT 60::int AS rrf_k, 1.0::float AS vec_w, 1.0::float AS text_w),
@@ -207,19 +213,18 @@ async function handlePost(req: Request): Promise<Response> {
   const retrievedIds = ranked.map((r) => r.clipId);
 
   // Fetch the retrieved clips' canonical text for the prompt
-  const retrievedClips = retrievedIds.length === 0
-    ? []
-    : await db.query.clips.findMany({
-        where: and(
-          inArray(clips.id, retrievedIds),
-          eq(clips.status, 'approved'),
-        ),
-      });
+  const retrievedClips =
+    retrievedIds.length === 0
+      ? []
+      : await db.query.clips.findMany({
+          where: and(inArray(clips.id, retrievedIds), eq(clips.status, 'approved')),
+        });
 
   if (retrievedClips.length === 0) {
     // Mark the run as completed (even with 0 candidates) so the recommendations page
     // doesn't see candidatesJson=null and redirect back into the interview loop.
-    await db.update(interviewRuns)
+    await db
+      .update(interviewRuns)
       .set({ candidatesJson: [], completedAt: new Date() })
       .where(eq(interviewRuns.id, body.runId));
     return Response.json(
@@ -249,7 +254,9 @@ async function handlePost(req: Request): Promise<Response> {
     const row = await db.query.clips.findFirst({
       where: eq(clips.id, clipId),
     });
-    return row ? { id: row.id, status: row.status, claim: row.claim, removedAt: row.removedAt } : null;
+    return row
+      ? { id: row.id, status: row.status, claim: row.claim, removedAt: row.removedAt }
+      : null;
   };
 
   const nearest: NearestChunkQuery = async (vec, clipId) => {
@@ -269,7 +276,9 @@ async function handlePost(req: Request): Promise<Response> {
 
   let attempt = 0;
   while (attempt < MAX_REGEN_ATTEMPTS && !validated.allCandidatesOk) {
-    const regenPrompt = prompt + '\n\nREGENERATION: Previous output had citation or domain-coverage failures. ' +
+    const regenPrompt =
+      prompt +
+      '\n\nREGENERATION: Previous output had citation or domain-coverage failures. ' +
       'Output must satisfy: every candidate has ≥2 citations whose claim text matches the retrieved-clip claim ' +
       'by cosine ≥ 0.85; gapDomains must each appear in at least one candidate.';
     output = await doGenerateSynthesis(regenPrompt);
@@ -281,7 +290,8 @@ async function handlePost(req: Request): Promise<Response> {
     .filter((c) => c.valid)
     .map((c) => ({ ...c.candidate, citations: c.validCitations as Citation[] }));
 
-  await db.update(interviewRuns)
+  await db
+    .update(interviewRuns)
     .set({
       profileJson: output.profileSummary,
       candidatesJson: finalCandidates,
@@ -298,7 +308,7 @@ async function handlePost(req: Request): Promise<Response> {
 
 async function doGenerateSynthesis(prompt: string): Promise<SynthesisOutput> {
   const { object } = await generateObject({
-    model: getAiSdkModel('reasoning'),    // AION-08: reasoning tier for synthesis
+    model: getAiSdkModel('reasoning'), // AION-08: reasoning tier for synthesis
     system: INTERVIEW_VOICE_SPEC,
     schema: SynthesisOutputSchema,
     prompt,
@@ -315,7 +325,10 @@ function buildSynthesisPrompt(args: {
     .map((c) => `- id: ${c.id} | domain: ${c.domain} | speaker: ${c.speaker} | claim: "${c.claim}"`)
     .join('\n');
   const answersBlock = args.answers
-    .map((a) => `- [${a.domain}] ${a.question} → ${a.choiceLabel}${a.freeText ? ` (note: ${a.freeText})` : ''}`)
+    .map(
+      (a) =>
+        `- [${a.domain}] ${a.question} → ${a.choiceLabel}${a.freeText ? ` (note: ${a.freeText})` : ''}`,
+    )
     .join('\n');
   return [
     'Synthesize 3–5 habit candidates from this onboarding interview.',
@@ -331,7 +344,7 @@ function buildSynthesisPrompt(args: {
     '- Output must match SynthesisOutputSchema exactly.',
     '- Every candidate has 2–3 citations whose clipId is from the list above.',
     "- The model-quoted claim string in each citation MUST closely paraphrase the listed clip's claim (similarity ≥ 0.85 will be checked post-generation).",
-    '- profileSummary.gapDomains lists domains with low coverage in the user\'s answers.',
+    "- profileSummary.gapDomains lists domains with low coverage in the user's answers.",
     '- Every domain in gapDomains must appear in at least one candidate (REC-03).',
     '- Each candidate needs a `trigger` (when/where, implementation-intention) and `tinyAction` (≤80 chars, BJ Fogg minimum).',
   ].join('\n');

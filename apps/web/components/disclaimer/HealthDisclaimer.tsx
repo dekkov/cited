@@ -6,11 +6,7 @@ export interface HealthDisclaimerProps {
 
 export function HealthDisclaimer({ variant = 'card' }: HealthDisclaimerProps) {
   const cls =
-    variant === 'page'
-      ? 'text-sm leading-relaxed'
-      : variant === 'footer'
-        ? 'text-xs'
-        : 'text-xs';
+    variant === 'page' ? 'text-sm leading-relaxed' : variant === 'footer' ? 'text-xs' : 'text-xs';
   return (
     <div
       role="note"
@@ -21,9 +17,9 @@ export function HealthDisclaimer({ variant = 'card' }: HealthDisclaimerProps) {
       <strong className="font-semibold text-[color:var(--color-ink-2)]">
         This is not medical advice.
       </strong>{' '}
-      Habits surfaced here are evidence-informed but general. See a clinician for medical
-      questions specific to your situation. Do not start, stop, or change prescribed treatment
-      based on this content.
+      Habits surfaced here are evidence-informed but general. See a clinician for medical questions
+      specific to your situation. Do not start, stop, or change prescribed treatment based on this
+      content.
     </div>
   );
 }

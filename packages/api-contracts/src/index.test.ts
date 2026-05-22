@@ -1,18 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   API_CONTRACT_VERSION,
-  ProfileSchema,
-  ClipSchema,
-  HabitTemplateSchema,
-  UserHabitSchema,
-  CheckInSchema,
-  ExtractionJobSchema,
-  ExtractionJobPayloadSchema,
-  ExtractionJobResultSchema,
-  ClipPendingSchema,
-  UserRoleSchema,
   ClipDomainSchema,
+  ClipPendingSchema,
+  ClipSchema,
+  ExtractionJobResultSchema,
+  ExtractionJobSchema,
   ExtractionJobStatusSchema,
+  ProfileSchema,
+  UserRoleSchema,
 } from './index';
 
 describe('@cited/api-contracts smoke tests', () => {

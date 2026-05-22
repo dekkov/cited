@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { HabitCard } from './HabitCard';
 import type { Consistency } from '@cited/core';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { HabitCard } from './HabitCard';
 
 // Mock child components
 vi.mock('./ConsistencyBar', () => ({
@@ -27,7 +27,9 @@ const makeConsistency = (overrides?: Partial<Consistency>): Consistency => ({
   partial: 2,
   skipped: 1,
   missed: 5,
-  last21Days: Array.from({ length: 21 }, (_, i): 'on' | 'half' | 'missed' => i < 10 ? 'on' : i < 12 ? 'half' : 'missed'),
+  last21Days: Array.from({ length: 21 }, (_, i): 'on' | 'half' | 'missed' =>
+    i < 10 ? 'on' : i < 12 ? 'half' : 'missed',
+  ),
   ...overrides,
 });
 
@@ -72,9 +74,7 @@ describe('HabitCard', () => {
     expect(bar).toBeTruthy();
     expect(strip).toBeTruthy();
     // Check DOM order: bar should come before strip
-    expect(
-      bar!.compareDocumentPosition(strip!) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    expect(bar!.compareDocumentPosition(strip!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('Test 3: streak strip is NOT rendered when currentLength >= 30 (HAB-09)', () => {

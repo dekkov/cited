@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('interview schemas', () => {
   describe('HabitCandidateSchema', () => {
@@ -77,7 +77,8 @@ describe('interview schemas', () => {
       const result = HabitCandidateSchema.safeParse({
         templateSlug: 'sleep-timing',
         title: 'Consistent sleep timing',
-        rationale: 'Keeping a regular sleep schedule anchors your circadian rhythm and improves health.',
+        rationale:
+          'Keeping a regular sleep schedule anchors your circadian rhythm and improves health.',
         domain: 'sleep',
         trigger: 'When my alarm goes off each morning at 7am',
         tinyAction: 'Get up within 5 minutes',
@@ -104,13 +105,22 @@ describe('interview schemas', () => {
       const validCandidate = {
         templateSlug: 'sleep-timing',
         title: 'Consistent sleep timing',
-        rationale: 'Keeping a regular sleep schedule anchors your circadian rhythm and improves health.',
+        rationale:
+          'Keeping a regular sleep schedule anchors your circadian rhythm and improves health.',
         domain: 'sleep',
         trigger: 'When my alarm goes off each morning',
         tinyAction: 'Get up within 5 minutes',
         citations: [
-          { clipId: '11111111-1111-1111-1111-111111111111', claim: 'Claim 1', speaker: 'Speaker A' },
-          { clipId: '22222222-2222-2222-2222-222222222222', claim: 'Claim 2', speaker: 'Speaker A' },
+          {
+            clipId: '11111111-1111-1111-1111-111111111111',
+            claim: 'Claim 1',
+            speaker: 'Speaker A',
+          },
+          {
+            clipId: '22222222-2222-2222-2222-222222222222',
+            claim: 'Claim 2',
+            speaker: 'Speaker A',
+          },
         ],
       };
       const result = SynthesisOutputSchema.safeParse({
@@ -128,13 +138,22 @@ describe('interview schemas', () => {
       const validCandidate = {
         templateSlug: 'sleep-timing',
         title: 'Consistent sleep timing',
-        rationale: 'Keeping a regular sleep schedule anchors your circadian rhythm and improves health.',
+        rationale:
+          'Keeping a regular sleep schedule anchors your circadian rhythm and improves health.',
         domain: 'sleep',
         trigger: 'When my alarm goes off each morning',
         tinyAction: 'Get up within 5 minutes',
         citations: [
-          { clipId: '11111111-1111-1111-1111-111111111111', claim: 'Claim 1', speaker: 'Speaker A' },
-          { clipId: '22222222-2222-2222-2222-222222222222', claim: 'Claim 2', speaker: 'Speaker A' },
+          {
+            clipId: '11111111-1111-1111-1111-111111111111',
+            claim: 'Claim 1',
+            speaker: 'Speaker A',
+          },
+          {
+            clipId: '22222222-2222-2222-2222-222222222222',
+            claim: 'Claim 2',
+            speaker: 'Speaker A',
+          },
         ],
       };
       const result = SynthesisOutputSchema.safeParse({

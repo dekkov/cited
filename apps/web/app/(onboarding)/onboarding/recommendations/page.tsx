@@ -1,3 +1,8 @@
+import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { HabitCandidateSchema } from '@cited/core';
+import type { HabitCandidate } from '@cited/core';
+import { and, clips, eq, habitTemplateClips, inArray, interviewRuns, isNull } from '@cited/db';
 /**
  * Recommendations page (Server Component).
  *
@@ -10,11 +15,6 @@
  * so AdoptHabitCard can render the YouTubeEmbed.
  */
 import { redirect } from 'next/navigation';
-import { getSessionUser } from '@/lib/auth/guards';
-import { getDb } from '@/lib/db';
-import { interviewRuns, clips, habitTemplateClips, eq, and, inArray, isNull } from '@cited/db';
-import { HabitCandidateSchema } from '@cited/core';
-import type { HabitCandidate } from '@cited/core';
 import { z } from 'zod';
 import { AdoptBoard } from './_components/AdoptBoard';
 
@@ -49,10 +49,7 @@ export default async function RecommendationsPage({
 
   // Fetch the interview run (RLS scopes to owner at DB level)
   const run = await db.query.interviewRuns.findFirst({
-    where: and(
-      eq(interviewRuns.id, runId),
-      eq(interviewRuns.userId, user.id),
-    ),
+    where: and(eq(interviewRuns.id, runId), eq(interviewRuns.userId, user.id)),
   });
 
   if (!run || !run.candidatesJson) {
@@ -143,17 +140,18 @@ export default async function RecommendationsPage({
         </h1>
         <p className="font-[family-name:var(--font-geist-sans)] text-sm text-[var(--color-ink-4)]">
           The habit corpus doesn&apos;t have enough approved clips to generate personalised
-          recommendations for your profile. Ask an admin to approve some clips, then re-run
-          the interview from <a href="/settings" className="underline">Settings</a>.
+          recommendations for your profile. Ask an admin to approve some clips, then re-run the
+          interview from{' '}
+          <a href="/settings" className="underline">
+            Settings
+          </a>
+          .
         </p>
       </main>
     );
   }
 
   return (
-    <AdoptBoard
-      candidates={enrichedCandidates}
-      habitTemplateIds={candidateHabitTemplateIds}
-    />
+    <AdoptBoard candidates={enrichedCandidates} habitTemplateIds={candidateHabitTemplateIds} />
   );
 }

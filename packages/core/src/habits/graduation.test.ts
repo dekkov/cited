@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isGraduationReady, GRADUATION_THRESHOLD, GRADUATION_MESSAGE } from './graduation';
+import { GRADUATION_MESSAGE, GRADUATION_THRESHOLD, isGraduationReady } from './graduation';
 
 describe('isGraduationReady', () => {
   it('Test 9: streak.currentLength >= 21 AND status=active → true', () => {

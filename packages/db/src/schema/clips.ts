@@ -1,6 +1,6 @@
+import { sql } from 'drizzle-orm';
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { vector } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
 import { clipDomain, clipStatus, evidenceStrength, speakerStatus } from './enums';
 import { episodes } from './episodes';
 

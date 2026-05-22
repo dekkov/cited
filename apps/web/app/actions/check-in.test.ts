@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Must mock server-only before importing the action
 vi.mock('server-only', () => ({}));
@@ -20,11 +20,11 @@ vi.mock('@/lib/db', () => ({
   getDb: vi.fn(),
 }));
 
+import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { applyCheckIn, isGraduationReady } from '@cited/core';
 // ─── Import after mocks ───────────────────────────────────────────────────────
 import { checkInAction } from './check-in';
-import { getDb } from '@/lib/db';
-import { getSessionUser } from '@/lib/auth/guards';
-import { applyCheckIn, isGraduationReady } from '@cited/core';
 
 const USER_ID = '00000000-0000-0000-0000-000000000001';
 const HABIT_ID = '00000000-0000-0000-0000-000000000002';
@@ -234,9 +234,9 @@ describe('checkInAction', () => {
   it('rejects re-check-in on the same day (once-per-day rule)', async () => {
     db._findFirstCheckIns.mockResolvedValue({ id: 'existing-checkin-id' });
 
-    await expect(
-      checkInAction({ userHabitId: HABIT_ID, status: 'done' }),
-    ).rejects.toThrow('AlreadyCheckedIn');
+    await expect(checkInAction({ userHabitId: HABIT_ID, status: 'done' })).rejects.toThrow(
+      'AlreadyCheckedIn',
+    );
 
     // No insert, no streak update, no graduation flip.
     expect(db.insert).not.toHaveBeenCalled();

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock server-only
 vi.mock('server-only', () => ({}));
@@ -31,13 +31,22 @@ const goodOutput = {
     {
       templateSlug: 'sleep-wind-down',
       title: 'Evening wind-down routine',
-      rationale: 'Dr. Matthew Walker recommends a consistent wind-down ritual for better sleep quality.',
+      rationale:
+        'Dr. Matthew Walker recommends a consistent wind-down ritual for better sleep quality.',
       domain: 'sleep',
       trigger: 'When it is 9pm each evening',
       tinyAction: 'Turn off overhead lights',
       citations: [
-        { clipId: '00000000-0000-0000-0000-000000000001', claim: 'Consistent bedtime improves sleep quality', speaker: 'Dr. Matthew Walker' },
-        { clipId: '00000000-0000-0000-0000-000000000002', claim: 'Blue light suppresses melatonin', speaker: 'Dr. Andrew Huberman' },
+        {
+          clipId: '00000000-0000-0000-0000-000000000001',
+          claim: 'Consistent bedtime improves sleep quality',
+          speaker: 'Dr. Matthew Walker',
+        },
+        {
+          clipId: '00000000-0000-0000-0000-000000000002',
+          claim: 'Blue light suppresses melatonin',
+          speaker: 'Dr. Andrew Huberman',
+        },
       ],
     },
     {
@@ -48,8 +57,16 @@ const goodOutput = {
       trigger: 'Right after breakfast',
       tinyAction: 'Walk to the end of the street',
       citations: [
-        { clipId: '00000000-0000-0000-0000-000000000003', claim: 'Morning exercise boosts cortisol positively', speaker: 'Dr. Rangan Chatterjee' },
-        { clipId: '00000000-0000-0000-0000-000000000004', claim: 'Walking reduces all-cause mortality', speaker: 'Professor Tim Spector' },
+        {
+          clipId: '00000000-0000-0000-0000-000000000003',
+          claim: 'Morning exercise boosts cortisol positively',
+          speaker: 'Dr. Rangan Chatterjee',
+        },
+        {
+          clipId: '00000000-0000-0000-0000-000000000004',
+          claim: 'Walking reduces all-cause mortality',
+          speaker: 'Professor Tim Spector',
+        },
       ],
     },
     {
@@ -60,8 +77,16 @@ const goodOutput = {
       trigger: 'Before getting into bed',
       tinyAction: 'Set thermostat to 18C',
       citations: [
-        { clipId: '00000000-0000-0000-0000-000000000001', claim: 'Room temperature affects sleep stages', speaker: 'Dr. Matthew Walker' },
-        { clipId: '00000000-0000-0000-0000-000000000002', claim: 'Core temp drop triggers sleep onset', speaker: 'Dr. Andrew Huberman' },
+        {
+          clipId: '00000000-0000-0000-0000-000000000001',
+          claim: 'Room temperature affects sleep stages',
+          speaker: 'Dr. Matthew Walker',
+        },
+        {
+          clipId: '00000000-0000-0000-0000-000000000002',
+          claim: 'Core temp drop triggers sleep onset',
+          speaker: 'Dr. Andrew Huberman',
+        },
       ],
     },
   ],
@@ -78,20 +103,52 @@ vi.mock('ai', async () => {
 
 // Mock auth
 vi.mock('@/lib/auth/guards', () => ({
-  getSessionUser: vi.fn(() => Promise.resolve({ id: 'user-123', email: 'test@example.com', role: 'user' })),
+  getSessionUser: vi.fn(() =>
+    Promise.resolve({ id: 'user-123', email: 'test@example.com', role: 'user' }),
+  ),
 }));
 
 // Mock consent records — default: no ai_free_text consent
 const mockConsentFindFirst = vi.fn(() => Promise.resolve(null));
-const mockClipsFindMany = vi.fn(() => Promise.resolve([
-  { id: '00000000-0000-0000-0000-000000000001', claim: 'Consistent bedtime improves sleep quality', speaker: 'Dr. Matthew Walker', domain: 'sleep', status: 'approved', removedAt: null },
-  { id: '00000000-0000-0000-0000-000000000002', claim: 'Blue light suppresses melatonin', speaker: 'Dr. Andrew Huberman', domain: 'sleep', status: 'approved', removedAt: null },
-  { id: '00000000-0000-0000-0000-000000000003', claim: 'Morning exercise boosts cortisol positively', speaker: 'Dr. Rangan Chatterjee', domain: 'exercise_longevity', status: 'approved', removedAt: null },
-  { id: '00000000-0000-0000-0000-000000000004', claim: 'Walking reduces all-cause mortality', speaker: 'Professor Tim Spector', domain: 'exercise_longevity', status: 'approved', removedAt: null },
-]));
+const mockClipsFindMany = vi.fn(() =>
+  Promise.resolve([
+    {
+      id: '00000000-0000-0000-0000-000000000001',
+      claim: 'Consistent bedtime improves sleep quality',
+      speaker: 'Dr. Matthew Walker',
+      domain: 'sleep',
+      status: 'approved',
+      removedAt: null,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000002',
+      claim: 'Blue light suppresses melatonin',
+      speaker: 'Dr. Andrew Huberman',
+      domain: 'sleep',
+      status: 'approved',
+      removedAt: null,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000003',
+      claim: 'Morning exercise boosts cortisol positively',
+      speaker: 'Dr. Rangan Chatterjee',
+      domain: 'exercise_longevity',
+      status: 'approved',
+      removedAt: null,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000004',
+      claim: 'Walking reduces all-cause mortality',
+      speaker: 'Professor Tim Spector',
+      domain: 'exercise_longevity',
+      status: 'approved',
+      removedAt: null,
+    },
+  ]),
+);
 const mockDbUpdate = vi.fn(() => ({ set: vi.fn(() => ({ where: vi.fn() })) }));
 const mockDbExecute = vi.fn(() => Promise.resolve([{ similarity: 0.92 }]));
-const mockClipFindFirst = vi.fn((opts?: { where?: unknown }) => {
+const mockClipFindFirst = vi.fn((_opts?: { where?: unknown }) => {
   // Return the clip based on the query — simplified: always return approved
   return Promise.resolve({ id: 'clip-id', status: 'approved', claim: 'test', removedAt: null });
 });
@@ -119,7 +176,11 @@ vi.mock('@cited/core', async () => {
     })),
     getAiSdkModel: vi.fn(() => ({ modelId: 'claude-sonnet-4-5' })),
     getEmbeddings: vi.fn(() => ({
-      embed: vi.fn(async () => ({ embeddings: [[0.5, 0.5, 0.5]], provider: 'fake', model: 'fake' })),
+      embed: vi.fn(async () => ({
+        embeddings: [[0.5, 0.5, 0.5]],
+        provider: 'fake',
+        model: 'fake',
+      })),
     })),
   };
 });
@@ -142,14 +203,47 @@ describe('POST /api/synthesize', () => {
     vi.clearAllMocks();
     mockConsentFindFirst.mockResolvedValue(null);
     mockClipsFindMany.mockResolvedValue([
-      { id: '00000000-0000-0000-0000-000000000001', claim: 'Consistent bedtime improves sleep quality', speaker: 'Dr. Matthew Walker', domain: 'sleep', status: 'approved', removedAt: null },
-      { id: '00000000-0000-0000-0000-000000000002', claim: 'Blue light suppresses melatonin', speaker: 'Dr. Andrew Huberman', domain: 'sleep', status: 'approved', removedAt: null },
-      { id: '00000000-0000-0000-0000-000000000003', claim: 'Morning exercise boosts cortisol positively', speaker: 'Dr. Rangan Chatterjee', domain: 'exercise_longevity', status: 'approved', removedAt: null },
-      { id: '00000000-0000-0000-0000-000000000004', claim: 'Walking reduces all-cause mortality', speaker: 'Professor Tim Spector', domain: 'exercise_longevity', status: 'approved', removedAt: null },
+      {
+        id: '00000000-0000-0000-0000-000000000001',
+        claim: 'Consistent bedtime improves sleep quality',
+        speaker: 'Dr. Matthew Walker',
+        domain: 'sleep',
+        status: 'approved',
+        removedAt: null,
+      },
+      {
+        id: '00000000-0000-0000-0000-000000000002',
+        claim: 'Blue light suppresses melatonin',
+        speaker: 'Dr. Andrew Huberman',
+        domain: 'sleep',
+        status: 'approved',
+        removedAt: null,
+      },
+      {
+        id: '00000000-0000-0000-0000-000000000003',
+        claim: 'Morning exercise boosts cortisol positively',
+        speaker: 'Dr. Rangan Chatterjee',
+        domain: 'exercise_longevity',
+        status: 'approved',
+        removedAt: null,
+      },
+      {
+        id: '00000000-0000-0000-0000-000000000004',
+        claim: 'Walking reduces all-cause mortality',
+        speaker: 'Professor Tim Spector',
+        domain: 'exercise_longevity',
+        status: 'approved',
+        removedAt: null,
+      },
     ]);
     mockDbUpdate.mockReturnValue({ set: vi.fn(() => ({ where: vi.fn() })) });
     mockDbExecute.mockResolvedValue([{ similarity: 0.92 }]);
-    mockClipFindFirst.mockResolvedValue({ id: 'clip-id', status: 'approved', claim: 'test', removedAt: null });
+    mockClipFindFirst.mockResolvedValue({
+      id: 'clip-id',
+      status: 'approved',
+      claim: 'test',
+      removedAt: null,
+    });
   });
 
   it('Test 1: valid synthesis returns 200 with candidates array', async () => {
@@ -161,7 +255,7 @@ describe('POST /api/synthesize', () => {
     });
     const response = await POST(req);
     expect(response.status).toBe(200);
-    const data = await response.json() as { candidates: unknown[] };
+    const data = (await response.json()) as { candidates: unknown[] };
     expect(data.candidates).toBeDefined();
     expect(Array.isArray(data.candidates)).toBe(true);
     expect(data.candidates.length).toBeGreaterThanOrEqual(1);
@@ -177,7 +271,13 @@ describe('POST /api/synthesize', () => {
         ...baseRequestBody,
         tellMeMoreFreeText: 'I also have anxiety issues and insomnia.',
         structuredAnswers: [
-          { turn: 1, domain: 'sleep', question: 'How is your sleep?', choiceLabel: 'Not great', freeText: 'terrible sleep' },
+          {
+            turn: 1,
+            domain: 'sleep',
+            question: 'How is your sleep?',
+            choiceLabel: 'Not great',
+            freeText: 'terrible sleep',
+          },
         ],
       }),
       headers: { 'Content-Type': 'application/json' },

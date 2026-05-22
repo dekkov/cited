@@ -3,20 +3,20 @@ import type { Domain } from '../interview/schemas';
 export type TemplateEmbedding = {
   readonly templateId: string;
   readonly domain: Domain;
-  readonly centroid: readonly number[];  // mean of the template's clip embeddings, 1536-dim
+  readonly centroid: readonly number[]; // mean of the template's clip embeddings, 1536-dim
 };
 
 export type ClusterAssignment = {
   readonly templateId: string;
-  readonly clusterId: number | null;  // null when centroid is empty/no clips
+  readonly clusterId: number | null; // null when centroid is empty/no clips
 };
 
 // Seeded PRNG — mulberry32. Seed fixed at 42 for determinism (used only if random tiebreaks
 // needed; primary tiebreaks are templateId-based).
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
-  return function () {
-    a = (a + 0x6D2B79F5) >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
     let t = a;
     t = Math.imul(t ^ (t >>> 15), t | 1);
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
@@ -25,7 +25,9 @@ function mulberry32(seed: number): () => number {
 }
 
 export function cosineDistance(a: readonly number[], b: readonly number[]): number {
-  let dot = 0, na = 0, nb = 0;
+  let dot = 0,
+    na = 0,
+    nb = 0;
   const len = Math.min(a.length, b.length);
   for (let i = 0; i < len; i++) {
     dot += a[i]! * b[i]!;
@@ -97,7 +99,7 @@ export function computeClusters(
       const next: number[] = new Array(n);
       for (let i = 0; i < n; i++) {
         let bestC = 0;
-        let bestD = Infinity;
+        let bestD = Number.POSITIVE_INFINITY;
         for (let c = 0; c < k; c++) {
           const d = cosineDistance(sorted[i]!.centroid, centroids[c]!);
           if (d < bestD - 1e-12) {
@@ -115,7 +117,11 @@ export function computeClusters(
 
       // Early terminate if unchanged
       let changed = false;
-      for (let i = 0; i < n; i++) if (next[i] !== assignments[i]) { changed = true; break; }
+      for (let i = 0; i < n; i++)
+        if (next[i] !== assignments[i]) {
+          changed = true;
+          break;
+        }
       assignments = next;
       if (!changed && iter > 0) break;
 

@@ -9,7 +9,7 @@
  *
  * Run against a dev server with at least one published habit_template at 'test-slug'.
  */
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const WEB_URL = process.env['WEB_URL'] ?? process.env['BASE_URL'] ?? 'http://localhost:3000';
 
@@ -42,10 +42,11 @@ test.describe('YouTubeEmbed smoke tests', () => {
       // lite-youtube-embed may use data attributes instead; check parent
       const embedEl = page.locator('[data-videoid], lite-youtube').first();
       if ((await embedEl.count()) > 0) {
-        const videoId = await embedEl.getAttribute('data-videoid') ?? await embedEl.getAttribute('videoid');
+        const videoId =
+          (await embedEl.getAttribute('data-videoid')) ?? (await embedEl.getAttribute('videoid'));
         expect(videoId).toBeTruthy();
         // lite-youtube-embed builds URL client-side on click; params embedded in dataset
-        const paramsAttr = await embedEl.getAttribute('params') ?? '';
+        const paramsAttr = (await embedEl.getAttribute('params')) ?? '';
         expect(paramsAttr).toMatch(/start=/);
         expect(paramsAttr).toMatch(/end=/);
         expect(paramsAttr).not.toMatch(/controls=0/);
@@ -59,7 +60,9 @@ test.describe('YouTubeEmbed smoke tests', () => {
     expect(iframeSrc).not.toMatch(/controls=0/);
   });
 
-  test('authenticated /habits/[id] iframe src contains start/end and not controls=0', async ({ page }) => {
+  test('authenticated /habits/[id] iframe src contains start/end and not controls=0', async ({
+    page,
+  }) => {
     // This test requires a logged-in user, which is harder to automate.
     // The check is: if we can navigate to /habits/[id], the embed must pass HAB-05.
     // In CI without auth, this test skips gracefully.

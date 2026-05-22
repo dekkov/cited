@@ -1,5 +1,5 @@
-import { ImageResponse } from 'next/og';
 import { getAnonSupabase } from '@/lib/supabase/anon';
+import { ImageResponse } from 'next/og';
 
 // Next.js file convention: auto-injected into <head> as og:image meta tag.
 // Auto-cached at the edge, sized correctly, no custom /api/og route needed.
@@ -44,89 +44,85 @@ export default async function Image({
   const youtubeId = firstClipData?.youtube_video_id ?? '';
 
   // YouTube maxresdefault thumbnail (fetched at OG image generation time)
-  const thumbnailUrl = youtubeId
-    ? `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`
-    : '';
+  const thumbnailUrl = youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg` : '';
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        background: '#F4EFE6', // warm paper palette
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+    >
+      {/* YouTube thumbnail left half */}
+      {thumbnailUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={thumbnailUrl}
+          width={540}
+          height={304}
+          style={{
+            objectFit: 'cover',
+            alignSelf: 'center',
+            marginLeft: 24,
+            borderRadius: 12,
+          }}
+          alt=""
+        />
+      )}
+
+      {/* Text right half */}
       <div
         style={{
-          background: '#F4EFE6', // warm paper palette
-          width: '100%',
-          height: '100%',
+          padding: '0 48px',
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          flex: 1,
         }}
       >
-        {/* YouTube thumbnail left half */}
-        {thumbnailUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={thumbnailUrl}
-            width={540}
-            height={304}
-            style={{
-              objectFit: 'cover',
-              alignSelf: 'center',
-              marginLeft: 24,
-              borderRadius: 12,
-            }}
-            alt=""
-          />
-        )}
-
-        {/* Text right half */}
+        {/* Cited wordmark */}
         <div
           style={{
-            padding: '0 48px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            flex: 1,
+            fontSize: 18,
+            color: '#8B8B99',
+            marginBottom: 16,
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
           }}
         >
-          {/* Cited wordmark */}
-          <div
-            style={{
-              fontSize: 18,
-              color: '#8B8B99',
-              marginBottom: 16,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
-          >
-            Cited
-          </div>
-
-          {/* Habit title */}
-          <div
-            style={{
-              fontSize: 48,
-              color: '#15161A',
-              lineHeight: 1.15,
-              fontWeight: 600,
-              marginBottom: 24,
-            }}
-          >
-            {title}
-          </div>
-
-          {/* Speaker */}
-          {speaker && (
-            <div
-              style={{
-                fontSize: 22,
-                color: '#5C5D66',
-              }}
-            >
-              {speaker}
-            </div>
-          )}
+          Cited
         </div>
+
+        {/* Habit title */}
+        <div
+          style={{
+            fontSize: 48,
+            color: '#15161A',
+            lineHeight: 1.15,
+            fontWeight: 600,
+            marginBottom: 24,
+          }}
+        >
+          {title}
+        </div>
+
+        {/* Speaker */}
+        {speaker && (
+          <div
+            style={{
+              fontSize: 22,
+              color: '#5C5D66',
+            }}
+          >
+            {speaker}
+          </div>
+        )}
       </div>
-    ),
+    </div>,
     { ...size },
   );
 }

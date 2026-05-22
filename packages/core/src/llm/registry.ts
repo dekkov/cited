@@ -1,6 +1,6 @@
-import type { EmbeddingProvider, LlmProvider } from './provider';
 import { anthropicLlm } from './anthropic';
 import { openaiEmbeddings, openaiLlm } from './openai';
+import type { EmbeddingProvider, LlmProvider } from './provider';
 
 /**
  * Returns the configured LLM provider for chat/completion tasks.

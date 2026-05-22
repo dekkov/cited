@@ -1,7 +1,7 @@
 'use server';
-import { userHabits } from '@cited/db';
-import { getDb } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth/guards';
+import { getDb } from '@/lib/db';
+import { userHabits } from '@cited/db';
 
 /**
  * Bulk-inserts user_habits rows from accepted candidates after the swipe stack.

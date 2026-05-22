@@ -1,5 +1,11 @@
 import type { z } from 'zod';
-import type { EmbeddingOpts, EmbeddingResponse, LlmCallOpts, LlmResponse, LlmStructuredOpts } from './types';
+import type {
+  EmbeddingOpts,
+  EmbeddingResponse,
+  LlmCallOpts,
+  LlmResponse,
+  LlmStructuredOpts,
+} from './types';
 
 export interface LlmProvider {
   name: string;

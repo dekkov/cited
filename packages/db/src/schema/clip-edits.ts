@@ -1,6 +1,6 @@
 import { boolean, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { clipEditAction } from './enums';
 import { clips } from './clips';
+import { clipEditAction } from './enums';
 
 // Note: actorId references auth.users(id) on delete set null
 // This FK is managed in migration SQL (auth.users is Supabase Auth — not introspectable by drizzle-kit)

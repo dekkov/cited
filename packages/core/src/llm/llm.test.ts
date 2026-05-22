@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { openaiEmbeddings, openaiLlm, anthropicLlm } from './index';
+import { describe, expect, it } from 'vitest';
+import { anthropicLlm, openaiEmbeddings, openaiLlm } from './index';
 import type { EmbeddingProvider, LlmProvider } from './provider';
 
 describe('llm interface contract', () => {

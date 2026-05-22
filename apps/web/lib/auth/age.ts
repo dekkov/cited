@@ -54,8 +54,7 @@ export function isAgeAllowed(
   const isLeapBirthday = mo === 2 && d === 29;
   if (isLeapBirthday) {
     const targetYear = now.getUTCFullYear();
-    const isLeapYear =
-      (targetYear % 4 === 0 && targetYear % 100 !== 0) || targetYear % 400 === 0;
+    const isLeapYear = (targetYear % 4 === 0 && targetYear % 100 !== 0) || targetYear % 400 === 0;
     if (!isLeapYear) {
       anniversaryMonth = 2; // March (0-indexed)
       anniversaryDay = 1;

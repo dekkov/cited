@@ -6,7 +6,7 @@
  *
  * Run with: pnpm --filter @cited/web test:e2e -- legal-gate.spec.ts
  */
-import { type Page, test, expect, request as pwRequest } from '@playwright/test';
+import { type Page, expect, request as pwRequest, test } from '@playwright/test';
 
 const SUPABASE_URL = process.env['SUPABASE_URL'] ?? 'http://localhost:9999';
 const SR = process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '';

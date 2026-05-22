@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('@cited/db schema exports', () => {
   it('exports all 16 table names', async () => {
@@ -26,8 +26,9 @@ describe('@cited/db schema exports', () => {
   });
 
   it('user-scoped tables have userId or id column referencing auth.users with cascade', async () => {
-    const { profiles, userHabits, checkIns, streaks, streakFreezes, consentRecords } =
-      await import('./index');
+    const { profiles, userHabits, checkIns, streaks, streakFreezes, consentRecords } = await import(
+      './index'
+    );
     // profiles uses `id` as the FK; others use `userId`
     expect(profiles).toBeDefined();
     expect(userHabits).toBeDefined();
