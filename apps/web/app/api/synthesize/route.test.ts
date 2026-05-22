@@ -164,11 +164,30 @@ vi.mock('@/lib/db', () => ({
   })),
 }));
 
-// Mock @cited/core groundingCheck to return high similarity
+// Canned hybrid-retrieval result (route maps r.clipId → retrievedIds). The clip
+// bodies come from the mocked db.query.clips.findMany below.
+const rankedClips = [
+  '00000000-0000-0000-0000-000000000001',
+  '00000000-0000-0000-0000-000000000002',
+  '00000000-0000-0000-0000-000000000003',
+  '00000000-0000-0000-0000-000000000004',
+].map((clipId, i) => ({
+  clipId,
+  similarityScore: 0.9 - i * 0.1,
+  vectorScore: 0.5,
+  textScore: 0.4,
+  claim: 'canned',
+  speaker: 'canned',
+  domain: 'sleep' as const,
+}));
+
+// Mock @cited/core: stub hybrid retrieval + citation validation + embeddings.
+// Keeps the real QUESTION_POOL_BY_ID / schemas via the actual spread.
 vi.mock('@cited/core', async () => {
   const actual = await vi.importActual<typeof import('@cited/core')>('@cited/core');
   return {
     ...actual,
+    hybridRetrieve: vi.fn(async () => rankedClips),
     // Override validateCitations to always validate (high similarity)
     validateCitations: vi.fn(async (citations: unknown[]) => ({
       valid: citations,
@@ -185,17 +204,12 @@ vi.mock('@cited/core', async () => {
   };
 });
 
+// Current request contract: runId + freeFormText + answers[{ questionId, choiceId }].
+// questionId/choiceId must exist in QUESTION_POOL_BY_ID to be hydrated into the prompt.
 const baseRequestBody = {
   runId: '00000000-0000-0000-0000-000000000099',
-  structuredAnswers: [
-    { turn: 1, domain: 'sleep', question: 'How is your sleep?', choiceLabel: 'Not great' },
-  ],
-  retrievedClipIds: [
-    '00000000-0000-0000-0000-000000000001',
-    '00000000-0000-0000-0000-000000000002',
-    '00000000-0000-0000-0000-000000000003',
-    '00000000-0000-0000-0000-000000000004',
-  ],
+  freeFormText: '',
+  answers: [{ questionId: 'sleep-quality', choiceId: 'restless' }],
 };
 
 describe('POST /api/synthesize', () => {
@@ -268,16 +282,10 @@ describe('POST /api/synthesize', () => {
     const req = new Request('http://localhost/api/synthesize', {
       method: 'POST',
       body: JSON.stringify({
-        ...baseRequestBody,
-        tellMeMoreFreeText: 'I also have anxiety issues and insomnia.',
-        structuredAnswers: [
-          {
-            turn: 1,
-            domain: 'sleep',
-            question: 'How is your sleep?',
-            choiceLabel: 'Not great',
-            freeText: 'terrible sleep',
-          },
+        runId: baseRequestBody.runId,
+        freeFormText: 'I also have anxiety issues and insomnia.',
+        answers: [
+          { questionId: 'sleep-quality', choiceId: 'restless', freeText: 'terrible sleep' },
         ],
       }),
       headers: { 'Content-Type': 'application/json' },
