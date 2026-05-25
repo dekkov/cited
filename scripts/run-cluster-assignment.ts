@@ -13,12 +13,18 @@
  * to run weekly on Sundays at 03:00 UTC via a pg_cron HTTP call.
  */
 
-import 'dotenv/config';
-import { sql, eq } from 'drizzle-orm';
-import { createDb } from '../packages/db/src/client';
-import { habitTemplates } from '../packages/db/src/schema/habit-templates';
+import * as path from 'node:path';
+import { config } from 'dotenv';
+
+// Match scripts/seed-test-clips.ts: DATABASE_URL lives in apps/web/.env.local,
+// not in a repo-root .env. Load it before any module that needs the env reads it.
+config({ path: path.resolve(__dirname, '../apps/web/.env.local') });
+
+import { eq, sql } from 'drizzle-orm';
 import { computeClusters } from '../packages/core/src/swap/cluster';
 import type { TemplateEmbedding } from '../packages/core/src/swap/cluster';
+import { createDb } from '../packages/db/src/client';
+import { habitTemplates } from '../packages/db/src/schema/habit-templates';
 
 interface RawRow {
   template_id: string;
@@ -55,7 +61,7 @@ export async function runClusterAssignment(): Promise<{ assigned: number }> {
     LEFT JOIN clips c ON c.id = htc.clip_id AND c.embedding IS NOT NULL
   `);
 
-  const rows = Array.isArray(rawRows) ? rawRows : (rawRows as { rows: RawRow[] }).rows ?? [];
+  const rows = Array.isArray(rawRows) ? rawRows : ((rawRows as { rows: RawRow[] }).rows ?? []);
 
   // Group embeddings by template
   const grouped = new Map<string, { domain: string; embeddings: number[][] }>();
@@ -86,7 +92,7 @@ export async function runClusterAssignment(): Promise<{ assigned: number }> {
     const centroid = new Array<number>(dims).fill(0);
     for (const vec of embeddings) {
       for (let i = 0; i < dims; i++) {
-        centroid[i]! += vec[i]!;
+        centroid[i]! += vec[i];
       }
     }
     for (let i = 0; i < dims; i++) {

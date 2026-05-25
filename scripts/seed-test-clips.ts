@@ -12,11 +12,11 @@ import { config } from 'dotenv';
 // Load apps/web env before any package code runs (needs OPENAI_API_KEY + DATABASE_URL)
 config({ path: path.resolve(__dirname, '../apps/web/.env.local') });
 
+import { eq, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { eq, inArray } from 'drizzle-orm';
-import * as schema from '../packages/db/src/schema/index';
 import { getEmbeddings } from '../packages/core/src/llm/registry';
+import * as schema from '../packages/db/src/schema/index';
 
 // ── Test data (2 clips per domain, 8 total) ───────────────────────────────────
 
@@ -134,6 +134,186 @@ const CLIPS = [
     startSeconds: 1240,
     endSeconds: 1330,
   },
+  // ── Second wave: diversified mechanisms per domain so the swap query's
+  //    `cosine_distance > 0.7` gate has substantively-different alternatives.
+  //    One nutrition entry carries risk_flags: ['supplement'] to exercise the
+  //    SEO no-index path and sitemap exclusion (HAB-06 + SEO policy).
+  {
+    domain: 'sleep' as const,
+    title: 'Morning light exposure',
+    slug: 'morning-light-exposure',
+    trigger: 'Within 30 minutes of waking',
+    tinyAction: 'Step outside for 10 minutes of direct sunlight (no sunglasses).',
+    claim:
+      'Bright outdoor light within 30 minutes of waking anchors the circadian clock — 100,000+ lux for 10 minutes shifts melatonin onset earlier by roughly 30 minutes that night.',
+    rationale:
+      'Suprachiasmatic-nucleus photoentrainment via ipRGC melanopsin pathway; outdoor light is 10–100× brighter than indoor.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 410,
+    endSeconds: 500,
+  },
+  {
+    domain: 'nutrition_gut' as const,
+    title: 'Daily creatine for cognition',
+    slug: 'daily-creatine-cognition',
+    trigger: 'With morning coffee',
+    tinyAction: 'Stir 5 g of creatine monohydrate into your drink.',
+    claim:
+      'A daily 5-gram dose of creatine monohydrate improves working memory and reasoning performance on sleep-deprived days by replenishing brain phosphocreatine stores.',
+    rationale:
+      'Cognitive benefit demonstrated in RCTs under fatigue conditions; effect strongest with consistent daily dosing.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 950,
+    endSeconds: 1040,
+    // SEO/risk: this is supplement content — public /h/[slug] must noindex and be omitted from sitemap.
+    riskFlags: ['supplement'] as const,
+  },
+  {
+    domain: 'exercise_longevity' as const,
+    title: 'Twice-weekly resistance training',
+    slug: 'twice-weekly-resistance',
+    trigger: 'Two non-consecutive weekday evenings',
+    tinyAction: 'Do a 25-minute full-body lift (squat, push, pull, hinge).',
+    claim:
+      'Two resistance-training sessions per week — even 25 minutes each — preserve muscle mass and bone density after age 40 and reduce all-cause mortality by 15–20% independent of cardio.',
+    rationale:
+      'Sarcopenia prevention via mTOR activation; observational mortality data from Cooper Clinic and Korean longitudinal cohorts.',
+    speaker: 'Peter Attia',
+    startSeconds: 1450,
+    endSeconds: 1540,
+  },
+  {
+    domain: 'mental_health' as const,
+    title: 'Five-minute physiological sigh',
+    slug: 'five-minute-physiological-sigh',
+    trigger: 'When you notice acute stress',
+    tinyAction:
+      'Two short inhales through the nose, one long exhale through the mouth — repeat for one minute.',
+    claim:
+      'A single minute of physiological sighing — double inhale followed by extended exhale — lowers state anxiety more quickly than equivalent-duration mindful breathing or box breathing.',
+    rationale:
+      'Stanford 2023 RCT showed measurable reduction in heart-rate variability stress markers within 5 minutes vs. control breathwork modalities.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 200,
+    endSeconds: 290,
+  },
+] as const;
+
+// ── Supporting clips ─────────────────────────────────────────────────────────
+// SWAP-03 requires ≥2 validated citations per habit_template; the primary CLIPS
+// above provide one. These add a second clip per template — same episode, distinct
+// claim and timestamp — so swap candidates clear the citation-count gate.
+const SUPPORTING_CLIPS = [
+  {
+    templateSlug: 'fixed-sleep-wake-time',
+    claim:
+      'Weekend lie-ins of more than 90 minutes shift the circadian clock back by an hour and produce measurable Monday-morning sleep inertia equivalent to mild jet lag.',
+    rationale: 'Social-jetlag literature (Roenneberg) quantifies the weekend-shift effect.',
+    speaker: 'Matthew Walker',
+    startSeconds: 240,
+    endSeconds: 320,
+  },
+  {
+    templateSlug: 'cool-bedroom-deep-sleep',
+    claim:
+      'A warm bath one to two hours before bed paradoxically lowers core temperature by triggering peripheral vasodilation, helping induce sleep onset by 36% on average.',
+    rationale: 'Texas A&M meta-analysis of 17 bath-and-sleep trials.',
+    speaker: 'Matthew Walker',
+    startSeconds: 760,
+    endSeconds: 830,
+  },
+  {
+    templateSlug: 'thirty-plants-a-week',
+    claim:
+      'Polyphenol-rich plants — colored vegetables, berries, herbs — feed Akkermansia and other beneficial gut bacteria that strengthen the intestinal mucosal barrier.',
+    rationale: 'American Gut Project data on diet-microbiome correlation.',
+    speaker: 'Tim Spector',
+    startSeconds: 420,
+    endSeconds: 500,
+  },
+  {
+    templateSlug: 'daily-fermented-food',
+    claim:
+      'Two servings of fermented foods per day produce broader microbiome diversity gains than a single serving — dose-response holds at least up to six servings per day.',
+    rationale: 'Wastyk et al. 2021 follow-up arm.',
+    speaker: 'Tim Spector',
+    startSeconds: 970,
+    endSeconds: 1050,
+  },
+  {
+    templateSlug: 'build-vo2-max',
+    claim:
+      'Norwegian 4x4 protocols — four 4-minute hard intervals separated by 3-minute recoveries — raise VO2 max by 10–15% in untrained adults within eight weeks.',
+    rationale: 'Helgerud et al. 2007 RCT comparing interval modalities.',
+    speaker: 'Peter Attia',
+    startSeconds: 580,
+    endSeconds: 660,
+  },
+  {
+    templateSlug: 'weekly-zone-2-cardio',
+    claim:
+      'Mitochondrial density and oxidative capacity respond more to cumulative weekly Zone-2 minutes than to intensity above the lactate threshold.',
+    rationale: 'San Millán muscle-biopsy work on metabolic flexibility.',
+    speaker: 'Peter Attia',
+    startSeconds: 1130,
+    endSeconds: 1210,
+  },
+  {
+    templateSlug: 'daily-nsdr-session',
+    claim:
+      'Brief NSDR practice between cognitively demanding tasks restores focus more effectively than caffeine without the dopamine-receptor downregulation of repeated stimulant use.',
+    rationale: 'Stanford prefrontal-cortex recovery imaging studies.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 870,
+    endSeconds: 950,
+  },
+  {
+    templateSlug: 'three-day-expressive-writing',
+    claim:
+      'Expressive writing benefits scale with emotional engagement, not literary quality — handwritten, unstructured releases outperform polished prose.',
+    rationale: 'Pennebaker meta-analysis stratification by writing style.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 1340,
+    endSeconds: 1410,
+  },
+  {
+    templateSlug: 'morning-light-exposure',
+    claim:
+      'Even on overcast days, outdoor light delivers 10,000–25,000 lux — orders of magnitude more circadian signal than the brightest indoor lighting at 500 lux.',
+    rationale: 'Photometric measurements across weather conditions.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 510,
+    endSeconds: 590,
+  },
+  {
+    templateSlug: 'daily-creatine-cognition',
+    claim:
+      'Creatine monohydrate at 5 g/day reaches steady-state brain saturation in roughly four weeks; loading doses accelerate the timeline but offer no long-term advantage.',
+    rationale: 'PK studies on creatine brain uptake kinetics.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 1060,
+    endSeconds: 1140,
+    // Supplement content — paired with primary clip's risk flag for the noindex/sitemap path.
+    riskFlags: ['supplement'] as const,
+  },
+  {
+    templateSlug: 'twice-weekly-resistance',
+    claim:
+      'Compound movements — squat, deadlift, press, row — recruit ten times more motor units than isolation exercises and drive the bulk of hypertrophy and bone-density gains.',
+    rationale: 'EMG and bone-mineral-density comparison data.',
+    speaker: 'Peter Attia',
+    startSeconds: 1570,
+    endSeconds: 1650,
+  },
+  {
+    templateSlug: 'five-minute-physiological-sigh',
+    claim:
+      'Reinflating collapsed alveoli with the second short inhale is the mechanistic basis of the physiological sigh; this is why a single inhale of equal duration does not produce the same effect.',
+    rationale: 'Pulmonary physiology — alveolar recruitment.',
+    speaker: 'Andrew Huberman',
+    startSeconds: 310,
+    endSeconds: 390,
+  },
 ] as const;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -216,6 +396,9 @@ async function seed() {
         status: 'approved' as const,
         approvedAt: new Date(),
         embedding: embeddings[i] as number[],
+        // riskFlags only set on entries that declare them (e.g. supplement content).
+        // Drizzle column defaults to '{}'::text[] when omitted; spread keeps that path clean.
+        ...('riskFlags' in c && c.riskFlags ? { riskFlags: [...c.riskFlags] } : {}),
       })),
     )
     .returning({ id: schema.clips.id });
@@ -224,6 +407,7 @@ async function seed() {
 
   // 6. Upsert one habit_template per clip + junction row
   console.log(`Upserting ${CLIPS.length} habit_templates + junctions…`);
+  const templateIdBySlug = new Map<string, string>();
   for (let i = 0; i < CLIPS.length; i++) {
     const c = CLIPS[i]!;
     const clipId = inserted[i]!.id;
@@ -250,12 +434,56 @@ async function seed() {
       })
       .returning({ id: schema.habitTemplates.id });
     if (!tpl) throw new Error(`Failed to upsert habit_template for slug=${c.slug}`);
+    templateIdBySlug.set(c.slug, tpl.id);
     await db
       .insert(schema.habitTemplateClips)
       .values({ habitTemplateId: tpl.id, clipId, position: 1 })
       .onConflictDoNothing();
   }
   console.log(`  Upserted ${CLIPS.length} habit_templates.`);
+
+  // 7. Insert supporting clips so every template clears SWAP-03's ≥2-citation gate.
+  console.log(`Inserting ${SUPPORTING_CLIPS.length} supporting clips + junctions…`);
+  const supportingEmbeddings = await embedClaims(SUPPORTING_CLIPS.map((c) => c.claim));
+  for (let i = 0; i < SUPPORTING_CLIPS.length; i++) {
+    const supp = SUPPORTING_CLIPS[i]!;
+    const tplId = templateIdBySlug.get(supp.templateSlug);
+    if (!tplId) {
+      console.warn(`  Skipping supporting clip for unknown template ${supp.templateSlug}`);
+      continue;
+    }
+    // Look up the parent template's domain — supporting clips inherit it (kept off the
+    // SUPPORTING_CLIPS shape to avoid duplication).
+    const parent = CLIPS.find((c) => c.slug === supp.templateSlug);
+    if (!parent) continue;
+
+    const [clipRow] = await db
+      .insert(schema.clips)
+      .values({
+        episodeId: episode.id,
+        youtubeVideoId: TEST_VIDEO_ID,
+        startSeconds: supp.startSeconds,
+        endSeconds: supp.endSeconds,
+        claim: supp.claim,
+        rationale: supp.rationale,
+        speaker: supp.speaker,
+        speakerStatus: 'verified' as const,
+        domain: parent.domain,
+        evidenceStrength: 'observational' as const,
+        status: 'approved' as const,
+        approvedAt: new Date(),
+        embedding: supportingEmbeddings[i] as number[],
+        ...('riskFlags' in supp && supp.riskFlags ? { riskFlags: [...supp.riskFlags] } : {}),
+      })
+      .returning({ id: schema.clips.id });
+    if (!clipRow) throw new Error(`Failed to insert supporting clip for ${supp.templateSlug}`);
+
+    await db
+      .insert(schema.habitTemplateClips)
+      .values({ habitTemplateId: tplId, clipId: clipRow.id, position: 2 })
+      .onConflictDoNothing();
+  }
+  console.log(`  Inserted ${SUPPORTING_CLIPS.length} supporting clips.`);
 
   console.log('\nDone. Run cluster-assignment next, then the onboarding interview.');
   await sql.end();
