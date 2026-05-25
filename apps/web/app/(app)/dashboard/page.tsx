@@ -43,11 +43,17 @@ export default async function DashboardPage() {
     })
     .from(userHabits)
     .innerJoin(habitTemplates, eq(userHabits.habitTemplateId, habitTemplates.id))
-    .leftJoin(habitTemplateClips, eq(habitTemplateClips.habitTemplateId, habitTemplates.id))
+    // Filter the junction to the primary clip (position = 1, matching scripts/seed-test-clips.ts)
+    // on the FIRST left join — otherwise a template with N junction rows fans out the result
+    // set to N copies of the same user_habit, producing duplicate React keys downstream.
     .leftJoin(
-      clips,
-      and(eq(habitTemplateClips.clipId, clips.id), eq(habitTemplateClips.position, 0)),
+      habitTemplateClips,
+      and(
+        eq(habitTemplateClips.habitTemplateId, habitTemplates.id),
+        eq(habitTemplateClips.position, 1),
+      ),
     )
+    .leftJoin(clips, eq(habitTemplateClips.clipId, clips.id))
     .where(and(eq(userHabits.userId, user.id), eq(userHabits.status, 'active')))
     .orderBy(userHabits.createdAt);
 
