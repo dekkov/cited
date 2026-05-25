@@ -17,4 +17,6 @@ export {
   gte,
   ne,
   sql,
+  asc,
+  desc,
 } from 'drizzle-orm';

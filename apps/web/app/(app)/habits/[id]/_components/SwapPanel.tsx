@@ -3,13 +3,13 @@
 import { acceptSwapAction } from '@/app/actions/accept-swap';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -43,6 +43,8 @@ interface SwapPanelProps {
   userHabitId: string;
 }
 
+// Side-anchored sheet (not centered dialog) — Radix Dialog with proper
+// slide-from-right semantics so the reason picker isn't clipped above viewport.
 export function SwapPanel({ userHabitId }: SwapPanelProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -51,11 +53,13 @@ export function SwapPanel({ userHabitId }: SwapPanelProps) {
   const [candidates, setCandidates] = useState<SwapCandidateData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [accepting, setAccepting] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmitReason() {
     if (!selectedReason) return;
     setLoading(true);
     setError(null);
+    setSubmitted(true);
 
     try {
       const res = await fetch('/api/swap', {
@@ -94,46 +98,35 @@ export function SwapPanel({ userHabitId }: SwapPanelProps) {
   function handleOpenChange(next: boolean) {
     setOpen(next);
     if (!next) {
-      // Reset state on close
+      // Reset state on close so reopen starts fresh
       setSelectedReason(null);
       setCandidates([]);
       setError(null);
+      setSubmitted(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
+      <SheetTrigger asChild>
         <Button variant="outline">Swap this habit</Button>
-      </DialogTrigger>
+      </SheetTrigger>
 
-      {/* Panel: right-side slide-in on desktop, fullscreen on mobile */}
-      <DialogContent
-        className="
-          fixed right-0 top-0 h-full w-full overflow-y-auto
-          sm:w-[480px] sm:rounded-l-2xl sm:rounded-r-none
-          bg-[var(--color-paper-2)] border-l border-[var(--color-rule)]
-          data-[state=open]:slide-in-from-right
-          data-[state=closed]:slide-out-to-right
-        "
-        aria-label="Equivalent-benefit swap"
-      >
-        <DialogHeader className="mb-4">
+      <SheetContent side="right" aria-label="Equivalent-benefit swap">
+        <SheetHeader>
           <p className="text-xs font-medium uppercase tracking-widest text-[var(--color-accent)]">
             Equivalent-Benefit Swap
           </p>
-          <DialogTitle className="text-xl font-[family-name:var(--font-newsreader)]">
-            Find a better fit
-          </DialogTitle>
-          <DialogDescription className="text-sm text-[var(--color-ink-3)]">
+          <SheetTitle>Find a better fit</SheetTitle>
+          <SheetDescription>
             Tell us why this habit isn't working — we'll find something that delivers the same
             benefit in a different way.
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
 
-        {/* Reason chips */}
+        {/* ─── Reason picker (visible until a search returns results) ─────── */}
         {candidates.length === 0 && (
-          <div className="space-y-4">
+          <div className="mt-6 space-y-4">
             <p className="text-sm font-medium text-[var(--color-ink)]">Why do you want to swap?</p>
             <div className="flex flex-wrap gap-2">
               {SWAP_REASONS.map((r) => (
@@ -141,14 +134,11 @@ export function SwapPanel({ userHabitId }: SwapPanelProps) {
                   key={r}
                   type="button"
                   onClick={() => setSelectedReason(r)}
-                  className={`
-                    rounded-full border px-4 py-2 text-sm transition-colors
-                    ${
-                      selectedReason === r
-                        ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white'
-                        : 'border-[var(--color-rule)] bg-transparent text-[var(--color-ink)] hover:bg-[var(--color-paper-3)]'
-                    }
-                  `}
+                  className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+                    selectedReason === r
+                      ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white'
+                      : 'border-[var(--color-rule)] bg-transparent text-[var(--color-ink)] hover:bg-[var(--color-paper-3)]'
+                  }`}
                 >
                   {REASON_LABELS[r]}
                 </button>
@@ -166,29 +156,40 @@ export function SwapPanel({ userHabitId }: SwapPanelProps) {
             >
               {loading ? 'Finding alternatives…' : 'Find alternatives'}
             </Button>
+
+            {submitted && !loading && candidates.length === 0 && !error && (
+              <p className="text-sm text-[var(--color-ink-3)]">
+                We couldn't find a substantively different alternative right now. The current habit
+                may already be the best fit for your goals — or our library is still growing. Try
+                browsing all habits in your domain.
+              </p>
+            )}
           </div>
         )}
 
-        {/* Candidates */}
+        {/* ─── Candidates (rendered after a successful search) ─────────────── */}
         {candidates.length > 0 && (
-          <div className="space-y-4">
+          <div className="mt-6 space-y-4">
             <p className="text-sm font-medium text-[var(--color-ink)]">
-              Here are {candidates.length} alternative{candidates.length !== 1 ? 's' : ''} — all
-              backed by credentialed evidence:
+              Here{' '}
+              {candidates.length === 1
+                ? 'is 1 alternative'
+                : `are ${candidates.length} alternatives`}{' '}
+              — all backed by credentialed evidence:
             </p>
 
             {candidates.map((c) => (
               <div
                 key={c.templateId}
-                className="rounded-lg border border-[var(--color-rule)] bg-[var(--color-paper)] p-4 space-y-3"
+                className="space-y-3 rounded-lg border border-[var(--color-rule)] bg-[var(--color-paper)] p-4"
               >
-                <h3 className="font-[family-name:var(--font-newsreader)] text-lg font-medium text-[var(--color-ink)]">
+                <h3 className="text-lg font-medium text-[var(--color-ink)] font-[family-name:var(--font-newsreader)]">
                   {c.title}
                 </h3>
 
                 {c.citations[0] && (
                   <blockquote className="border-l-2 border-[var(--color-accent)] pl-3">
-                    <p className="font-[family-name:var(--font-newsreader)] text-sm italic text-[var(--color-ink-2)]">
+                    <p className="text-sm italic text-[var(--color-ink-2)] font-[family-name:var(--font-newsreader)]">
                       "{c.citations[0].claim}"
                     </p>
                     <footer className="mt-1 text-xs text-[var(--color-ink-3)]">
@@ -226,18 +227,19 @@ export function SwapPanel({ userHabitId }: SwapPanelProps) {
 
             {error && <p className="text-sm text-red-600">{error}</p>}
 
-            <Button variant="ghost" className="w-full" onClick={() => setCandidates([])}>
+            <Button
+              variant="ghost"
+              className="w-full"
+              onClick={() => {
+                setCandidates([]);
+                setSubmitted(false);
+              }}
+            >
               ← Try a different reason
             </Button>
           </div>
         )}
-
-        {candidates.length === 0 && !loading && selectedReason === null && (
-          <p className="text-sm text-[var(--color-ink-3)] mt-4">
-            Can't find a suitable alternative? Try browsing all habits in your domain.
-          </p>
-        )}
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

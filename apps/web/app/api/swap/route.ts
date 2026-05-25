@@ -17,6 +17,13 @@ const Input = z.object({
   // reasonText intentionally OMITTED — deferred to Phase 4 (subject to AUTH-05c).
 });
 
+// SWAP-02: candidates must be substantively different from current (cosine distance gate).
+// 0.7 was calibrated for ≥30 diverse approved clips; the MVP seed (12 templates) clusters
+// tighter than that, so allow an env override for dev demos. Production keeps the strict default.
+const RAW_THRESHOLD = process.env['SWAP_MIN_COS_DISTANCE'];
+const SWAP_MIN_COS_DISTANCE =
+  RAW_THRESHOLD && !Number.isNaN(Number(RAW_THRESHOLD)) ? Number(RAW_THRESHOLD) : 0.7;
+
 export async function POST(req: Request) {
   const user = await getSessionUser();
   if (!user) return new Response('Unauthorized', { status: 401 });
@@ -88,7 +95,7 @@ export async function POST(req: Request) {
           AND ht.id <> ${params.currentTemplateId}
           AND c.embedding IS NOT NULL
         GROUP BY ht.id
-        HAVING MIN(c.embedding <=> cc.embedding) > 0.7
+        HAVING MIN(c.embedding <=> cc.embedding) > ${SWAP_MIN_COS_DISTANCE}
         ORDER BY min_cos_distance DESC
         LIMIT ${params.limit}
       `);
