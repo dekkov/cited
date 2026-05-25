@@ -36,10 +36,9 @@ export function RemoveHabitButton({ userHabitId }: RemoveHabitButtonProps) {
   if (!confirming) {
     return (
       <Button
-        variant="ghost"
-        size="sm"
+        variant="outline"
         onClick={() => setConfirming(true)}
-        className="text-[var(--color-ink-3)] hover:text-red-600"
+        className="border-red-300 text-red-600 hover:border-red-400 hover:bg-red-50 hover:text-red-700"
       >
         <Trash2 className="mr-1.5 size-4" />
         Remove this habit

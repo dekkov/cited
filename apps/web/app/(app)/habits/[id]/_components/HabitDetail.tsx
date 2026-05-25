@@ -96,13 +96,14 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
         </div>
       )}
 
-      {/* Claim block-quote */}
+      {/* Claim block-quote — opening glyph is inline at the start of the text flow,
+          not absolutely positioned over the left bar (was clipping/overlapping). */}
       {clip && (
-        <blockquote className="relative border-l-4 border-[var(--color-accent)] pl-4">
-          <span className="absolute -left-2 top-0 text-4xl leading-none text-[var(--color-accent)] opacity-60">
-            &ldquo;
-          </span>
+        <blockquote className="border-l-4 border-[var(--color-accent)] pl-4">
           <p className="font-[family-name:var(--font-newsreader)] text-xl italic leading-relaxed text-[var(--color-ink)]">
+            <span className="mr-1 align-text-top text-3xl leading-none text-[var(--color-accent)] opacity-70">
+              &ldquo;
+            </span>
             {clip.claim}
           </p>
         </blockquote>
@@ -134,9 +135,10 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
         </div>
       )}
 
-      {/* YouTubeEmbed — hero mode (200px). HAB-05: params must include start+end; no autoplay. */}
+      {/* YouTubeEmbed — 16:9 aspect (was fixed 200px which cropped the lite-embed thumbnail).
+          HAB-05: params must include start+end; no autoplay; player chrome stays enabled. */}
       {clip && (
-        <div className="overflow-hidden rounded-lg" style={{ height: '200px' }}>
+        <div className="aspect-video overflow-hidden rounded-lg">
           <YouTubeEmbed
             videoid={clip.youtubeVideoId}
             params={`start=${clip.startSeconds}&end=${clip.endSeconds}`}
@@ -178,8 +180,8 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
         </div>
       )}
 
-      {/* Swap + Remove actions */}
-      <div className="space-y-3 border-t border-[var(--color-rule)] pt-4">
+      {/* Swap + Remove actions — same line, consistent button styling */}
+      <div className="flex flex-wrap items-center gap-3 border-t border-[var(--color-rule)] pt-4">
         <SwapPanel userHabitId={habitId} />
         <RemoveHabitButton userHabitId={habitId} />
       </div>
