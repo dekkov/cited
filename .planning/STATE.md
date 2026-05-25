@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v0.5
 milestone_name: Extraction Worker
-status: Executing Phase 03
-stopped_at: "Plan 03-04 complete (Task 3 verified 2026-05-17). Wave 3 pending: plans 03-05 + 03-06."
-last_updated: "2026-05-18T04:32:07.541Z"
+status: Phase 03 complete; ready to plan Phase 04
+stopped_at: "Phase 03 (user-ai-loop-the-demo) complete. All 6 plans shipped + SUMMARYs written. UAT passed 13/13 on 2026-05-24. Ready to plan Phase 04: re-engagement + OSS polish + alpha launch."
+last_updated: "2026-05-24T00:00:00Z"
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 20
-  completed_plans: 18
+  completed_plans: 20
 ---
 
 # Project State: Hdiary (working title — rename pre-launch)
