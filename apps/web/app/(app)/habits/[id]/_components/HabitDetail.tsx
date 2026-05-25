@@ -2,7 +2,9 @@
 
 import { Badge } from '@/components/ui/badge';
 import { YouTubeEmbed } from '@next/third-parties/google';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { RemoveHabitButton } from './RemoveHabitButton';
 import { SwapPanel } from './SwapPanel';
 
 type ClipData = {
@@ -62,6 +64,15 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
 
   return (
     <article className="max-w-2xl space-y-6">
+      {/* Back to dashboard */}
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-3)] transition-colors hover:text-[var(--color-ink)]"
+      >
+        <ArrowLeft className="size-4" />
+        Back to dashboard
+      </Link>
+
       {/* Domain badge */}
       <div>
         <Badge variant="outline" className="text-xs uppercase tracking-wider">
@@ -167,9 +178,10 @@ export function HabitDetail({ habitId, template, clip }: HabitDetailProps) {
         </div>
       )}
 
-      {/* Swap button */}
-      <div className="border-t border-[var(--color-rule)] pt-4">
+      {/* Swap + Remove actions */}
+      <div className="space-y-3 border-t border-[var(--color-rule)] pt-4">
         <SwapPanel userHabitId={habitId} />
+        <RemoveHabitButton userHabitId={habitId} />
       </div>
     </article>
   );

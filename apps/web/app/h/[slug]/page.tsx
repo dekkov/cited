@@ -10,6 +10,16 @@ import { HabitEditorial } from './_components/HabitEditorial';
 
 // PUB-05: Uses ONLY anon Supabase client. No admin client imports here.
 // RLS must deny anon role reads to user-scoped tables (verified by rls-public-habit.spec.ts).
+//
+// Rendering strategy — MVP: full per-request SSR (fine at zero users / ~8 seeded templates).
+//   Next step (trigger: first real traffic OR template count > ~50):
+//     Switch to ISR + on-demand revalidation. Add `export const revalidate = false`,
+//     wrap the loader in `unstable_cache` keyed by `['habit', slug]` with `tags: ['habit:'+slug]`,
+//     and call `revalidateTag('habit:'+slug)` from the admin publish/edit/remove actions.
+//   End state (Phase 4+): Partial Prerendering — static editorial shell + dynamic adopt
+//     button island. Requires splitting <HabitEditorial> so <AdoptButton> fetches its own
+//     adoptionState via a sub-Suspense boundary (currently passed as a prop from this server
+//     component, which forces the whole route dynamic).
 
 type Clip = {
   id: string;
